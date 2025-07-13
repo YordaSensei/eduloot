@@ -60,8 +60,12 @@ void products() {
 
         switch(choice) {
             case 1:
-
                 break;
+            case 2:
+                break;
+            default:
+                cout << "\nERROR: Invalid Choice!\n";
+                continue;
         }
     } while (choice != 2);
 }
@@ -74,6 +78,18 @@ void sales() {
         cout << "1. View Total Sales\n";
         cout << "2. Transactions\n";
         cout << "3. Back to Home\n";
+
+        switch(choice) {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;    
+            default:
+                cout << "\nERROR: Invalid Choice!\n";
+                continue;
+        }
     } while (choice != 3);
 }
 
@@ -102,6 +118,11 @@ void requestAdmin() {
             case 5:
                 viewRequests();
                 break;
+            case 6:
+                break;
+            default:
+                cout << "\nERROR: Invalid Choice!\n";
+                continue;
         }
     } while (reqChoice != 6);
 }
@@ -131,6 +152,11 @@ int main() {
                 break;
             case 4:
                 break;
+            case 5:
+                break;
+            default:
+                cout << "\nERROR: Invalid Choice!\n";
+                continue;
         }
     } while (mainChoice != 5);
 

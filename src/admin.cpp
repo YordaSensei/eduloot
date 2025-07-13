@@ -25,7 +25,7 @@ void manageAccounts () {
             case 5:
                 break;
             default:
-                cout << "\nERROR: Invalid Choice!";
+                cout << "\nERROR: Invalid Choice!\n";
                 continue;
         }
 
@@ -61,7 +61,7 @@ int main () {
             case 7:
                 break;
             default:
-                cout << "\nERROR: Invalid Choice!";
+                cout << "\nERROR: Invalid Choice!\n";
                 continue;
         }
     } while (choice != 7);
