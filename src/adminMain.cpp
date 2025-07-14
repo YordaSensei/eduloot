@@ -491,6 +491,41 @@ void viewQuests () {
     inFile.close();
 }
 
+void approveStudentQuests () {
+    string readFile = "studentAccomplishedQuests.txt";
+    string line, student, quest;
+    int tokenAmount;
+
+    cout << "\n--- Quests Completed by Students ---\n";
+    cout << "--------------------------------------\n";
+
+    ifstream inFile(readFile);
+    while (getline(inFile, line)) {
+        cout << line << endl;
+    }
+
+    inFile.close();
+
+    cout << "--------------------------------\n";
+    cout << "--- Enter Details to Approve ---\n";
+    cout << "Student: ";
+    getline (cin, student);
+    cout << "Quest: ";
+    getline (cin, quest);
+    cout << "Token Amount: ";
+    cin >> tokenAmount;
+    cin.ignore();
+
+    string concat = student + ", " + quest + ", " + to_string(tokenAmount);
+    deleteLine(readFile, concat);
+
+    ofstream outFile ("ApprovedQuests.txt", ios::app);
+    outFile << concat << endl;
+    outFile.close();
+
+    cout << "\nApproved: " << concat << endl;
+}
+
 void createQuest () {
     int tokenAmount;
     string quest;
@@ -552,6 +587,8 @@ void questsTab () {
                 viewQuests();
                 break;
             case 2:
+                approveStudentQuests();
+                break;
             case 3:
                 createQuest();
                 break;
