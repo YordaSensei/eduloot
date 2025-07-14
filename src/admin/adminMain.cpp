@@ -1,12 +1,13 @@
 #include <iostream>
-#include "../include/admin/adminMain.h"
-#include "../include/admin/manageAccounts.h"
-#include "../include/admin/notifications.h"
-#include "../include/admin/quests.h"
-#include "../include/admin/merchantRequests.h"
-#include "../include/admin/tokenBank.h"
-#include "../include/admin/moneyBank.h"
-#include "../include/admin/viewTransactions.h"
+#include "../../include/admin/adminMain.h"
+#include "../../include/admin/manageAccounts.h"
+#include "../../include/admin/notifications.h"
+#include "../../include/admin/quests.h"
+#include "../../include/admin/merchantRequests.h"
+#include "../../include/admin/tokenBank.h"
+#include "../../include/admin/moneyBank.h"
+#include "../../include/admin/viewTransactions.h"
+
 
 using namespace std;
 
