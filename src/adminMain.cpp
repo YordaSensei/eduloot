@@ -60,7 +60,7 @@ bool isEmailTaken (const string &accountsFile, const string &emailToCheck) {
 
 void deleteLine (const string &filename, const string &targetLine) {
     ifstream inFile (filename);
-    ofstream tempFile ("tempAccounts.txt");
+    ofstream tempFile ("tempFile.txt");
 
     if (!inFile || !tempFile) {
     cout << "\nERROR: Failed to access file.\n";
@@ -82,12 +82,12 @@ void deleteLine (const string &filename, const string &targetLine) {
     tempFile.close();
 
     remove(filename.c_str());
-    rename("tempAccounts.txt", filename.c_str());
+    rename("tempFile.txt", filename.c_str());
 
     if (found) {
-        cout << "\n-- Account deleted successfully --\n";
+        cout << "\n-- Deleted successfully --\n";
     } else {
-        cout << "\n-- Account NOT found --\n";
+        cout << "\n-- NOT found (check spelling/case) --\n";
     }
 }
 
@@ -429,7 +429,6 @@ void editAccount () {
     } while (choice !=5);
 }
 
-
 void manageAccounts () {
     int choice;
 
@@ -470,6 +469,104 @@ void manageAccounts () {
 
 }
 
+
+//----------------------------------------------------------------------
+
+void viewQuests () {
+    ifstream inFile ("quests.txt");
+    string line;
+
+     if (!inFile) {
+        cerr << "ERROR: Could not open quests.txt\n";
+        return;
+    }
+
+    cout << "\n--- Available Quests ---\n";
+    cout << "--------------------------\n";
+
+    while (getline(inFile, line)) {
+        cout << line << endl;
+    }
+
+    inFile.close();
+}
+
+void createQuest () {
+    int tokenAmount;
+    string quest;
+
+    cout << "\n--- Create Quests ---\n";
+    cout << "-----------------------\n";
+    cout << "Quest: ";
+    getline (cin, quest);
+    cout << "Token Reward: ";
+    cin >> tokenAmount;
+    cin.ignore();
+
+    string concat = quest + ", " + to_string(tokenAmount);
+
+    ofstream outFile("quests.txt", ios::app);
+    if (!outFile) {
+        cerr << "ERROR: Could not open quests.txt\n";
+        return;
+    }
+
+    outFile << concat << endl;
+    outFile.close();
+}
+
+void deleteQuest () {
+    string quest;
+    int tokenAmount;
+    string filename = "quests.txt";
+
+    cout << "\n--- Delete Quest ---\n";
+    cout << "----------------------\n";
+    cout << "Enter the quest: ";
+    getline (cin, quest);
+    cout << "Enter Token Amount: ";
+    cin >> tokenAmount;
+
+    string concat = quest + ", " + to_string(tokenAmount);
+    deleteLine(filename, concat);
+}
+
+void questsTab () {
+    int choice;
+
+    do {
+        cout << "\n--- Quests Tab ---\n";
+        cout << "--------------------\n";
+        cout << "1. View Available Quests\n";
+        cout << "2. Approve Student Quest\n";
+        cout << "3. Create Quest\n";
+        cout << "4. Delete Quest\n";
+        cout << "5. Back\n";
+        cout << "--------------------\n";
+        cout << "Choice: ";
+        cin >> choice;
+        cin.ignore();
+
+        switch (choice) {
+            case 1:
+                viewQuests();
+                break;
+            case 2:
+            case 3:
+                createQuest();
+                break;
+            case 4:
+                deleteQuest();
+                break;
+            case 5:
+                break;
+            default:
+                cout << "\nERROR: Invalid choice!\n";
+                continue;
+        }
+    } while (choice != 5);
+}
+
 int main() {
     int choice;
 
@@ -494,6 +591,7 @@ int main() {
             case 2:
                 break;
             case 3:
+                questsTab();
                 break;
             case 4:
                 break;
