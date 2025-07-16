@@ -769,41 +769,37 @@ void approveMerchantRequests () {
 
                 switch (choice) {
                     case 1: {
+                        string file = "productReq.txt";
                         string productLine;
-                        file = "productReq.txt";
-                        inFile.open(file);
 
+                        ifstream inFile(file);
                         cout << "\n--- Pending Add Product Requests ---\n";
                         while (getline(inFile, productLine)) {
-                            cout << productLine << endl;
+                            if (productLine.find("add,") == 0) {
+                                cout << productLine << endl;
+                            }
                         }
                         inFile.close();
 
                         cout << "\n--- Approve Request ---\n";
-                        cout << "Product Name: ";
-                        getline(cin, name);
-                        cout << "Price: ";
-                        cin >> price;
-                        cin.ignore();
-                        cout << "Quantity: ";
-                        cin >> quantity;
-                        cin.ignore();
-                        cout << "Description: ";
-                        getline(cin, desc);
+                        cout << "Enter full request line to approve (copy-paste exactly):\n";
+                        getline(cin, productLine);
 
-                        productLine = "add," + name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
+                        ofstream approvedFile("approvedReq.txt", ios::app);
+                        approvedFile << productLine << endl;
+                        approvedFile.close();
 
-                        outFile.open("approvedReq.txt", ios::app);
-                        outFile << productLine << endl;
-                        outFile.close();
-
-                        outFile.open("productList.txt", ios::app);
-                        outFile << productLine << endl;
-                        outFile.close();
+                        string productEntry = productLine.substr(4); 
+                        ofstream prodFile("productList.txt", ios::app);
+                        prodFile << productEntry << endl;
+                        prodFile.close();
 
                         deleteLine("productReq.txt", productLine);
+
+                        cout << "\nProduct approved and added.\n";
                         break;
                     }
+
 
                     case 2: {
                         cout << "\n--- Delete Product ---\n";
@@ -1065,7 +1061,7 @@ void viewTransactions () {
 }
 
 
-int main() {
+void adminMain() {
     int choice;
 
     do {

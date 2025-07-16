@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 #include <vector>
 
 using namespace std;
@@ -53,67 +54,201 @@ void reqDeleteProduct() {
     outFile << "delete," << p.name << "," << reason << endl;
 
     outFile.close();
-    cout << "Deletion equested to admin.\n";
+    cout << "Deletion requested to admin.\n";
+}
+
+void reqChangePrice() {
+    vector<Product> productList;
+    ifstream inFile("productList.txt");
+    string line;
+
+    while (getline(inFile, line)) {
+        if (!line.empty()) {
+            Product p;
+            string priceStr, quantityStr;
+            stringstream ss(line);
+
+            getline(ss, p.name, ',');
+            getline(ss, priceStr, ',');
+            getline(ss, quantityStr, ',');
+            getline(ss, p.desc);
+
+            try {
+                p.price = stod(priceStr);
+                p.quantity = stoi(quantityStr);
+            } catch (...) {
+                continue;
+            }
+
+            productList.push_back(p);
+        }
+    }
+    inFile.close();
+
+    if (productList.empty()) {
+        cout << "No products available to edit.\n";
+        return;
+    }
+
+    cout << "\n--- Choose a product to edit ---\n";
+    for (size_t i = 0; i < productList.size(); ++i) {
+        cout << i + 1 << ". " << productList[i].name
+             << " (Current Stock: " << productList[i].quantity << ")\n";
+    }
+
+    int choice;
+    cout << "Enter product number to edit: ";
+    cin >> choice;
+
+    if (choice < 1 || choice > productList.size()) {
+        cout << "Invalid choice.\n";
+        return;
+    }
+
+    int newQty;
+    cout << "Enter new stock quantity for " << productList[choice - 1].name << ": ";
+    cin >> newQty;
+
+    productList[choice - 1].quantity = newQty;
+
+    ofstream outFile("productList.txt");
+    for (const Product& p : productList) {
+        outFile << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
+    }
+    outFile.close();
+
+    cout << "Stock updated successfully.\n";
 }
 
 void viewRequests() {
     ifstream inFile("productReq.txt");
     string line;
 
+    if (!inFile) {
+        cout << "\nERROR: Could not open productReq.txt\n";
+        return;
+    }
+
     cout << "\n--- Product Request(s) ---\n";
 
-    vector<string> addRequests;
-    vector<string> deleteRequests;
-    vector<string> changePriceRequests;
-    vector<string> cashoutRequests;
+    bool hasAdd = false, hasDelete = false, hasChange = false, hasCashout = false;
 
+    inFile.clear();
+    inFile.seekg(0);
     while (getline(inFile, line)) {
-        size_t pos = line.find(',');
-        if (pos == string::npos) continue;
-
-        string type = line.substr(0, pos);
-        string content = line.substr(pos + 1);
-
-        if (type == "add") {
-            addRequests.push_back(content);
-        } else if (type == "delete") {
-            deleteRequests.push_back(content);
-        } else if (type == "change_price") {
-            changePriceRequests.push_back(content);
-        } else if (type == "cashout") {
-            cashoutRequests.push_back(content);
+        if (line.substr(0, 4) == "add,") {
+            if (!hasAdd) {
+                cout << "\n[Add Product Requests]\n";
+                hasAdd = true;
+            }
+            cout << line.substr(4) << endl;
         }
     }
 
-    if (!addRequests.empty()) {
-        cout << "\n[Add Product Requests]\n";
-        for (const string& req : addRequests)
-            cout << req << endl;
+    inFile.clear();
+    inFile.seekg(0);
+    while (getline(inFile, line)) {
+        if (line.substr(0, 7) == "delete,") {
+            if (!hasDelete) {
+                cout << "\n[Delete Product Requests]\n";
+                hasDelete = true;
+            }
+            cout << line.substr(7) << endl;
+        }
     }
 
-    if (!deleteRequests.empty()) {
-        cout << "\n[Delete Product Requests]\n";
-        for (const string& req : deleteRequests)
-            cout << req << endl;
+    inFile.clear();
+    inFile.seekg(0);
+    while (getline(inFile, line)) {
+        if (line.substr(0, 13) == "change_price,") {
+            if (!hasChange) {
+                cout << "\n[Change Price Requests]\n";
+                hasChange = true;
+            }
+            cout << line.substr(13) << endl;
+        }
     }
 
-    if (!changePriceRequests.empty()) {
-        cout << "\n[Change Price Requests]\n";
-        for (const string& req : changePriceRequests)
-            cout << req << endl;
+    inFile.clear();
+    inFile.seekg(0);
+    while (getline(inFile, line)) {
+        if (line.substr(0, 8) == "cashout,") {
+            if (!hasCashout) {
+                cout << "\n[Cashout Requests]\n";
+                hasCashout = true;
+            }
+            cout << line.substr(8) << endl;
+        }
     }
 
-    if (!cashoutRequests.empty()) {
-        cout << "\n[Cashout Requests]\n";
-        for (const string& req : cashoutRequests)
-            cout << req << endl;
-    }
-
-    if (addRequests.empty() && deleteRequests.empty() && changePriceRequests.empty() && cashoutRequests.empty()) {
+    if (!hasAdd && !hasDelete && !hasChange && !hasCashout) {
         cout << "No requests found.\n";
     }
 
     inFile.close();
+}
+
+void editStock() {
+    vector<Product> productList;
+    ifstream inFile("productList.txt");
+    string line;
+
+    while (getline(inFile, line)) {
+        if (!line.empty()) {
+            Product p;
+            string priceStr, quantityStr;
+            stringstream ss(line);
+
+            getline(ss, p.name, ',');
+            getline(ss, priceStr, ',');
+            getline(ss, quantityStr, ',');
+            getline(ss, p.desc);
+
+            try {
+                p.price = stod(priceStr);
+                p.quantity = stoi(quantityStr);
+            } catch (...) {
+                continue;
+            }
+
+            productList.push_back(p);
+        }
+    }
+    inFile.close();
+
+    if (productList.empty()) {
+        cout << "No products available to edit.\n";
+        return;
+    }
+
+    cout << "\n--- Choose a product to edit ---\n";
+    for (size_t i = 0; i < productList.size(); ++i) {
+        cout << i + 1 << ". " << productList[i].name
+             << " (Current Stock: " << productList[i].quantity << ")\n";
+    }
+
+    int choice;
+    cout << "Enter product number to edit: ";
+    cin >> choice;
+
+    if (choice < 1 || choice > productList.size()) {
+        cout << "Invalid choice.\n";
+        return;
+    }
+
+    int newQty;
+    cout << "Enter new stock quantity for " << productList[choice - 1].name << ": ";
+    cin >> newQty;
+
+    productList[choice - 1].quantity = newQty;
+
+    ofstream outFile("productList.txt");
+    for (const Product& p : productList) {
+        outFile << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
+    }
+    outFile.close();
+
+    cout << "Stock updated successfully.\n";
 }
 
 void products() {
@@ -121,17 +256,59 @@ void products() {
 
     do {
         cout << "\n--- Products ---\n";
+
+        ifstream inFile("productList.txt");
+        string line;
+        bool hasProducts = false;
+
+        while (getline(inFile, line)) {
+            if (!line.empty()) {
+                hasProducts = true;
+
+                // Parse using your Product struct
+                Product p;
+                stringstream ss(line);
+                string priceStr, quantityStr;
+
+                getline(ss, p.name, ',');
+                getline(ss, priceStr, ',');
+                getline(ss, quantityStr, ',');
+                getline(ss, p.desc);
+
+                p.price = stod(priceStr);
+                p.quantity = stoi(quantityStr);
+
+                // Display the product
+                cout << "Name: " << p.name
+                     << " | Token Price: " << p.price
+                     << " | Quantity: " << p.quantity
+                     << " | Description: " << p.desc << endl;
+            }
+        }
+
+        if (!hasProducts) {
+            cout << "No products found.\n";
+        }
+
+        inFile.close();
+
         cout << "\n----------------\n";
         cout << "1. Edit Stock\n";
         cout << "2. Back to Home\n";
         cout << "Choice: ";
         cin >> choice;
 
-        switch(choice) {
+        switch (choice) {
             case 1:
-
+                editStock();
                 break;
+            case 2:
+                cout << "Returning to home...\n";
+                break;
+            default:
+                cout << "Invalid choice.\n";
         }
+
     } while (choice != 2);
 }
 
@@ -165,6 +342,7 @@ void requestAdmin() {
                 reqAddProduct();
                 break;
             case 2:
+                reqDeleteProduct();
                 break;
             case 3:
                 break;
@@ -177,7 +355,7 @@ void requestAdmin() {
     } while (choice != 6);
 }
 
-int main() {
+void merchantMain() {
     int choice;
 
     do {
@@ -206,5 +384,4 @@ int main() {
     } while (choice != 5);
 
     cout << "Logging Out...";
-    return 0;
 }
