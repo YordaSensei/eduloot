@@ -853,7 +853,7 @@ void approveMerchantRequests () {
                         cout << "New Description: ";
                         getline(cin, desc);
 
-                        string newLine = "add," + name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
+                        string newLine = name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
 
                         editLine("productList.txt", oldLine, newLine);
                         break;
