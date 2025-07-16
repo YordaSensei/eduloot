@@ -17,6 +17,8 @@ struct Merchant {
     string password;
 };
 
+// HELPER FUNCTIONS -------------------------------------------------------------------------------------------------------------------------------------------
+
 bool isUsernameTaken (const string &accountsFile, const string &usernameToCheck) {
     ifstream file (accountsFile);
     if (!file.is_open()) return false;
@@ -116,7 +118,7 @@ void editLine (const string &filename, const string &targetLine, const string &u
     tempFile.close();
 
     remove(filename.c_str());
-    rename("tempAccounts.txt", filename.c_str());
+    rename("tempFile.txt", filename.c_str());
 
     if (found) {
         cout << "\n-- Edited successfully --\n";
@@ -124,6 +126,63 @@ void editLine (const string &filename, const string &targetLine, const string &u
         cout << "\n-- NOT found --\n";
     }
 }
+
+void updateTotalTokens (int change) {
+    int systemTokens = 0;
+    string line;
+
+    ifstream inFile ("tokensSystem.txt");
+    if (inFile.is_open()) {
+        getline(inFile, line);
+        if (!line.empty()){
+            systemTokens = stoi(line);
+        }
+        inFile.close();
+    } else {
+        cout << "\nERROR opening file...\n";
+    }
+
+    systemTokens += change;
+    if (systemTokens < 0) systemTokens = 0;
+
+    ofstream outFile ("tokensSystem.txt");
+    if(outFile.is_open()) {
+        outFile << systemTokens << endl;
+        outFile.close();
+    } else {
+        cout << "\nERROR opening file...\n";
+    }
+}
+
+void updateTotalMoney (int pesos) {
+    int systemMoney = 0;
+    const int toke_rate = 3;
+    string line;
+
+    ifstream inFile ("moneySystem.txt");
+    if (inFile.is_open()) {
+        getline(inFile, line);
+        if (!line.empty()){
+            systemMoney = stoi(line);
+        }
+        inFile.close();
+    } else {
+        cout << "\nERROR opening file...\n";
+    }
+
+    systemMoney += pesos;
+    if (systemMoney < 0) systemMoney = 0;
+
+    ofstream outFile ("moneySystem.txt");
+    if(outFile.is_open()) {
+        outFile << systemMoney << endl;
+        outFile.close();
+    } else {
+        cout << "\nERROR opening file...\n";
+    }
+}
+
+// MANAGE ACCOUNTS -------------------------------------------------------------------------------------------------------------------------------------
 
 void viewAccounts() {
     int choice;
@@ -469,8 +528,51 @@ void manageAccounts () {
 
 }
 
+// NOTIFICATIONS ------------------------------------------------------------------------------------------------------------------------------------------
 
-//----------------------------------------------------------------------
+void notifications () {
+    cout << "\n--- Viewing Notifications ---\n";
+
+    struct NotificationFile {
+        string title;
+        string filename;
+    };
+
+    NotificationFile notifFiles[] = {
+        {"Product Add Requests", "productReq.txt"},
+        {"Product Delete Requests", "deleteProductReq.txt"},
+        {"Merchant Concerns", "concerns.txt"},
+        {"Merchant Cash Out Requests", "cashout.txt"},
+        {"Emergency Fund Requests", "emergencyfunds.txt"},
+        {"Student Balances", "studentBalance.txt"},
+        {"Student Accomplished Quests", "studentAccomplishedQuests.txt"}
+    };
+
+    for (const auto& notif : notifFiles) {
+        cout << "\n[" << notif.title << "]\n";
+        ifstream file(notif.filename);
+
+        if (!file) {
+            cout << "(No file found: " << notif.filename << ")\n";
+            continue;
+        }
+
+        string line;
+        bool empty = true;
+        while (getline(file, line)) {
+            empty = false;
+            cout << "- " << line << endl;
+        }
+
+        if (empty) {
+            cout << "(No pending entries)\n";
+        }
+
+        file.close();
+    }
+}
+
+// QUESTS --------------------------------------------------------------------------------------------------------------------------------------------------
 
 void viewQuests () {
     ifstream inFile ("quests.txt");
@@ -496,34 +598,62 @@ void approveStudentQuests () {
     string line, student, quest;
     int tokenAmount;
 
+    // Show all completed quests
     cout << "\n--- Quests Completed by Students ---\n";
-    cout << "--------------------------------------\n";
-
     ifstream inFile(readFile);
     while (getline(inFile, line)) {
         cout << line << endl;
     }
-
     inFile.close();
 
-    cout << "--------------------------------\n";
-    cout << "--- Enter Details to Approve ---\n";
-    cout << "Student: ";
-    getline (cin, student);
-    cout << "Quest: ";
-    getline (cin, quest);
+    // Input details for approval
+    cout << "\n--- Enter Details to Approve ---\n";
+    cout << "Student Username: ";
+    getline(cin, student);
+    cout << "Quest Name: ";
+    getline(cin, quest);
     cout << "Token Amount: ";
     cin >> tokenAmount;
     cin.ignore();
 
-    string concat = student + ", " + quest + ", " + to_string(tokenAmount);
-    deleteLine(readFile, concat);
+    string approvedLine = student + ", " + quest + ", " + to_string(tokenAmount);
+    deleteLine(readFile, approvedLine);
 
-    ofstream outFile ("ApprovedQuests.txt", ios::app);
-    outFile << concat << endl;
+    bool found = false;
+    string walletFile = "studentBalance.txt";
+    ifstream walletIn(walletFile);
+    ofstream tempFile("tempBalance.txt");
+    string walletLine;
+
+    while (getline(walletIn, walletLine)) {
+        size_t pos = walletLine.find(',');
+        string username = walletLine.substr(0, pos);
+        int balance = stoi(walletLine.substr(pos + 1));
+
+        if (username == student) {
+            balance += tokenAmount;
+            tempFile << username << ", " << balance << endl;
+            found = true;
+        } else {
+            tempFile << walletLine << endl;
+        }
+    }
+
+    walletIn.close();
+
+    if (!found) {
+        tempFile << student << ", " << tokenAmount << endl;
+    }
+
+    tempFile.close();
+    remove(walletFile.c_str());
+    rename("tempBalance.txt", walletFile.c_str());
+
+    ofstream outFile("ApprovedQuests.txt", ios::app);
+    outFile << approvedLine << endl;
     outFile.close();
 
-    cout << "\nApproved: " << concat << endl;
+    cout << "\nQuest Approved and " << tokenAmount << " tokens added to " << student << "'s wallet.\n";
 }
 
 void createQuest () {
@@ -603,6 +733,8 @@ void questsTab () {
         }
     } while (choice != 5);
 }
+
+// MERHCANT REQUESTS ----------------------------------------------------------------------------------------------------------------------------------------
 
 void approveMerchantRequests () {
     int choice, price, quantity;
@@ -812,6 +944,127 @@ void merchantRequests() {
     } while (choice != 2);
 }
 
+// BANK -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+void bank () {
+    int totalTokens = 0, totalMoney = 0, tokensOut = 0, tokensLeft = 0, topUp;
+    string line;
+    const int tokenRate = 3;
+
+    ifstream tokenFile ("tokensOut.txt");
+    if (tokenFile.is_open()) {
+        while (getline(tokenFile, line)) {
+            size_t pos = line.find(",");
+            if (pos != string::npos) {
+                string tokens = line.substr(pos + 1);
+                int token = stoi(tokens);
+                tokensOut += token;
+            }
+        }
+        tokenFile.close();
+    } else {
+        cout << "\nERROR opening tokensOut.txt\n";
+    }
+
+    ifstream adminFile ("tokensSystem.txt");
+    if (adminFile.is_open()) {
+        while (getline(adminFile, line)) {
+            int token = stoi(line);
+            tokensLeft += token;
+        }
+        adminFile.close();
+    } else {
+        cout << "\nERROR opening adminTokens.txt\n";
+    }
+
+    ifstream moneyFile ("moneySystem.txt");
+    if (adminFile.is_open()) {
+        while (getline(moneyFile, line)) {
+            int money = stoi(line);
+            totalMoney = money;
+        }
+        adminFile.close();
+    } else {
+        cout << "\nERROR opening adminTokens.txt\n";
+    }
+
+    totalTokens = tokensOut + tokensLeft;
+
+    cout << "\n--- BANK SUMMARY ---\n";
+    cout << "Total Tokens (in system):   " << totalTokens << " tokens (P" << totalTokens * tokenRate << ")\n";
+    cout << "Tokens Out:                 " << tokensOut << " tokens (P" << tokensOut * tokenRate << ")\n";
+    cout << "Total Money (in system):    " << "P" << totalMoney << "\n";
+    cout << "-----------------------\n";
+    cout << "Admin Token Reserve:        " << tokensLeft << " tokens (P" << tokensLeft * tokenRate << ")\n";
+
+    int choice;
+    cout << "\nAdd more tokens to the system?\n";
+    cout << "1. Yes\n";
+    cout << "2. No\n";
+    cout << "--------------------------------\n";
+    cout << "Choice: ";
+    cin >> choice;
+
+    if (choice == 1) {
+        cout << "\nEnter number of tokens to add: ";
+        cin >> topUp;
+
+        if (topUp > 0) {
+            updateTotalTokens(topUp);
+            cout << "\nSuccessfully added " << topUp << " tokens (₱" << topUp * tokenRate << ") to the system.\n";
+        } else {
+            cout << "\nInvalid token amount.\n";
+        }
+    } else if (choice == 2) {
+        cout << "\nReturning to dashboard...\n";
+    } else {
+        cout << "\nInvalid choice.\n";
+    }
+}
+
+// TRANSACTIONS ---------------------------------------------------------------------------------------------------------------------------------------------
+
+void viewTransactions () {
+    cout << "\n--- Viewing All Transactions ---\n";
+
+    struct TransactionFile {
+        string title;
+        string filename;
+    };
+
+    TransactionFile transactionFiles[] = {
+        {"Token Purchases", "tokenPurchases.txt"},
+        {"Token Refunds", "tokenRefunds.txt"},
+        {"Token to Cash Conversions", "tokenConversions.txt"},
+        {"Quest Approvals", "ApprovedQuests.txt"},
+        {"Merchant Cash Outs", "cashout.txt"}
+    };
+
+    for (const auto& tx : transactionFiles) {
+        cout << "\n[" << tx.title << "]\n";
+        ifstream file(tx.filename);
+
+        if (!file) {
+            cout << "(No file found: " << tx.filename << ")\n";
+            continue;
+        }
+
+        string line;
+        bool empty = true;
+        while (getline(file, line)) {
+            empty = false;
+            cout << "- " << line << endl;
+        }
+
+        if (empty) {
+            cout << "(No entries found)\n";
+        }
+
+        file.close();
+    }
+}
+
+
 int main() {
     int choice;
 
@@ -821,10 +1074,9 @@ int main() {
         cout << "2. Notifications\n";
         cout << "3. Quests Tab\n";
         cout << "4. Merchant Requests\n";
-        cout << "5. Token Bank\n";
-        cout << "6. Money Bank\n";
-        cout << "7. View Transactions\n";
-        cout << "8. Log Out\n";
+        cout << "5. Bank\n";
+        cout << "6. View Transactions\n";
+        cout << "7. Log Out\n";
         cout << "--------------------------\n";
         cout << "Choice: ";
         cin >> choice;
@@ -834,6 +1086,7 @@ int main() {
                 manageAccounts();
                 break;
             case 2:
+                notifications();
                 break;
             case 3:
                 questsTab();
@@ -842,18 +1095,18 @@ int main() {
                 merchantRequests();
                 break;
             case 5:
+                bank();
                 break;
             case 6:
+                viewTransactions();
                 break;
             case 7:
-                break;
-            case 8:
                 break;
             default:
                 cout << "\nERROR: Invalid Choice!\n";
                 continue;
         }
-    } while (choice != 8);
+    } while (choice != 7);
 
     cout << "\nLogging out...\n";
 }
