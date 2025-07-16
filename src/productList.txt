@@ -292,3 +292,4 @@ add,hg,0,0,
 add,hg,0,0,
 add,hg,0,0,
 add,hg,8,7,hfh
+add,cock,100,5,will get you high (grades)

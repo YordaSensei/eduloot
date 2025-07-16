@@ -85,7 +85,7 @@ void deleteLine (const string &filename, const string &targetLine) {
     rename("tempFile.txt", filename.c_str());
 
     if (found) {
-        cout << "\n-- Deleted successfully --\n";
+        cout << "\n-- Successful --\n";
     } else {
         cout << "\n-- NOT found (check spelling/case) --\n";
     }
@@ -809,7 +809,7 @@ void merchantRequests() {
                 cout << "\nERROR: Invalid choice!\n";
                 continue;
         }
-    } while (choice != 3);
+    } while (choice != 2);
 }
 
 int main() {
