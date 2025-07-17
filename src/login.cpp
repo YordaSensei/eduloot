@@ -6,6 +6,7 @@
 #include "adminMain.cpp"
 #include "merchant.cpp"
 #include "student.cpp"
+#include "admin_helpers.cpp"
 
 using namespace std;
 

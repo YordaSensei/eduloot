@@ -5,18 +5,6 @@
 
 using namespace std;
 
-struct Account {
-    string ciitEmail;       
-    string username;
-    string password;
-};
-
-struct Merchant {
-    string shopname;      
-    string username;
-    string password;
-};
-
 bool isUsernameTaken (const string &accountsFile, const string &usernameToCheck) {
     ifstream file (accountsFile);
     if (!file.is_open()) return false;
@@ -93,14 +81,13 @@ bool deleteLine(const string &filename, const string &targetLine) {
     return found;
 }
 
-
 bool editLine (const string &filename, const string &targetLine, const string &updatedLine) {
     ifstream inFile (filename);
     ofstream tempFile ("tempFile.txt");
 
     if (!inFile || !tempFile) {
     cout << "\nERROR: Failed to access file.\n";
-    return;
+    return false;
     }   
 
     string line;

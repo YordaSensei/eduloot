@@ -3,21 +3,10 @@
 #include <string>
 #include <cstdio>
 
-#include "admin_helpers.cpp"
+#include "admin_helpers.h"
+#include "admin_structs.h"
 
 using namespace std;
-
-struct Account {
-    string ciitEmail;       
-    string username;
-    string password;
-};
-
-struct Merchant {
-    string shopname;      
-    string username;
-    string password;
-};
 
 void approveMerchantRequests() {
     int mainChoice, productChoice;

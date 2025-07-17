@@ -3,7 +3,7 @@
 #include <string>
 #include <cstdio>
 
-#include "admin_helpers.cpp"
+#include "admin_helpers.h"
 
 using namespace std;
 
