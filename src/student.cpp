@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 
 using namespace std;
@@ -59,22 +60,30 @@ void purchase() {
     } while (choice != 3);
 }
 
-void rewards() {
-    int choice;
+void quests () {
+    ifstream inFile ("quests.txt");
+    string line;
 
-    do {
-        cout << "\n--- Tasks ---\n";
-        cout << "\n-------------\n";
-        cout << "1. Tasks Completed\n";
-        cout << "2. Back to Home\n";
-        cout << "Choice: ";
-        cin >> choice;
+    if (!inFile) {
+        cerr << "ERROR: Could not open quests.txt\n";
+        return;
+    }
 
-        switch (choice) {
-            case 1:
-                break;
+    cout << "\n--- Available Quests ---\n";
+    while (getline(inFile, line)) {
+        if (!line.empty()) {
+            string desc, rewardStr;
+            stringstream split(line);
+
+            getline(split, desc, ',');
+            getline(split, rewardStr, ',');
+            
+            cout << "Task: " << desc << " | Reward: " << rewardStr;
         }
-    } while (choice != 2);
+    }
+    cout << "\n------------------------\n";
+
+    inFile.close();
 }
 
 void notification() {
@@ -101,14 +110,14 @@ void transaction() {
     } while (choice != 1);
 }
 
-int main() {
+void studentMain() {
     int choice;
 
     do {
         cout << "\n--- Good day, Student! ---\n";
         cout << "1. Wallet\n";
         cout << "2. Purchase\n";
-        cout << "3. Rewards / Tasks\n";
+        cout << "3. Quests\n";
         cout << "4. Notification\n";
         cout << "5. Transactions\n";
         cout << "6. Request Emergency Fund\n";
@@ -123,6 +132,7 @@ int main() {
             case 2:
                 break;
             case 3:
+                quests();
                 break;
             case 4:
                 break;
@@ -134,5 +144,4 @@ int main() {
     } while (choice != 7);
 
     cout << "Logging Out...";
-    return 0;
 }
