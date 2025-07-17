@@ -60,14 +60,14 @@ bool isEmailTaken (const string &accountsFile, const string &emailToCheck) {
     return false;
 }
 
-void deleteLine (const string &filename, const string &targetLine) {
-    ifstream inFile (filename);
-    ofstream tempFile ("tempFile.txt");
+bool deleteLine(const string &filename, const string &targetLine) {
+    ifstream inFile(filename);
+    ofstream tempFile("tempFile.txt");
 
     if (!inFile || !tempFile) {
-    cout << "\nERROR: Failed to access file.\n";
-    return;
-    }   
+        cout << "\nERROR: Failed to access file.\n";
+        return false;
+    }
 
     string line;
     bool found = false;
@@ -91,9 +91,12 @@ void deleteLine (const string &filename, const string &targetLine) {
     } else {
         cout << "\n-- NOT found (check spelling/case) --\n";
     }
+
+    return found;
 }
 
-void editLine (const string &filename, const string &targetLine, const string &updatedLine) {
+
+bool editLine (const string &filename, const string &targetLine, const string &updatedLine) {
     ifstream inFile (filename);
     ofstream tempFile ("tempFile.txt");
 
@@ -125,6 +128,8 @@ void editLine (const string &filename, const string &targetLine, const string &u
     } else {
         cout << "\n-- NOT found --\n";
     }
+
+    return found;
 }
 
 void updateTotalTokens (int change) {
@@ -735,9 +740,10 @@ void questsTab () {
 
 // MERHCANT REQUESTS ----------------------------------------------------------------------------------------------------------------------------------------
 
-void approveMerchantRequests () {
-    int choice, price, quantity;
-    string file, name, desc;
+void approveMerchantRequests() {
+    int mainChoice, productChoice;
+    string file, name, desc, line;
+    int price, quantity;
     ifstream inFile;
     ofstream outFile;
 
@@ -750,166 +756,198 @@ void approveMerchantRequests () {
         cout << "4. Back\n";
         cout << "------------------------------\n";
         cout << "Choice: ";
-        cin >> choice;
+        cin >> mainChoice;
         cin.ignore();
 
-        switch (choice) {
-            case 1: {
-                cout << "\n--- Product Requests ---\n";
-                cout << "-----------------------------\n";
-                cout << "1. Add Product\n";
-                cout << "2. Delete Product\n";
-                cout << "3. Edit Product\n";
-                cout << "4. Back\n";
-                cout << "------------------------------\n";
-                cout << "Choice: ";
-                cin >> choice;
-                cin.ignore();
+        switch (mainChoice) {
+            case 1: { // PRODUCTS
+                do {
+                    cout << "\n--- Product Requests ---\n";
+                    cout << "-----------------------------\n";
+                    cout << "1. Add Product\n";
+                    cout << "2. Delete Product\n";
+                    cout << "3. Edit Product\n";
+                    cout << "4. Back\n";
+                    cout << "------------------------------\n";
+                    cout << "Choice: ";
+                    cin >> productChoice;
+                    cin.ignore();
 
-                switch (choice) {
-                    case 1: {
-                        string file = "productReq.txt";
-                        string productLine;
-
-                        ifstream inFile(file);
-                        cout << "\n--- Pending Add Product Requests ---\n";
-
-                string productLine;
-                file = "productReq.txt";
-                inFile.open(file);
-
-                cout << "\n--- Pending Product Requests ---\n";
-                        while (getline(inFile, productLine)) {
-                            if (productLine.find("add,") == 0) {
-                                cout << productLine << endl;
+                    cout << "\n--- Pending Product Requests ---\n";
+                            inFile.open("productReq.txt");
+                            while (getline(inFile, line)) {
+                                if (line.find("add,") == 0) {
+                                    cout << line << endl;
+                                }
                             }
+                            inFile.close();
+
+                    switch (productChoice) {
+                        case 1: { // ADD PRODUCT
+                            cout << "\n--- Add Product ---\n";
+                            cout << "Product Name: ";
+                            getline(cin, name);
+                            cout << "Price: ";
+                            cin >> price;
+                            cin.ignore();
+                            cout << "Quantity: ";
+                            cin >> quantity;
+                            cin.ignore();
+                            cout << "Description: ";
+                            getline(cin, desc);
+
+                            string target = "add," + name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
+
+                            if (deleteLine("productReq.txt", target)) {
+                                ofstream outFile("productList.txt", ios::app);
+                                outFile << name << "," << to_string(price) << "," << to_string(quantity) << "," << desc << endl;
+                                outFile.close();
+
+                                ofstream approvedFile("approvedReq.txt", ios::app);
+                                approvedFile << target << endl;
+                                approvedFile.close();
+
+                                cout << "\nProduct approved and added to the product list.\n";
+                            } 
+                            break;
                         }
-                inFile.close();
 
 
-                switch (choice) {
-                    case 1: {
+                        case 2: { // DELETE PRODUCT
+                            cout << "\n--- Delete Product ---\n";
+                            cout << "Product Name: ";
+                            getline(cin, name);
+                            cout << "Price: ";
+                            cin >> price;
+                            cin.ignore();
+                            cout << "Quantity: ";
+                            cin >> quantity;
+                            cin.ignore();
+                            cout << "Description: ";
+                            getline(cin, desc);
 
-                        cout << "\n--- Approve Request ---\n";
-                        cout << "Enter full request line to approve (copy-paste exactly):\n";
-                        getline(cin, productLine);
+                            string target = name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
 
-                        ofstream approvedFile("approvedReq.txt", ios::app);
-                        approvedFile << productLine << endl;
-                        approvedFile.close();
+                            if (deleteLine("productList.txt", target)) {
+                                ofstream approvedFile("approvedReq.txt", ios::app);
+                                approvedFile << target << endl;
+                                approvedFile.close();
+                            }
+                            break;
+                        }
 
-                        string productEntry = productLine.substr(4); 
-                        ofstream prodFile("productList.txt", ios::app);
-                        prodFile << productEntry << endl;
-                        prodFile.close();
+                        case 3: { // EDIT PRODUCT
+                            cout << "\n--- Edit Product ---\n";
+                            cout << "[Old Product Info]\n";
+                            string oldName, oldDesc;
+                            int oldPrice, oldQuantity;
+                            cout << "Name: ";
+                            getline(cin, oldName);
+                            cout << "Price: ";
+                            cin >> oldPrice;
+                            cin.ignore();
+                            cout << "Quantity: ";
+                            cin >> oldQuantity;
+                            cin.ignore();
+                            cout << "Description: ";
+                            getline(cin, oldDesc);
 
-                        deleteLine("productReq.txt", productLine);
+                            string oldLine = oldName + "," + to_string(oldPrice) + "," + to_string(oldQuantity) + "," + oldDesc;
 
-                        cout << "\nProduct approved and added.\n";
-                        break;
+                            cout << "\n[New Product Info]\n";
+                            cout << "New Name: ";
+                            getline(cin, name);
+                            cout << "New Price: ";
+                            cin >> price;
+                            cin.ignore();
+                            cout << "New Quantity: ";
+                            cin >> quantity;
+                            cin.ignore();
+                            cout << "New Description: ";
+                            getline(cin, desc);
+
+                            string newLine = name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
+
+                            if (editLine("productList.txt", oldLine, newLine)) {
+                                ofstream approvedFile("approvedReq.txt", ios::app);
+                                approvedFile << newLine << endl;
+                                approvedFile.close();
+                            }
+                            break;
+                        }
+
+                        case 4:
+                            break;
+
+                        default:
+                            cout << "\nERROR: Invalid product choice!\n";
+                            break;
                     }
-
-
-                    case 2: {
-                        cout << "\n--- Delete Product ---\n";
-                        cout << "Product Name: ";
-                        getline(cin, name);
-                        cout << "Price: ";
-                        cin >> price;
-                        cin.ignore();
-                        cout << "Quantity: ";
-                        cin >> quantity;
-                        cin.ignore();
-                        cout << "Description: ";
-                        getline(cin, desc);
-
-                        string target = "add," + name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
-                        deleteLine("productList.txt", target);
-                        break;
-                    }
-
-                    case 3: {
-                        cout << "\n--- Edit Product ---\n";
-                        cout << "[Old Product Info]\n";
-                        string oldName, oldDesc;
-                        int oldPrice, oldQuantity;
-                        cout << "Name: ";
-                        getline(cin, oldName);
-                        cout << "Price: ";
-                        cin >> oldPrice;
-                        cin.ignore();
-                        cout << "Quantity: ";
-                        cin >> oldQuantity;
-                        cin.ignore();
-                        cout << "Description: ";
-                        getline(cin, oldDesc);
-
-                        string oldLine = "add," + oldName + "," + to_string(oldPrice) + "," + to_string(oldQuantity) + "," + oldDesc;
-
-                        cout << "\n[New Product Info]\n";
-                        cout << "New Name: ";
-                        getline(cin, name);
-                        cout << "New Price: ";
-                        cin >> price;
-                        cin.ignore();
-                        cout << "New Quantity: ";
-                        cin >> quantity;
-                        cin.ignore();
-                        cout << "New Description: ";
-                        getline(cin, desc);
-
-                        string newLine = name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
-
-                        editLine("productList.txt", oldLine, newLine);
-                        break;
-                    }
-                }
+                } while (productChoice != 4);
                 break;
             }
 
-            case 2: {
-                string concernLine, merchant;
-                file = "concerns.txt";
-                inFile.open(file);
-
+            case 2: { // CONCERNS
+                string concernLine;
+                inFile.open("concerns.txt");
                 cout << "\n--- Pending Merchant Concerns ---\n";
                 while (getline(inFile, concernLine)) {
                     cout << concernLine << endl;
                 }
                 inFile.close();
 
-                cout << "\n--- Approve Concern ---\n";
-                cout << "Enter full concern line to approve (copy-paste or retype):\n";
+                cout << "\nEnter full concern line to approve:\n";
                 getline(cin, concernLine);
 
                 outFile.open("approvedReq.txt", ios::app);
                 outFile << "concern," + concernLine << endl;
                 outFile.close();
 
-                deleteLine("concerns.txt", concernLine);
+                ifstream inFile5("concerns.txt");
+                ofstream tempFile("tempConcerns.txt");
+                while (getline(inFile5, line)) {
+                    if (line != concernLine) {
+                        tempFile << line << endl;
+                    }
+                }
+                inFile5.close();
+                tempFile.close();
+                remove("concerns.txt");
+                rename("tempConcerns.txt", "concerns.txt");
+
+                cout << "\nConcern approved.\n";
                 break;
             }
 
-            case 3: {
+            case 3: { // CASH OUT
                 string cashoutLine;
-                file = "cashout.txt";
-                inFile.open(file);
-
+                inFile.open("cashout.txt");
                 cout << "\n--- Pending Cash Out Requests ---\n";
                 while (getline(inFile, cashoutLine)) {
                     cout << cashoutLine << endl;
                 }
                 inFile.close();
 
-                cout << "\n--- Approve Cash Out ---\n";
-                cout << "Enter full cash out line to approve (copy-paste or retype):\n";
+                cout << "\nEnter full cash out line to approve:\n";
                 getline(cin, cashoutLine);
 
                 outFile.open("approvedReq.txt", ios::app);
                 outFile << "cashout," + cashoutLine << endl;
                 outFile.close();
 
-                deleteLine("cashout.txt", cashoutLine);
+                ifstream inFile6("cashout.txt");
+                ofstream tempFile("tempCashout.txt");
+                while (getline(inFile6, line)) {
+                    if (line != cashoutLine) {
+                        tempFile << line << endl;
+                    }
+                }
+                inFile6.close();
+                tempFile.close();
+                remove("cashout.txt");
+                rename("tempCashout.txt", "cashout.txt");
+
+                cout << "\nCash out approved.\n";
                 break;
             }
 
@@ -917,12 +955,13 @@ void approveMerchantRequests () {
                 break;
 
             default:
-                cout << "\nERROR: Invalid choice!\n";
+                cout << "\nERROR: Invalid main choice!\n";
                 break;
         }
 
-    } while (choice != 4);
+    } while (mainChoice != 4);
 }
+
 
 void merchantRequests() {
     int choice;
