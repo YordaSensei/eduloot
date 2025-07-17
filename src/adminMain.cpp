@@ -31,7 +31,7 @@ bool isUsernameTaken (const string &accountsFile, const string &usernameToCheck)
         size_t pos2 = line.find(',', pos1 + 1);
         if (pos2 == string::npos) continue;
 
-        string username = line.substr(pos1 + 2, pos2 - pos1 - 2);
+        string username = line.substr(pos1 + 1, pos2 - pos1 - 1);
         
         if (username == usernameToCheck) {
             return true;
@@ -156,7 +156,6 @@ void updateTotalTokens (int change) {
 
 void updateTotalMoney (int pesos) {
     int systemMoney = 0;
-    const int toke_rate = 3;
     string line;
 
     ifstream inFile ("moneySystem.txt");
@@ -167,7 +166,7 @@ void updateTotalMoney (int pesos) {
         }
         inFile.close();
     } else {
-        cout << "\nERROR opening file...\n";
+        cout << "\nERROR opening moneySystem.txt...\n";
     }
 
     systemMoney += pesos;
@@ -178,7 +177,7 @@ void updateTotalMoney (int pesos) {
         outFile << systemMoney << endl;
         outFile.close();
     } else {
-        cout << "\nERROR opening file...\n";
+        cout << "\nERROR opening moneySystem.txt...\n";
     }
 }
 
@@ -307,7 +306,7 @@ void createAccount() {
 
                 accountsFile.open(filename, ios::app);
                 if (accountsFile.is_open()) {
-                    accountsFile << acc.ciitEmail << ", " << acc.username << ", " << acc.password << endl;
+                    accountsFile << acc.ciitEmail << "," << acc.username << "," << acc.password << endl;
                     accountsFile.close();
                     cout << "\nAccount created successfully!\n";
                 } else {
@@ -349,7 +348,7 @@ void createAccount() {
                 getline (cin, shop.password);
 
                 if (accountsFile.is_open()) {
-                    accountsFile << shop.shopname << ", " << shop.username << ", " << shop.password << endl;
+                    accountsFile << shop.shopname << "," << shop.username << "," << shop.password << endl;
                     accountsFile.close();
                     cout << "\nShop created successfully!\n";
                 } else {
@@ -407,7 +406,7 @@ void deleteAccount() {
                 if (choice == 3)filename = "merchantAccounts.txt"; 
                 if (choice == 4)filename = "parentAccounts.txt"; 
             
-                string concat = emailOrShop + ", " + username + ", " + password;
+                string concat = emailOrShop + "," + username + "," + password;
                 deleteLine(filename, concat);
                 break;
             }
@@ -458,7 +457,7 @@ void editAccount () {
                 cout << "Password: ";
                 getline(cin, findpassword);
 
-                string oldDetails = findemailOrShop + ", " + findusername + ", " + findpassword;
+                string oldDetails = findemailOrShop + "," + findusername + "," + findpassword;
 
                 cout << "\n-- Enter New Account Details --\n";
 
@@ -473,7 +472,7 @@ void editAccount () {
                 cout << "Password: ";
                 getline(cin, password);
 
-                string newDetails = emailOrShop + ", " + username + ", " + password;
+                string newDetails = emailOrShop + "," + username + "," + password;
 
                 editLine (filename, oldDetails, newDetails);
                 break;
@@ -616,7 +615,7 @@ void approveStudentQuests () {
     cin >> tokenAmount;
     cin.ignore();
 
-    string approvedLine = student + ", " + quest + ", " + to_string(tokenAmount);
+    string approvedLine = student + "," + quest + "," + to_string(tokenAmount);
     deleteLine(readFile, approvedLine);
 
     bool found = false;
@@ -632,7 +631,7 @@ void approveStudentQuests () {
 
         if (username == student) {
             balance += tokenAmount;
-            tempFile << username << ", " << balance << endl;
+            tempFile << username << "," << balance << endl;
             found = true;
         } else {
             tempFile << walletLine << endl;
@@ -642,7 +641,7 @@ void approveStudentQuests () {
     walletIn.close();
 
     if (!found) {
-        tempFile << student << ", " << tokenAmount << endl;
+        tempFile << student << "," << tokenAmount << endl;
     }
 
     tempFile.close();
@@ -668,7 +667,7 @@ void createQuest () {
     cin >> tokenAmount;
     cin.ignore();
 
-    string concat = quest + ", " + to_string(tokenAmount);
+    string concat = quest + "," + to_string(tokenAmount);
 
     ofstream outFile("quests.txt", ios::app);
     if (!outFile) {
@@ -692,7 +691,7 @@ void deleteQuest () {
     cout << "Enter Token Amount: ";
     cin >> tokenAmount;
 
-    string concat = quest + ", " + to_string(tokenAmount);
+    string concat = quest + "," + to_string(tokenAmount);
     deleteLine(filename, concat);
 }
 
@@ -774,12 +773,22 @@ void approveMerchantRequests () {
 
                         ifstream inFile(file);
                         cout << "\n--- Pending Add Product Requests ---\n";
+
+                string productLine;
+                file = "productReq.txt";
+                inFile.open(file);
+
+                cout << "\n--- Pending Product Requests ---\n";
                         while (getline(inFile, productLine)) {
                             if (productLine.find("add,") == 0) {
                                 cout << productLine << endl;
                             }
                         }
-                        inFile.close();
+                inFile.close();
+
+
+                switch (choice) {
+                    case 1: {
 
                         cout << "\n--- Approve Request ---\n";
                         cout << "Enter full request line to approve (copy-paste exactly):\n";
