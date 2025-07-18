@@ -1,17 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <sstream>
-#include <vector>
+#include <string>
 
 using namespace std;
-
-struct Product {
-    string name;
-    double price;
-    int quantity;
-    string desc;
-};
 
 void reqAddProduct(string email) {
     ofstream outFile("productReq.txt", ios::app);
@@ -31,7 +23,7 @@ void reqAddProduct(string email) {
     cin.ignore();
     getline(cin, p.desc);
 
-    outFile << email << "add," << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
+    outFile << email << ",add," << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
 
     outFile.close();
     cout << "Product requested to admin.\n";
@@ -120,12 +112,6 @@ void reqChangePrice(string email) {
     cout << "Stock updated successfully.\n";
 }
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-using namespace std;
-
 void viewRequests() {
     ifstream inFile("productReq.txt");
     string line;
@@ -205,141 +191,6 @@ void viewRequests() {
     }
 }
 
-void editStock() {
-    vector<Product> productList;
-    ifstream inFile("productList.txt");
-    string line;
-
-    while (getline(inFile, line)) {
-        if (!line.empty()) {
-            Product p;
-            string priceStr, quantityStr;
-            stringstream ss(line);
-
-            getline(ss, p.name, ',');
-            getline(ss, priceStr, ',');
-            getline(ss, quantityStr, ',');
-            getline(ss, p.desc);
-
-            try {
-                p.price = stod(priceStr);
-                p.quantity = stoi(quantityStr);
-            } catch (...) {
-                continue;
-            }
-
-            productList.push_back(p);
-        }
-    }
-    inFile.close();
-
-    if (productList.empty()) {
-        cout << "No products available to edit.\n";
-        return;
-    }
-
-    cout << "\n--- Choose a product to edit ---\n";
-    for (size_t i = 0; i < productList.size(); ++i) {
-        cout << i + 1 << ". " << productList[i].name
-             << " (Current Stock: " << productList[i].quantity << ")\n";
-    }
-
-    int choice;
-    cout << "Enter product number to edit: ";
-    cin >> choice;
-
-    if (choice < 1 || choice > productList.size()) {
-        cout << "Invalid choice.\n";
-        return;
-    }
-
-    int newQty;
-    cout << "Enter new stock quantity for " << productList[choice - 1].name << ": ";
-    cin >> newQty;
-
-    productList[choice - 1].quantity = newQty;
-
-    ofstream outFile("productList.txt");
-    for (const Product& p : productList) {
-        outFile << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
-    }
-    outFile.close();
-
-    cout << "Stock updated successfully.\n";
-}
-
-void products() {
-    int choice;
-
-    do {
-        cout << "\n--- Products ---\n";
-
-        ifstream inFile("productList.txt");
-        string line;
-        bool hasProducts = false;
-
-        while (getline(inFile, line)) {
-            if (!line.empty()) {
-                hasProducts = true;
-
-                // Parse using your Product struct
-                Product p;
-                stringstream ss(line);
-                string priceStr, quantityStr;
-
-                getline(ss, p.name, ',');
-                getline(ss, priceStr, ',');
-                getline(ss, quantityStr, ',');
-                getline(ss, p.desc);
-
-                p.price = stod(priceStr);
-                p.quantity = stoi(quantityStr);
-
-                // Display the product
-                cout << "Name: " << p.name
-                     << " | Token Price: " << p.price
-                     << " | Quantity: " << p.quantity
-                     << " | Description: " << p.desc << endl;
-            }
-        }
-
-        if (!hasProducts) {
-            cout << "No products found.\n";
-        }
-
-        inFile.close();
-
-        cout << "\n----------------\n";
-        cout << "1. Edit Stock\n";
-        cout << "2. Back to Home\n";
-        cout << "Choice: ";
-        cin >> choice;
-
-        switch (choice) {
-            case 1:
-                editStock();
-                break;
-            case 2:
-                cout << "Returning to home...\n";
-                break;
-            default:
-                cout << "Invalid choice.\n";
-        }
-
-    } while (choice != 2);
-}
-
-void sales() {
-    int choice;
-
-    do {
-        cout << "\n--- Sales ---\n";
-        cout << "1. View Total Sales\n";
-        cout << "2. Transactions\n";
-        cout << "3. Back to Home\n";
-    } while (choice != 3);
-}
-
 void requestAdmin(string email) {
     int choice;
 
@@ -370,35 +221,4 @@ void requestAdmin(string email) {
                 break;
         }
     } while (choice != 6);
-}
-
-void merchantMain(string email) {
-    int choice;
-
-    do {
-        cout << "\n--- Good day, " << email << "! ---\n";
-        cout << "1. Products\n";
-        cout << "2. Sales\n";
-        cout << "3. Request To Admin\n";
-        cout << "4. QR Code\n";
-        cout << "5. Log Out\n";
-        cout << "Choice: ";
-        cin >> choice;
-
-        switch(choice) {
-            case 1:
-                products();
-                break;
-            case 2:
-                sales();
-                break;
-            case 3:
-                requestAdmin(email); 
-                break;
-            case 4:
-                break;
-        }
-    } while (choice != 5);
-
-    cout << "Logging Out...";
 }

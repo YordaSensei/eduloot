@@ -4,7 +4,7 @@
 #include <string>
 
 #include "adminMain.cpp"
-#include "merchant.cpp"
+#include "merchantMain.cpp"
 #include "student.cpp"
 #include "admin_helpers.cpp"
 

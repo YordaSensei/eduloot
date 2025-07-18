@@ -1,1 +1,3 @@
 EduGate,add,Kiosk,200,3,RFID Kiosk System
+EduGate,add,Chocolate,5,40,Yum
+EduGate,add,Testing,10,4,mhm
