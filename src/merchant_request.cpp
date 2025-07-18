@@ -30,7 +30,33 @@ void reqAddProduct(string email) {
 }
 
 void reqDeleteProduct(string email) {
+    vector<Product> productList;
+    ifstream inFile("productList.txt");
     string reason;
+
+    while (getline(inFile, line)) {
+        if (!line.empty()) {
+            Product p;
+            string priceStr, quantityStr, store;
+            stringstream ss(line);
+
+            getline(ss, store, ',');
+            getline(ss, p.name, ',');
+            getline(ss, priceStr, ',');
+            getline(ss, quantityStr, ',');
+            getline(ss, p.desc);
+
+            try {
+                p.price = stod(priceStr);
+                p.quantity = stoi(quantityStr);
+            } catch (...) {
+                continue;
+            }
+
+            productList.push_back(p);
+        }
+    }
+    inFile.close();
 
     ofstream outFile("productReq.txt", ios::app);
     Product p;
@@ -43,7 +69,7 @@ void reqDeleteProduct(string email) {
     cin.ignore();
     getline(cin, reason);
 
-    outFile << email << "delete," << p.name << "," << reason << endl;
+    outFile << email << ",delete," << p.name << "," << reason << endl;
 
     outFile.close();
     cout << "Deletion requested to admin.\n";
