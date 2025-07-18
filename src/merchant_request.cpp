@@ -32,7 +32,11 @@ void reqAddProduct(string email) {
 void reqDeleteProduct(string email) {
     vector<Product> productList;
     ifstream inFile("productList.txt");
+<<<<<<< Updated upstream
     string line, reason;
+=======
+    string reason, line;
+>>>>>>> Stashed changes
 
     while (getline(inFile, line)) {
         if (!line.empty()) {

@@ -54,38 +54,40 @@ void approveMerchantRequests() {
                     cin >> productChoice;
                     cin.ignore();
 
-                    vector<Products> productReq;
-                    inFile.open("productReq.txt");
-                            while (getline(inFile, line)) {
-                                if (!line.empty()) {
-                                    Products p;
-                                    string priceStr, quantityStr;
-                                    stringstream ss(line);
+                   vector<Products> productReq;
+                    ifstream inFile("productReq.txt");
+                    string line;
 
-                                    getline(ss, p.shopName, ',');
-                                    getline(ss, p.reqType, ',');
-                                    getline(ss, p.name, ',');
-                                    getline(ss, priceStr, ',');
-                                    getline(ss, quantityStr, ',');
-                                    getline(ss, p.desc);
+                    while (getline(inFile, line)) {
+                        if (!line.empty()) {
+                            string priceStr, quantityStr;
+                            Products p;
+                            stringstream ss(line);
 
-                                    try {
-                                        p.price = stod(priceStr);
-                                        p.quantity =  stoi(quantityStr);
-                                    } catch (...) {
-                                        continue;
-                                    }
+                            getline(ss, p.shopName, ',');
+                            getline(ss, p.reqType, ',');
+                            getline(ss, p.name, ',');
 
-                                    productReq.push_back(p);
+                            if (p.reqType == "delete") {
+                                getline(ss, p.desc);
+                                p.price = 0.0;
+                                p.quantity = 0;
+                            } else {
+                                getline(ss, priceStr, ',');
+                                getline(ss, quantityStr, ',');
+                                getline(ss, p.desc);
+
+                                try {
+                                    p.price = stod(priceStr);
+                                    p.quantity = stoi(quantityStr);
+                                } catch (...) {
+                                    continue; 
                                 }
                             }
-                        inFile.close();
 
-                        if (productReq.empty()) {
-                            cout << "\n-- No product requests --\n";
-                            break;
+                            productReq.push_back(p);
                         }
-                    
+                    }
                     inFile.close();
 
                     cout << "\n--- Pending Product Requests ---\n";
@@ -94,12 +96,14 @@ void approveMerchantRequests() {
                        case 1: {
                             cout << "\n--- Pending [Add] Product Requests ---\n";
                             for (size_t i = 0; i < productReq.size(); i++) {
+                                if (productReq[i].reqType == "add") {
                                 cout << i + 1 << ". " << productReq[i].shopName << " | "
                                     << productReq[i].reqType << " | "
                                     << productReq[i].name << " | "
                                     << productReq[i].price << " | "
                                     << productReq[i].quantity << " | "
                                     << productReq[i].desc << endl;
+                                }
                             }
 
                             cout << "\nEnter request number: ";
@@ -141,12 +145,12 @@ void approveMerchantRequests() {
                         case 2: {
                             cout << "\n--- Pending [Delete] Product Requests ---\n";
                             for (size_t i = 0; i < productReq.size(); i++) {
-                                cout << i + 1 << ". " << productReq[i].shopName << " | "
-                                    << productReq[i].reqType << " | "
-                                    << productReq[i].name << " | "
-                                    << productReq[i].price << " | "
-                                    << productReq[i].quantity << " | "
-                                    << productReq[i].desc << endl;
+                                if (productReq[i].reqType == "delete") {
+                                    cout << i + 1 << ". " << productReq[i].shopName << " | "
+                                        << productReq[i].reqType << " | "
+                                        << productReq[i].name << " | "
+                                        << productReq[i].desc << endl;
+                                }
                             }
 
                             cout << "Enter request number: ";
@@ -155,20 +159,35 @@ void approveMerchantRequests() {
 
                             if (index <= 0 || index > productReq.size()) break;
 
-                            Products p = productReq[index - 1];
+                            Products p = productReq[index - 1]; 
 
                             if (p.reqType != "delete") {
                                 cout << "Selected request is not a 'delete' request.\n";
                                 break;
                             }
 
-                            ostringstream priceStream;
-                            priceStream << fixed << setprecision(2) << p.price;
-                            string priceStr = priceStream.str();
+                            string targetProduct;
+                            ifstream listFile("productList.txt");
+                            string line;
+                            while (getline(listFile, line)) {
+                                stringstream ss(line);
+                                string shop, name;
+                                getline(ss, shop, ',');
+                                getline(ss, name, ',');
 
-                            string targetProduct = p.shopName + "," + p.name + "," + priceStr + "," + to_string(p.quantity) + "," + p.desc;
-                            string targetRequest = p.shopName + "," + p.reqType + "," + p.name + "," + priceStr + "," + to_string(p.quantity) + "," + p.desc;
+                                if (shop == p.shopName && name == p.name) {
+                                    targetProduct = line;
+                                    break;
+                                }
+                            }
+                            listFile.close();
 
+                            if (targetProduct.empty()) {
+                                cout << "Matching product not found in productList.txt.\n";
+                                break;
+                            }
+
+                            string targetRequest = p.shopName + "," + p.reqType + "," + p.name + "," + p.desc;
 
                             if (deleteLine("productList.txt", targetProduct) && deleteLine("productReq.txt", targetRequest)) {
                                 ofstream approvedFile("approvedReq.txt", ios::app);
@@ -183,12 +202,14 @@ void approveMerchantRequests() {
                        case 3: {
                             cout << "\n--- Pending 'Edit' Product Requests ---\n";
                             for (size_t i = 0; i < productReq.size(); i++) {
+                                if (productReq[i].reqType == "edit") {
                                 cout << i + 1 << ". " << productReq[i].shopName << " | "
                                     << productReq[i].reqType << " | "
                                     << productReq[i].name << " | "
                                     << productReq[i].price << " | "
                                     << productReq[i].quantity << " | "
                                     << productReq[i].desc << endl;
+                                }
                             }
 
                             cout << "Enter request number: ";
