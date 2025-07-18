@@ -13,7 +13,7 @@ struct Product {
     string desc;
 };
 
-void reqAddProduct() {
+void reqAddProduct(string email) {
     ofstream outFile("productReq.txt", ios::app);
     Product p;
 
@@ -31,13 +31,13 @@ void reqAddProduct() {
     cin.ignore();
     getline(cin, p.desc);
 
-    outFile << "add," << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
+    outFile << email << "add," << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
 
     outFile.close();
     cout << "Product requested to admin.\n";
 }
 
-void reqDeleteProduct() {
+void reqDeleteProduct(string email) {
     string reason;
 
     ofstream outFile("productReq.txt", ios::app);
@@ -51,13 +51,13 @@ void reqDeleteProduct() {
     cin.ignore();
     getline(cin, reason);
 
-    outFile << "delete," << p.name << "," << reason << endl;
+    outFile << email << "delete," << p.name << "," << reason << endl;
 
     outFile.close();
     cout << "Deletion requested to admin.\n";
 }
 
-void reqChangePrice() {
+void reqChangePrice(string email) {
     vector<Product> productList;
     ifstream inFile("productList.txt");
     string line;
@@ -113,12 +113,18 @@ void reqChangePrice() {
 
     ofstream outFile("productList.txt");
     for (const Product& p : productList) {
-        outFile << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
+        outFile << email << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
     }
     outFile.close();
 
     cout << "Stock updated successfully.\n";
 }
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+using namespace std;
 
 void viewRequests() {
     ifstream inFile("productReq.txt");
@@ -129,63 +135,74 @@ void viewRequests() {
         return;
     }
 
-    cout << "\n--- Product Request(s) ---\n";
+    vector<string> addRequests;
+    vector<string> deleteRequests;
+    vector<string> changePriceRequests;
+    vector<string> cashoutRequests;
 
-    bool hasAdd = false, hasDelete = false, hasChange = false, hasCashout = false;
-
-    inFile.clear();
-    inFile.seekg(0);
     while (getline(inFile, line)) {
-        if (line.substr(0, 4) == "add,") {
-            if (!hasAdd) {
-                cout << "\n[Add Product Requests]\n";
-                hasAdd = true;
-            }
-            cout << line.substr(4) << endl;
-        }
-    }
+        stringstream ss(line);
+        string email, action, name, price, quantity, desc;
 
-    inFile.clear();
-    inFile.seekg(0);
-    while (getline(inFile, line)) {
-        if (line.substr(0, 7) == "delete,") {
-            if (!hasDelete) {
-                cout << "\n[Delete Product Requests]\n";
-                hasDelete = true;
-            }
-            cout << line.substr(7) << endl;
-        }
-    }
+        getline(ss, email, ',');
+        getline(ss, action, ',');
+        getline(ss, name, ',');
+        getline(ss, price, ',');
+        getline(ss, quantity, ',');
+        getline(ss, desc);
 
-    inFile.clear();
-    inFile.seekg(0);
-    while (getline(inFile, line)) {
-        if (line.substr(0, 13) == "change_price,") {
-            if (!hasChange) {
-                cout << "\n[Change Price Requests]\n";
-                hasChange = true;
-            }
-            cout << line.substr(13) << endl;
-        }
-    }
+        string formatted = "Requested by: " + email +
+                           "\n  Product: " + name +
+                           "\n  Price: " + price +
+                           "\n  Quantity: " + quantity +
+                           "\n  Description: " + desc + "\n";
 
-    inFile.clear();
-    inFile.seekg(0);
-    while (getline(inFile, line)) {
-        if (line.substr(0, 8) == "cashout,") {
-            if (!hasCashout) {
-                cout << "\n[Cashout Requests]\n";
-                hasCashout = true;
-            }
-            cout << line.substr(8) << endl;
+        if (action == "add") {
+            addRequests.push_back(formatted);
+        } else if (action == "delete") {
+            deleteRequests.push_back(formatted);
+        } else if (action == "change_price") {
+            changePriceRequests.push_back(formatted);
+        } else if (action == "cashout") {
+            cashoutRequests.push_back(formatted);
         }
-    }
-
-    if (!hasAdd && !hasDelete && !hasChange && !hasCashout) {
-        cout << "No requests found.\n";
     }
 
     inFile.close();
+
+    cout << "\n--- Product Request(s) ---\n";
+
+    if (!addRequests.empty()) {
+        cout << "\n[Add Product Requests]\n";
+        for (const string& req : addRequests) {
+            cout << req << endl;
+        }
+    }
+
+    if (!deleteRequests.empty()) {
+        cout << "\n[Delete Product Requests]\n";
+        for (const string& req : deleteRequests) {
+            cout << req << endl;
+        }
+    }
+
+    if (!changePriceRequests.empty()) {
+        cout << "\n[Change Price Requests]\n";
+        for (const string& req : changePriceRequests) {
+            cout << req << endl;
+        }
+    }
+
+    if (!cashoutRequests.empty()) {
+        cout << "\n[Cashout Requests]\n";
+        for (const string& req : cashoutRequests) {
+            cout << req << endl;
+        }
+    }
+
+    if (addRequests.empty() && deleteRequests.empty() && changePriceRequests.empty() && cashoutRequests.empty()) {
+        cout << "No requests found.\n";
+    }
 }
 
 void editStock() {
@@ -323,7 +340,7 @@ void sales() {
     } while (choice != 3);
 }
 
-void requestAdmin() {
+void requestAdmin(string email) {
     int choice;
 
     do {
@@ -339,10 +356,10 @@ void requestAdmin() {
 
         switch(choice) {
             case 1:
-                reqAddProduct();
+                reqAddProduct(email);
                 break;
             case 2:
-                reqDeleteProduct();
+                reqDeleteProduct(email);
                 break;
             case 3:
                 break;
@@ -355,11 +372,11 @@ void requestAdmin() {
     } while (choice != 6);
 }
 
-void merchantMain() {
+void merchantMain(string email) {
     int choice;
 
     do {
-        cout << "\n--- Good day, Merchant! ---\n";
+        cout << "\n--- Good day, " << email << "! ---\n";
         cout << "1. Products\n";
         cout << "2. Sales\n";
         cout << "3. Request To Admin\n";
@@ -376,7 +393,7 @@ void merchantMain() {
                 sales();
                 break;
             case 3:
-                requestAdmin(); 
+                requestAdmin(email); 
                 break;
             case 4:
                 break;

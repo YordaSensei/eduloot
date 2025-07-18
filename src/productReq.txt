@@ -1,0 +1,1 @@
+EduGate,add,Kiosk,200,3,RFID Kiosk System

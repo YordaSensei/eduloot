@@ -63,7 +63,7 @@ int main(){
             if (inputEmail == email && inputPassword == password){
                 cout << "Login Successful!\n";
                 loggedIn = true;
-                merchantMain();
+                merchantMain(email);
                 break;
             }
         }
