@@ -32,7 +32,7 @@ void reqAddProduct(string email) {
 void reqDeleteProduct(string email) {
     vector<Product> productList;
     ifstream inFile("productList.txt");
-    string reason;
+    string line, reason;
 
     while (getline(inFile, line)) {
         if (!line.empty()) {
@@ -53,25 +53,36 @@ void reqDeleteProduct(string email) {
                 continue;
             }
 
-            productList.push_back(p);
+            if (store == email) {
+                productList.push_back(p);
+            }
         }
     }
     inFile.close();
 
-    ofstream outFile("productReq.txt", ios::app);
-    Product p;
+    cout << "\n--- Choose a product to edelete ---\n";
+    for (size_t i = 0; i < productList.size(); ++i) {
+        cout << i + 1 << ". " << productList[i].name
+             << " (Current Stock: " << productList[i].quantity << ")\n";
+    }
 
-    cout << "What would you like to delete? (Enter Product Name): ";
-    cin.ignore();
-    getline(cin, p.name);
+    int choice;
+    cout << "Enter product number to delete: ";
+    cin >> choice;
+
+    if (choice < 1 || choice > productList.size()) {
+        cout << "Invalid choice.\n";
+        return;
+    }
 
     cout << "Reason for deletion: ";
     cin.ignore();
     getline(cin, reason);
 
-    outFile << email << ",delete," << p.name << "," << reason << endl;
-
+    ofstream outFile("productReq.txt", ios::app);
+    outFile << email << ",delete," << productList[choice - 1].name << "," << reason << endl;
     outFile.close();
+    
     cout << "Deletion requested to admin.\n";
 }
 
