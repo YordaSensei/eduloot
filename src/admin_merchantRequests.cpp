@@ -2,16 +2,29 @@
 #include <fstream>
 #include <string>
 #include <cstdio>
+#include <vector>
+#include <sstream>
+#include <iomanip>
 
 #include "admin_helpers.h"
 #include "admin_structs.h"
 
 using namespace std;
 
+struct Products {
+    string name;
+    double price;
+    int quantity;
+    string desc;
+    string shopName;
+    string reqType;
+};
+
+
 void approveMerchantRequests() {
     int mainChoice, productChoice;
     string file, name, desc, line;
-    int price, quantity;
+    int price, quantity, index;
     ifstream inFile;
     ofstream outFile;
 
@@ -41,106 +54,192 @@ void approveMerchantRequests() {
                     cin >> productChoice;
                     cin.ignore();
 
-                    cout << "\n--- Pending Product Requests ---\n";
-                            inFile.open("productReq.txt");
+                    vector<Products> productReq;
+                    inFile.open("productReq.txt");
                             while (getline(inFile, line)) {
-                                if (line.find("add,") == 0) {
-                                    cout << line << endl;
+                                if (!line.empty()) {
+                                    Products p;
+                                    string priceStr, quantityStr;
+                                    stringstream ss(line);
+
+                                    getline(ss, p.shopName, ',');
+                                    getline(ss, p.reqType, ',');
+                                    getline(ss, p.name, ',');
+                                    getline(ss, priceStr, ',');
+                                    getline(ss, quantityStr, ',');
+                                    getline(ss, p.desc);
+
+                                    try {
+                                        p.price = stod(priceStr);
+                                        p.quantity =  stoi(quantityStr);
+                                    } catch (...) {
+                                        continue;
+                                    }
+
+                                    productReq.push_back(p);
                                 }
                             }
-                            inFile.close();
+                        inFile.close();
 
+                        if (productReq.empty()) {
+                            cout << "\n-- No product requests --\n";
+                            break;
+                        }
+                    
+                    inFile.close();
+
+                    cout << "\n--- Pending Product Requests ---\n";
+                            
                     switch (productChoice) {
-                        case 1: { // ADD PRODUCT
-                            cout << "\n--- Add Product ---\n";
-                            cout << "Product Name: ";
-                            getline(cin, name);
-                            cout << "Price: ";
-                            cin >> price;
-                            cin.ignore();
-                            cout << "Quantity: ";
-                            cin >> quantity;
-                            cin.ignore();
-                            cout << "Description: ";
-                            getline(cin, desc);
+                       case 1: {
+                            cout << "\n--- Pending [Add] Product Requests ---\n";
+                            for (size_t i = 0; i < productReq.size(); i++) {
+                                cout << i + 1 << ". " << productReq[i].shopName << " | "
+                                    << productReq[i].reqType << " | "
+                                    << productReq[i].name << " | "
+                                    << productReq[i].price << " | "
+                                    << productReq[i].quantity << " | "
+                                    << productReq[i].desc << endl;
+                            }
 
-                            string target = "add," + name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
+                            cout << "\nEnter request number: ";
+                            cin >> index;
+                            cin.ignore();
 
-                            if (deleteLine("productReq.txt", target)) {
+                            if (index <= 0 || index > productReq.size()) break;
+
+                            Products p = productReq[index - 1];
+
+                            if (p.reqType != "add") {
+                                cout << "Selected request is not an 'add' request.\n";
+                                break;
+                            }
+
+                            ostringstream priceStream;
+                            priceStream << fixed << setprecision(2) << p.price;
+                            string priceStr = priceStream.str();
+
+                            string targetLine = p.shopName + "," + p.reqType + "," + p.name + "," +
+                                                priceStr + "," + to_string(p.quantity) + "," + p.desc;
+
+
+
+                            if (deleteLine("productReq.txt", targetLine)) {
                                 ofstream outFile("productList.txt", ios::app);
-                                outFile << name << "," << to_string(price) << "," << to_string(quantity) << "," << desc << endl;
+                                outFile << p.shopName << "," << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
                                 outFile.close();
 
                                 ofstream approvedFile("approvedReq.txt", ios::app);
-                                approvedFile << target << endl;
+                                approvedFile << targetLine << endl;
                                 approvedFile.close();
 
                                 cout << "\nProduct approved and added to the product list.\n";
-                            } 
-                            break;
-                        }
-
-
-                        case 2: { // DELETE PRODUCT
-                            cout << "\n--- Delete Product ---\n";
-                            cout << "Product Name: ";
-                            getline(cin, name);
-                            cout << "Price: ";
-                            cin >> price;
-                            cin.ignore();
-                            cout << "Quantity: ";
-                            cin >> quantity;
-                            cin.ignore();
-                            cout << "Description: ";
-                            getline(cin, desc);
-
-                            string target = name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
-
-                            if (deleteLine("productList.txt", target)) {
-                                ofstream approvedFile("approvedReq.txt", ios::app);
-                                approvedFile << target << endl;
-                                approvedFile.close();
                             }
                             break;
                         }
 
-                        case 3: { // EDIT PRODUCT
-                            cout << "\n--- Edit Product ---\n";
-                            cout << "[Old Product Info]\n";
-                            string oldName, oldDesc;
-                            int oldPrice, oldQuantity;
-                            cout << "Name: ";
-                            getline(cin, oldName);
-                            cout << "Price: ";
-                            cin >> oldPrice;
-                            cin.ignore();
-                            cout << "Quantity: ";
-                            cin >> oldQuantity;
-                            cin.ignore();
-                            cout << "Description: ";
-                            getline(cin, oldDesc);
+                        case 2: {
+                            cout << "\n--- Pending [Delete] Product Requests ---\n";
+                            for (size_t i = 0; i < productReq.size(); i++) {
+                                cout << i + 1 << ". " << productReq[i].shopName << " | "
+                                    << productReq[i].reqType << " | "
+                                    << productReq[i].name << " | "
+                                    << productReq[i].price << " | "
+                                    << productReq[i].quantity << " | "
+                                    << productReq[i].desc << endl;
+                            }
 
-                            string oldLine = oldName + "," + to_string(oldPrice) + "," + to_string(oldQuantity) + "," + oldDesc;
+                            cout << "Enter request number: ";
+                            cin >> index;
+                            cin.ignore();
+
+                            if (index <= 0 || index > productReq.size()) break;
+
+                            Products p = productReq[index - 1];
+
+                            if (p.reqType != "delete") {
+                                cout << "Selected request is not a 'delete' request.\n";
+                                break;
+                            }
+
+                            ostringstream priceStream;
+                            priceStream << fixed << setprecision(2) << p.price;
+                            string priceStr = priceStream.str();
+
+                            string targetProduct = p.shopName + "," + p.name + "," + priceStr + "," + to_string(p.quantity) + "," + p.desc;
+                            string targetRequest = p.shopName + "," + p.reqType + "," + p.name + "," + priceStr + "," + to_string(p.quantity) + "," + p.desc;
+
+
+                            if (deleteLine("productList.txt", targetProduct) && deleteLine("productReq.txt", targetRequest)) {
+                                ofstream approvedFile("approvedReq.txt", ios::app);
+                                approvedFile << targetRequest << endl;
+                                approvedFile.close();
+
+                                cout << "\nProduct deleted successfully.\n";
+                            }
+                            break;
+                        }
+
+                       case 3: {
+                            cout << "\n--- Pending 'Edit' Product Requests ---\n";
+                            for (size_t i = 0; i < productReq.size(); i++) {
+                                cout << i + 1 << ". " << productReq[i].shopName << " | "
+                                    << productReq[i].reqType << " | "
+                                    << productReq[i].name << " | "
+                                    << productReq[i].price << " | "
+                                    << productReq[i].quantity << " | "
+                                    << productReq[i].desc << endl;
+                            }
+
+                            cout << "Enter request number: ";
+                            cin >> index;
+                            cin.ignore();
+
+                            if (index <= 0 || index > productReq.size()) break;
+
+                            Products p = productReq[index - 1];
+
+                            if (p.reqType != "edit") {
+                                cout << "Selected request is not an 'edit' request.\n";
+                                break;
+                            }
+
+                            ostringstream oldPriceStream;
+                            oldPriceStream << fixed << setprecision(2) << p.price;
+                            string oldPriceStr = oldPriceStream.str();
+
+                            string oldLine = p.shopName + "," + p.name + "," + oldPriceStr + "," + to_string(p.quantity) + "," + p.desc;
+                            string requestLine = p.shopName + "," + p.reqType + "," + p.name + "," + oldPriceStr + "," + to_string(p.quantity) + "," + p.desc;
 
                             cout << "\n[New Product Info]\n";
+                            string newName, newDesc;
+                            double newPrice;
+                            int newQty;
+
                             cout << "New Name: ";
-                            getline(cin, name);
+                            getline(cin, newName);
                             cout << "New Price: ";
-                            cin >> price;
+                            cin >> newPrice;
                             cin.ignore();
                             cout << "New Quantity: ";
-                            cin >> quantity;
+                            cin >> newQty;
                             cin.ignore();
                             cout << "New Description: ";
-                            getline(cin, desc);
+                            getline(cin, newDesc);
 
-                            string newLine = name + "," + to_string(price) + "," + to_string(quantity) + "," + desc;
+                            ostringstream newPriceStream;
+                            newPriceStream << fixed << setprecision(2) << newPrice;
+                            string newPriceStr = newPriceStream.str();
 
-                            if (editLine("productList.txt", oldLine, newLine)) {
+                            string newLine = p.shopName + "," + newName + "," + newPriceStr + "," + to_string(newQty) + "," + newDesc;
+
+                            if (editLine("productList.txt", oldLine, newLine) && deleteLine("productReq.txt", requestLine)) {
                                 ofstream approvedFile("approvedReq.txt", ios::app);
-                                approvedFile << newLine << endl;
+                                approvedFile << "edit," + newLine << endl;
                                 approvedFile.close();
+                                cout << "\nProduct edited and request approved.\n";
                             }
+
                             break;
                         }
 
@@ -156,6 +255,41 @@ void approveMerchantRequests() {
             }
 
             case 2: { // CONCERNS
+                vector<Products> productReq;
+                    inFile.open("productReq.txt");
+                            while (getline(inFile, line)) {
+                                if (!line.empty()) {
+                                    Products p;
+                                    string priceStr, quantityStr;
+                                    stringstream ss(line);
+
+                                    getline(ss, p.shopName, ',');
+                                    getline(ss, p.reqType, ',');
+                                    getline(ss, p.name, ',');
+                                    getline(ss, priceStr, ',');
+                                    getline(ss, quantityStr, ',');
+                                    getline(ss, p.desc);
+
+                                    try {
+                                        p.price = stod(priceStr);
+                                        p.quantity =  stoi(quantityStr);
+                                    } catch (...) {
+                                        continue;
+                                    }
+
+                                    productReq.push_back(p);
+                                }
+                            }
+                        inFile.close();
+
+                        if (productReq.empty()) {
+                            cout << "\n-- No product requests --\n";
+                            break;
+                        }
+                    
+                    inFile.close();
+
+                    cout << "\n--- Pending Product Requests ---\n";
                 string concernLine;
                 inFile.open("concerns.txt");
                 cout << "\n--- Pending Merchant Concerns ---\n";
