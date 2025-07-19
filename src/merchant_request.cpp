@@ -32,11 +32,7 @@ void reqAddProduct(string email) {
 void reqDeleteProduct(string email) {
     vector<Product> productList;
     ifstream inFile("productList.txt");
-<<<<<<< Updated upstream
     string line, reason;
-=======
-    string reason, line;
->>>>>>> Stashed changes
 
     while (getline(inFile, line)) {
         if (!line.empty()) {
@@ -64,7 +60,7 @@ void reqDeleteProduct(string email) {
     }
     inFile.close();
 
-    cout << "\n--- Choose a product to edelete ---\n";
+    cout << "\n--- Choose a product to delete ---\n";
     for (size_t i = 0; i < productList.size(); ++i) {
         cout << i + 1 << ". " << productList[i].name
              << " (Current Stock: " << productList[i].quantity << ")\n";

@@ -12,12 +12,12 @@
 using namespace std;
 
 struct Products {
+    string shopName;
+    string reqType;
     string name;
     double price;
     int quantity;
     string desc;
-    string shopName;
-    string reqType;
 };
 
 
@@ -56,8 +56,7 @@ void approveMerchantRequests() {
 
                    vector<Products> productReq;
                     ifstream inFile("productReq.txt");
-                    string line;
-
+                    
                     while (getline(inFile, line)) {
                         if (!line.empty()) {
                             string priceStr, quantityStr;
@@ -120,17 +119,14 @@ void approveMerchantRequests() {
                             }
 
                             ostringstream priceStream;
-                            priceStream << fixed << setprecision(2) << p.price;
-                            string priceStr = priceStream.str();
 
                             string targetLine = p.shopName + "," + p.reqType + "," + p.name + "," +
-                                                priceStr + "," + to_string(p.quantity) + "," + p.desc;
-
-
+                                            to_string(p.price) + "," + to_string(p.quantity) + "," + p.desc;
 
                             if (deleteLine("productReq.txt", targetLine)) {
                                 ofstream outFile("productList.txt", ios::app);
-                                outFile << p.shopName << "," << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
+                                outFile << p.shopName << "," << "add" << "," << p.name << "," << to_string(p.price) << "," << p.quantity << "," << p.desc << endl;
+
                                 outFile.close();
 
                                 ofstream approvedFile("approvedReq.txt", ios::app);
@@ -168,7 +164,7 @@ void approveMerchantRequests() {
 
                             string targetProduct;
                             ifstream listFile("productList.txt");
-                            string line;
+                            
                             while (getline(listFile, line)) {
                                 stringstream ss(line);
                                 string shop, name;
@@ -384,7 +380,6 @@ void approveMerchantRequests() {
 
     } while (mainChoice != 4);
 }
-
 
 void merchantRequests() {
     int choice;
