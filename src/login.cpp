@@ -13,6 +13,7 @@ using namespace std;
 void adminMain();
 void merchantMain();
 void studentMain();
+void teacherMain();
 
 int main(){
     string inputEmail;

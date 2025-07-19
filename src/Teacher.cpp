@@ -1,14 +1,41 @@
 #include "Teacher.h"
 #include <iostream>
 
-Teacher::Teacher(const std::string& name, double tokenBalance) : User(name, tokenBalance) {}
+using namespace std;
+Teacher::Teacher(const string& name, double tokenBalance) : User(name, tokenBalance) {}
+enum class TeacherMenuOption { Wallet = 1, Purchase, Notifications, Transactions, Back };
 
-void Teacher::getInfo() const {
-    std::cout << "Type : Teacher" << std::endl;
-    std::cout << "Name :  " << name << std::endl;
-    std::cout << "Token Balance : " << tokenBalance << std::endl;
-}
+void Teacher::teacherMain() {
+    int choice;
 
-void Teacher::makePurchase() const {
-    std::cout << "Teacher Purchased!" << std::endl;
+    do {
+        cout << "\n--- Good day, Teacher " << getName() << "! ---\n";
+        cout << "1. Wallet\n";
+        cout << "2. Purchase\n";
+        cout << "3. Notifications\n";
+        cout << "4. Transactions\n";
+        cout << "5. Log Out\n";
+        cout << "Choice: ";
+        cin >> choice;
+
+        switch(static_cast<TeacherMenuOption>(choice)) {
+            case TeacherMenuOption::Wallet:
+                wallet();
+                break;
+            case TeacherMenuOption::Purchase:
+                purchase();
+                break;
+            case TeacherMenuOption::Notifications:
+                notifications();
+                break;
+            case TeacherMenuOption::Transactions:
+                transactions();
+                break;
+            case TeacherMenuOption::Back:
+                break;
+        }
+    } while (choice != 5);
+
+    cout << "Logging Out...";
+
 }
