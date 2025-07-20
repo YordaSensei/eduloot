@@ -144,8 +144,8 @@ void updateTotalTokens (int change) {
     }
 }
 
-void updateTotalMoney (int pesos) {
-    int systemMoney = 0;
+void updateTotalMoney (float pesos) {
+    float systemMoney = 0;
     string line;
 
     ifstream inFile ("moneySystem.txt");

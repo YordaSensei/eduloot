@@ -86,7 +86,7 @@ int main(){
             if (inputEmail == email && inputPassword == password){
                 cout << "Login Successful!\n";
                 loggedIn = true;
-                studentMain();
+                studentMain(email);
                 break;
             }
         }

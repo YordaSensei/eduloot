@@ -9,6 +9,6 @@ bool isEmailTaken(const string &accountsFile, const string &emailToCheck);
 bool deleteLine(const string &filename, const string &targetLine);
 bool editLine(const string &filename, const string &targetLine, const string &updatedLine);
 void updateTotalTokens(int change);
-void updateTotalMoney(int pesos);
+void updateTotalMoney(float pesos);
 
 #endif
