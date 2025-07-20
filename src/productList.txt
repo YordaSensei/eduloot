@@ -1,1 +1,3 @@
 EduGate,Golden,999,5,WE'RE GOING UP UP UP
+EduGate,Kiosk,200.00,3,RFID Kiosk System
+EduGate,Chocolatey,10.00,30,Yay

@@ -1,15 +1,11 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cstdio>
-
-#include "admin_helpers.h"
+#include "admin/admin_includes.h"
 
 using namespace std;
 
 void bank () {
-    int totalTokens = 0, totalMoney = 0, tokensOut = 0, tokensLeft = 0, topUp;
-    string line;
+    int totalTokens = 0, tokensOut = 0, tokensLeft = 0, topUp;
+    float totalMoney = 0.00;
+    string line, choice;
     const int tokenRate = 3;
 
     ifstream tokenFile ("tokensOut.txt");
@@ -35,50 +31,57 @@ void bank () {
         }
         adminFile.close();
     } else {
-        cout << "\nERROR opening adminTokens.txt\n";
+        cout << "\nERROR opening tokensSystem.txt\n";
     }
 
     ifstream moneyFile ("moneySystem.txt");
-    if (adminFile.is_open()) {
+    if (moneyFile.is_open()) {
         while (getline(moneyFile, line)) {
-            int money = stoi(line);
+            float money = stof(line);
             totalMoney = money;
         }
-        adminFile.close();
+        moneyFile.close();
     } else {
-        cout << "\nERROR opening adminTokens.txt\n";
+        cout << "\nERROR opening moneySystem.txt\n";
     }
 
     totalTokens = tokensOut + tokensLeft;
 
-    cout << "\n--- BANK SUMMARY ---\n";
-    cout << "Total Tokens (in system):   " << totalTokens << " tokens (P" << totalTokens * tokenRate << ")\n";
-    cout << "Tokens Out:                 " << tokensOut << " tokens (P" << tokensOut * tokenRate << ")\n";
-    cout << "Total Money (in system):    " << "P" << totalMoney << "\n";
-    cout << "-----------------------\n";
-    cout << "Admin Token Reserve:        " << tokensLeft << " tokens (P" << tokensLeft * tokenRate << ")\n";
+    cout << termcolor::bold << termcolor::magenta;
+    cout << "\n+--------------------------------------------------+\n";
+    cout << "|            " << termcolor::bright_yellow << "      BANK SUMMARY         " << termcolor::magenta << "           |\n";
+    cout << "+--------------------------------------------------+\n";
 
-    int choice;
-    cout << "\nAdd more tokens to the system?\n";
-    cout << "1. Yes\n";
-    cout << "2. No\n";
-    cout << "--------------------------------\n";
-    cout << "Choice: ";
-    cin >> choice;
+    cout << termcolor::reset;
 
-    if (choice == 1) {
-        cout << "\nEnter number of tokens to add: ";
+    cout << termcolor::yellow << " Total Tokens (in system):   " << totalTokens << " tokens (P" << totalTokens * tokenRate << ")\n";
+    cout << " Tokens Out:                 " << tokensOut << " tokens (P" << tokensOut * tokenRate << ")\n";
+    cout << " Total Money (in system):    " << "P" << totalMoney << "\n";
+    cout << " Admin Token Reserve:        " << tokensLeft << " tokens (P" << tokensLeft * tokenRate << ")\n" << termcolor::reset;
+
+
+    cout << termcolor::magenta << "+--------------------------------------------------+\n" << termcolor::reset;
+
+    cout << termcolor::bright_yellow << "\nAdd tokens to the system? [y/n]: ";
+    cin.ignore();
+    getline (cin, choice);
+    cout << termcolor::reset;
+
+    if (choice == "y" || choice == "Y") {
+        cout << termcolor::bold << "\nEnter number of tokens to add: " << termcolor::reset;
         cin >> topUp;
 
         if (topUp > 0) {
             updateTotalTokens(topUp);
-            cout << "\nSuccessfully added " << topUp << " tokens (₱" << topUp * tokenRate << ") to the system.\n";
+            cout << termcolor::green << "\nSuccessfully added " << topUp << " tokens (₱" << topUp * tokenRate << ") to the system.\n" << termcolor::reset;
+            clearSystem();
         } else {
-            cout << "\nInvalid token amount.\n";
+            cout << termcolor::red << "\nInvalid token amount.\n" << termcolor::reset;
         }
-    } else if (choice == 2) {
-        cout << "\nReturning to dashboard...\n";
+    } else if (choice == "n" || choice == "N") {
+        cout << termcolor::yellow << "\nReturning to dashboard...\n" << termcolor::reset;
+        clearSystem();
     } else {
-        cout << "\nInvalid choice.\n";
+        cout << termcolor::red << "\nInvalid choice.\n" << termcolor::reset;
     }
 }

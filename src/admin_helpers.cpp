@@ -1,7 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cstdio>
+#include "admin/admin_includes.h"
 
 using namespace std;
 
@@ -170,3 +167,10 @@ void updateTotalMoney (int pesos) {
         cout << "\nERROR opening moneySystem.txt...\n";
     }
 }
+
+void clearSystem(int delayMillis) { 
+    Sleep(delayMillis); 
+    system("cls");
+}
+
+

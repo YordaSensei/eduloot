@@ -2,11 +2,14 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cstdlib>
 
 #include "adminMain.cpp"
 #include "merchantMain.cpp"
 #include "student.cpp"
 #include "admin_helpers.cpp"
+#include "admin/admin_functions.h"
+#include "termcolor/termcolor.hpp"
 
 using namespace std;
 
@@ -18,14 +21,25 @@ void teacherMain();
 int main(){
     string inputEmail;
     string inputPassword;
-
-    cout << "--- LOG IN ---\n";
-    cout << "Email: ";
-    cin >> inputEmail;
-    cout << "Password: ";
-    cin >> inputPassword;
-
     bool loggedIn = false;
+
+    while (!loggedIn) {
+    cout << termcolor::bold << termcolor::bright_magenta;
+    cout << "\n+============================================+" << endl;
+    cout << "|                                            |" << endl;
+    cout << "|         WELCOME TO EDULOOT SYSTEM          |" << endl;
+    cout << "|                                            |" << endl;
+    cout << "+============================================+\n" << termcolor::reset;
+
+    cout << termcolor::bold << termcolor::bright_blue;
+    cout << "+--------------------------------------------+" << endl;
+    cout << "|                  LOGIN                     |" << endl;
+    cout << "+--------------------------------------------+" << termcolor::reset << endl;
+    cout << termcolor::bold << termcolor::bright_blue << "Email:   " << termcolor::reset;
+    cin >> inputEmail;
+    cout << termcolor::bold << termcolor::bright_blue << "Password:   " << termcolor::reset;
+    cin >> inputPassword;
+    
     string line;
 
     //Admin validation
@@ -40,8 +54,9 @@ int main(){
             getline(split, password, ',');
             
             if (inputEmail == email && inputPassword == password){
-                cout << "Login Successful!\n";
+                cout << "Logging in...\n";
                 loggedIn = true;
+                clearSystem();
                 adminMain();
                 break;
             }
@@ -49,6 +64,7 @@ int main(){
     }
 
     adminInFile.close();
+    if (loggedIn) break;
 
     //Merchant Validation
     ifstream merchantInFile("merchantAccounts.txt");
@@ -62,8 +78,9 @@ int main(){
             getline(split, password, ',');
             
             if (inputEmail == email && inputPassword == password){
-                cout << "Login Successful!\n";
+                cout << "Logging in...\n";
                 loggedIn = true;
+                clearSystem();
                 merchantMain(email);
                 break;
             }
@@ -71,6 +88,7 @@ int main(){
     }
 
     merchantInFile.close();
+    if (loggedIn) break;
 
     //Student Validation
     ifstream studentInFile("studentAccounts.txt");
@@ -84,8 +102,9 @@ int main(){
             getline(split, password, ',');
             
             if (inputEmail == email && inputPassword == password){
-                cout << "Login Successful!\n";
+                cout << "Logging in...\n";
                 loggedIn = true;
+                clearSystem();
                 studentMain();
                 break;
             }
@@ -93,10 +112,14 @@ int main(){
     }
 
     studentInFile.close();
+    if (loggedIn) break;
 
     if (!loggedIn) {
-        cout << "Invalid email or password.\n";
+        cout << termcolor::red << "Invalid email or password. Please try again.\n\n" << termcolor::reset;
+        
     }
+
+}
 
     return 0;
 }

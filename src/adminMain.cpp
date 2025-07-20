@@ -1,7 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cstdio>
+#include "admin/admin_includes.h"
 
 #include "admin_manageAccounts.cpp"
 #include "admin_notifications.cpp"
@@ -16,17 +13,25 @@ void adminMain() {
     int choice;
 
     do {
-        cout << "\n--- Good day, Admin! ---\n";
-        cout << "1. Manage accounts\n";
-        cout << "2. Notifications\n";
-        cout << "3. Quests Tab\n";
-        cout << "4. Merchant Requests\n";
-        cout << "5. Bank\n";
-        cout << "6. View Transactions\n";
-        cout << "7. Log Out\n";
-        cout << "--------------------------\n";
-        cout << "Choice: ";
+        cout << termcolor::bold << termcolor::magenta;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_yellow << "     Good day, Admin!       " << termcolor::magenta << "|\n";
+        cout << "+------------------------------+\n";
+
+        cout << "|  1. Manage accounts          |\n";
+        cout << "|  2. Notifications            |\n";
+        cout << "|  3. Quests Tab               |\n";
+        cout << "|  4. Merchant Requests        |\n";
+        cout << "|  5. Bank                     |\n";
+        cout << "|  6. View Transactions        |\n";
+        cout << "|  7. Log Out                  |\n";
+        cout << "+------------------------------+\n"<< termcolor::reset;
+
+        cout << termcolor::bright_yellow << "Choice: ";
         cin >> choice;
+        cout << termcolor::reset;
+        system("cls");
+
 
         switch (choice) {
             case 1:

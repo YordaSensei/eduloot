@@ -1,12 +1,13 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cstdio>
+#include "admin/admin_includes.h"
 
 using namespace std;
 
-void notifications () {
-    cout << "\n--- Viewing Notifications ---\n";
+void notifications() {
+    cout << termcolor::bold << termcolor::magenta;
+    cout << "\n+---------------------------------------------+\n";
+    cout << "|     " << termcolor::bright_yellow << "          NOTIFICATIONS                 " << termcolor::magenta << "|\n";
+    cout << "+---------------------------------------------+\n";
+    cout << termcolor::reset;
 
     struct NotificationFile {
         string title;
@@ -14,8 +15,7 @@ void notifications () {
     };
 
     NotificationFile notifFiles[] = {
-        {"Product Add Requests", "productReq.txt"},
-        {"Product Delete Requests", "deleteProductReq.txt"},
+        {"Product Requests", "productReq.txt"},
         {"Merchant Concerns", "concerns.txt"},
         {"Merchant Cash Out Requests", "cashout.txt"},
         {"Emergency Fund Requests", "emergencyfunds.txt"},
@@ -24,25 +24,39 @@ void notifications () {
     };
 
     for (const auto& notif : notifFiles) {
+        cout << termcolor::bold << termcolor::bright_yellow;
         cout << "\n[" << notif.title << "]\n";
-        ifstream file(notif.filename);
+        cout << termcolor::reset << termcolor::magenta;
+        cout << "+---------------------------------------------+\n";
 
+        ifstream file(notif.filename);
         if (!file) {
-            cout << "(No file found: " << notif.filename << ")\n";
+            cout << termcolor::red << " File not found: " << notif.filename;
+            int space = 43 - (int)notif.filename.length();
+            cout << string(space, ' ') << termcolor::magenta << "\n";
+            cout << "+---------------------------------------------+\n";
             continue;
         }
 
         string line;
         bool empty = true;
         while (getline(file, line)) {
-            empty = false;
-            cout << "- " << line << endl;
+            if (!line.empty()) {
+                empty = false;
+                cout << " " << termcolor::white << line;
+                int padding = 45 - (int)line.length();
+                if (padding > 0) cout << string(padding, ' ');
+                cout << termcolor::magenta << "\n";
+            }
         }
 
         if (empty) {
-            cout << "(No pending entries)\n";
+            cout << termcolor::yellow << " (No pending entries)                        " << termcolor::magenta << "\n";
         }
 
+        cout << "+---------------------------------------------+\n" << termcolor::reset;
         file.close();
     }
+
+    cout << termcolor::bold << termcolor::yellow << "\nEnd of Notifications\n" << termcolor::reset;
 }
