@@ -6,26 +6,7 @@
 using namespace std;
 
 #include "student_wallet.cpp"
-
-void purchase() {
-    int choice;
-
-    do {
-        cout << "\n--- Make a Purchase ---\n";
-        cout << "1. Scan QR Code\n";
-        cout << "2. Input Merchant Code\n";
-        cout << "3. Back to Home\n";
-        cout << "Choice: ";
-        cin >> choice;
-
-        switch (choice) {
-            case 1:
-                break;
-            case 2:
-                break;
-        }
-    } while (choice != 3);
-}
+#include "student_purchase.cpp"
 
 void quests () {
     ifstream inFile ("quests.txt");
@@ -97,6 +78,7 @@ void studentMain(string email) {
                 wallet(email);
                 break;
             case 2:
+                purchase(email);
                 break;
             case 3:
                 quests();

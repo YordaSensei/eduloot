@@ -3,15 +3,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "product_helpers.h"
 
 using namespace std;
-
-struct Product {
-    string name;
-    double price;
-    int quantity;
-    string desc;
-};
 
 void editStock() {
     vector<Product> productList;
@@ -21,20 +15,16 @@ void editStock() {
     while (getline(inFile, line)) {
         if (!line.empty()) {
             Product p;
-            string priceStr, quantityStr;
+            string strPrice, strQuantity;
             stringstream split(line);
 
             getline(split, p.name, ',');
-            getline(split, priceStr, ',');
-            getline(split, quantityStr, ',');
+            getline(split, strPrice, ',');
+            getline(split, strQuantity, ',');
             getline(split, p.desc);
 
-            try {
-                p.price = stod(priceStr);
-                p.quantity = stoi(quantityStr);
-            } catch (...) {
-                continue;
-            }
+            p.price = stod(strPrice);
+            p.quantity = stoi(strQuantity);
 
             productList.push_back(p);
         }

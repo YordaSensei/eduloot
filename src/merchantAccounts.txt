@@ -1,1 +1,2 @@
 EduGate,EduGate,123
+CIIT,CIIT,123

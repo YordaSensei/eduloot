@@ -1,2 +1,3 @@
 EduGate,add,Testing,10,4,mhm
 EduGate,delete,brownies,hase out
+EduGate,delete,Golden,Test

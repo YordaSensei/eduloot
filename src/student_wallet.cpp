@@ -1,5 +1,5 @@
 string line;
-#include "admin_helpers.h"
+#include "admin/admin_helpers.h"
 
 void viewBalance(string email) {
     vector<Student> balance;
@@ -103,7 +103,7 @@ void convertTokens(string email) {
     cin >> quantity;
 
     char choice;
-    float totalAmount = (quantity *3.0f) * 1.05;
+    float totalAmount = (quantity *3.0f) * 0.95f;
     cout << "Total amount is PHP " << totalAmount << " (fee included).\n";
     cout << "Are you sure you want to convert " << quantity << " tokens? (y/n)\n";
     cout << "Choice: ";
