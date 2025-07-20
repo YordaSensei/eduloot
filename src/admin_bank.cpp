@@ -6,7 +6,7 @@ void bank () {
     int totalTokens = 0, tokensOut = 0, tokensLeft = 0, topUp;
     float totalMoney = 0.00;
     string line, choice;
-    const int tokenRate = 3;
+    const float tokenRate = 3.00;
 
     ifstream tokenFile ("tokensOut.txt");
     if (tokenFile.is_open()) {

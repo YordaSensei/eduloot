@@ -379,9 +379,10 @@ void merchantRequests() {
             }
 
             case 3: { // CASH OUT
+                const float tokenRate = 3.00, fee = 0.05;
                 struct cashoutReq {
                     string shopName;
-                    int tokenAmount;
+                    float tokenAmount;
                     string originalLine;
                 };
 
@@ -400,7 +401,7 @@ void merchantRequests() {
                     getline(ss, tokenStr);
 
                     try {
-                        c.tokenAmount = stoi(tokenStr);
+                        c.tokenAmount = stof(tokenStr);
                     } catch (...) {
                         continue;
                     }
@@ -440,10 +441,15 @@ void merchantRequests() {
                 outFile << "cashout," << selected.originalLine << endl; 
                 outFile.close();
 
-                updateTotalTokens(selected.tokenAmount);         
-                updateTotalMoney(-selected.tokenAmount);
+                float total = selected.tokenAmount * tokenRate;
+                float moneyAfterFee = total - (total * fee);
 
-                cout << termcolor::green << "\nTokens Successfully Cashed Out!\n" << termcolor::reset;
+                updateTotalTokens(selected.tokenAmount); 
+                updateTotalMoney(-moneyAfterFee);
+
+                cout << termcolor::green << "\nTokens Successfully Cashed Out!" << endl;
+                cout << "P" << moneyAfterFee << " transferred\n" << termcolor::reset;
+
                 clearSystem();
                 break;
             }
