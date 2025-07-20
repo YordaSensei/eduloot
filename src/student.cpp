@@ -2,43 +2,10 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-
+#include "student_helpers.h"
 using namespace std;
 
-void viewBalance() {
-    int choice;
-
-    cout << "You have" << " tokens.\n";
-    do {
-        cout << "1. Back\n";
-        cout << "Choice: ";
-        cin >> choice;
-    } while (choice != 1);
-}
-
-void wallet() {
-    int choice;
-
-    do {
-        cout << "\n--- Token Wallet ---\n";
-        cout << "1. View Balance\n";
-        cout << "2. Purchase Tokens\n";
-        cout << "3. Convert to Cash\n";
-        cout << "4. Back to Home\n";
-        cout << "Choice: ";
-        cin >> choice;
-
-        switch(choice) {
-            case 1:
-                viewBalance();
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-        }
-    } while (choice != 4);
-}
+#include "student_wallet.cpp"
 
 void purchase() {
     int choice;
@@ -110,7 +77,7 @@ void transaction() {
     } while (choice != 1);
 }
 
-void studentMain() {
+void studentMain(string email) {
     int choice;
 
     do {
@@ -127,7 +94,7 @@ void studentMain() {
 
         switch(choice) {
             case 1:
-                wallet();
+                wallet(email);
                 break;
             case 2:
                 break;

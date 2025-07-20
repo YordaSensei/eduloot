@@ -11,5 +11,6 @@ bool editLine(const string &filename, const string &targetLine, const string &up
 void updateTotalTokens(int change);
 void updateTotalMoney(int pesos);
 void clearSystem(int delayMillis = 1000);
+void updateTotalMoney(float pesos);
 
 #endif

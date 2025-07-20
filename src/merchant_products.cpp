@@ -22,12 +22,12 @@ void editStock() {
         if (!line.empty()) {
             Product p;
             string priceStr, quantityStr;
-            stringstream ss(line);
+            stringstream split(line);
 
-            getline(ss, p.name, ',');
-            getline(ss, priceStr, ',');
-            getline(ss, quantityStr, ',');
-            getline(ss, p.desc);
+            getline(split, p.name, ',');
+            getline(split, priceStr, ',');
+            getline(split, quantityStr, ',');
+            getline(split, p.desc);
 
             try {
                 p.price = stod(priceStr);
@@ -92,13 +92,13 @@ void products() {
 
                 // Parse using your Product struct
                 Product p;
-                stringstream ss(line);
+                stringstream split(line);
                 string priceStr, quantityStr;
 
-                getline(ss, p.name, ',');
-                getline(ss, priceStr, ',');
-                getline(ss, quantityStr, ',');
-                getline(ss, p.desc);
+                getline(split, p.name, ',');
+                getline(split, priceStr, ',');
+                getline(split, quantityStr, ',');
+                getline(split, p.desc);
 
                 p.price = stod(priceStr);
                 p.quantity = stoi(quantityStr);

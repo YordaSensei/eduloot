@@ -2,7 +2,7 @@
 #include <iostream>
 
 using namespace std;
-Teacher::Teacher(const string& name, double tokenBalance) : User(name, tokenBalance) {}
+Teacher::Teacher(const string& name, int tokenBalance) : User(name, tokenBalance) {}
 enum class TeacherMenuOption { Wallet = 1, Purchase, Notifications, Transactions, Back };
 
 void Teacher::teacherMain() {

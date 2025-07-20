@@ -3,7 +3,7 @@
 
 class Teacher : public User {
     public:
-    Teacher(const std::string& name, double tokenBalance);
+    Teacher(const std::string& name, int tokenBalance);
 
     void wallet() const override;
     void viewBalance() const override;

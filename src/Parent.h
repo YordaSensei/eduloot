@@ -3,12 +3,12 @@
 
 class Parent : public User {
     public:
-    Parent(const std::string& name, double tokenBalance);
+    Parent(const std::string& name, int tokenBalance);
 
     void wallet() const;
     void purchase() const;
     void viewBalance() const override;
-    void transferToChild(double amount);
+    void transferToChild(int amount);
     void notifications() const override;
     void transactions() const override;
     void parentMain();

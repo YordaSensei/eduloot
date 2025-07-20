@@ -105,7 +105,7 @@ int main(){
                 cout << "Logging in...\n";
                 loggedIn = true;
                 clearSystem();
-                studentMain();
+                studentMain(email);
                 break;
             }
         }
