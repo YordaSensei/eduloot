@@ -4,7 +4,7 @@
 
 using namespace std;
 
-User::User(const string& name, double tokenBalance) : name(name), tokenBalance(tokenBalance) {}
+User::User(const string& name, int tokenBalance) : name(name), tokenBalance(tokenBalance) {}
 enum class WalletOption { ViewBalance = 1, Purchase, Convert, Back };
 
 void User::wallet() const {

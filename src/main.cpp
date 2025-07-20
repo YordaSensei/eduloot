@@ -5,7 +5,7 @@
 
 int main()
 {
-    Teacher teacher("Zoey", 100.0);
+    Teacher teacher("Zoey", 100);
     teacher.teacherMain();
     return 0;
 }

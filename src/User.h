@@ -1,9 +1,10 @@
 #pragma once
 #include <string>
+#include <fstream>
 
 class User {
 public:
-    User(const std::string& name, double tokenBalance);
+    User(const std::string& name, int tokenBalance);
     virtual ~User() = default;
 
     virtual void wallet() const;
@@ -14,12 +15,37 @@ public:
     virtual void transactions() const;
 
     std::string getName() const { return name; }
-    double getTokenBalance() const { return tokenBalance; }
+    int getTokenBalance() const { return tokenBalance; }
     
 protected:
-    void setTokenBalance(double newBalance) { tokenBalance = newBalance; }
+    void setTokenBalance(int newBalance) {
+        int systemTokens = 0;
+        string line;
+
+        ifstream inFile ("tokensSystem.txt");
+        if (inFile.is_open()) {
+            getline(inFile, line);
+            if (!line.empty()){
+                systemTokens = stoi(line);
+            }
+            inFile.close();
+        } else {
+            cout << "\nERROR opening file...\n";
+        }
+
+        systemTokens += newBalance;
+        if (systemTokens < 0) systemTokens = 0;
+
+        ofstream outFile ("tokensSystem.txt");
+        if(outFile.is_open()) {
+            outFile << systemTokens << endl;
+            outFile.close();
+        } else {
+            cout << "\nERROR opening file...\n";
+        }
+    }
     
 private:
     std::string name;
-    double tokenBalance;
+    int tokenBalance;
 };

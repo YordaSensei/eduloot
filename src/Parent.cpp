@@ -3,7 +3,7 @@
 #include <limits>
 
 using namespace std;
-Parent::Parent(const string& name, double tokenBalance) : User(name, tokenBalance) {}
+Parent::Parent(const string& name, int tokenBalance) : User(name, tokenBalance) {}
 enum class ParentMenuOption { ViewBalance = 1, Transfer, Notifications, Transactions, Back };
 
 void Parent::parentMain(){
@@ -24,7 +24,7 @@ void Parent::parentMain(){
                 viewBalance();
                 break;
             case ParentMenuOption::Transfer:
-                double amount;
+                int amount;
                 if (!(cin >> amount)) {
                     cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -60,10 +60,10 @@ void Parent::viewBalance() const {
     } while (choice != 1);
 }
 
-void Parent::transferToChild(double amount) {
+void Parent::transferToChild(int amount) {
     if (amount > 0 && amount <= getTokenBalance()) {
         setTokenBalance(getTokenBalance() - amount);
-        cout << "Successfully transferred " << amount << " pesos.\n";
+        cout << "Successfully transferred " << amount << " tokens.\n";
     } else {
         cout << "Invalid transfer amount/Insufficient balance.\n";
     }
