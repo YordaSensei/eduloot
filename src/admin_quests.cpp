@@ -7,7 +7,7 @@ struct completedQuests {
     string quest;
     int tokenAmount;
     string originalLine;
-}; // ← Missing semicolon fixed
+}; 
 
 void viewQuests() {
     ifstream inFile("quests.txt");
@@ -18,12 +18,17 @@ void viewQuests() {
         return;
     }
 
-    cout << "\n--- Available Quests ---\n";
-    cout << "--------------------------\n";
+    cout << termcolor::bold << termcolor::magenta;
+    cout << "\n+-----------------------------+\n";
+    cout << "|     " << termcolor::bright_yellow << " Available Quests" << termcolor::magenta << "       |\n";
+    cout << "+-----------------------------+\n";
+    cout << termcolor::reset;
 
     while (getline(inFile, line)) {
-        cout << line << endl;
+    cout << termcolor::yellow << "- " << line << termcolor::reset << endl;
     }
+
+    cout << termcolor::magenta <<  "+-----------------------------+\n" << termcolor::reset;
 
     inFile.close();
 }
@@ -57,20 +62,28 @@ void approveStudentQuests() {
         inFile.close();
 
         if (quests.empty()) {
-            cout << "\nNo completed quests found.\n";
+            cout << termcolor::bright_red << "\n[!] No completed quests found.\n" << termcolor::reset;
             return;
         }
 
-        cout << "\n--- Quests Completed by Students ---\n";
+        cout << termcolor::bold << termcolor::magenta;
+        cout << "\n+----------------------------------------------+\n";
+        cout << "| " << termcolor::bright_yellow << "    Quests Completed by Students" << termcolor::magenta << "     |\n";
+        cout << "+----------------------------------------------+\n";
+        cout << termcolor::reset;
+
         for (size_t i = 0; i < quests.size(); i++) {
-            cout << (i + 1) << ". " << quests[i].email << " | "
+            cout << termcolor::bright_yellow << (i + 1) << ". " << termcolor::reset
+                << quests[i].email << " | "
                 << quests[i].quest << " | "
                 << quests[i].tokenAmount << endl;
         }
 
-        cout << "\nEnter accomplished student quest to approve: ";
+        cout << termcolor::magenta << "\n+----------------------------------------------+\n";
+        cout << termcolor::bright_yellow << "Enter accomplished student quest to approve: ";
         cin >> index;
         cin.ignore();
+        cout << termcolor::reset;
 
         if (index <= 0 || index > quests.size()) {
             cout << "\nInvalid choice.\n";
@@ -139,22 +152,34 @@ void approveStudentQuests() {
         }
         questsOut.close();
 
-        cout << "\nQuest Approved and " << q.tokenAmount
-            << " tokens added to " << q.email << "'s wallet.\n";
+        cout << termcolor::green << "\nQuest Approved and " << q.tokenAmount
+            << " tokens added to " << q.email << "'s wallet.\n" << termcolor::reset;
+
+        ofstream approvedQuests ("approvedQuests.txt", ios::app);
+        approvedQuests << q.originalLine << endl;
+        clearSystem();
 }
 
 void createQuest() {
     int tokenAmount, studentLimit;
     string quest;
 
-    cout << "\n--- Create Quests ---\n";
-    cout << "-----------------------\n";
+    cout << termcolor::bold << termcolor::magenta;
+    cout << "\n+-----------------------------+\n";
+    cout << "|       " << termcolor::bright_yellow << "CREATE QUEST       " << termcolor::magenta << "       |\n";
+    cout << "+-----------------------------+\n";
+    cout << termcolor::reset;
+
+    cout << termcolor::bright_yellow;
     cout << "Quest: ";
     getline(cin, quest);
-    cout << "Token Reward: ";
+
+    cout << termcolor::bright_yellow << "Token Reward: ";
     cin >> tokenAmount;
-    cout << "Maximum Claims: ";
+
+    cout << termcolor::bright_yellow << "Maximum Claims: ";
     cin >> studentLimit;
+    cout << termcolor::reset;
     cin.ignore();
 
     string concat = quest + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
@@ -174,35 +199,50 @@ void deleteQuest() {
     int tokenAmount, studentLimit;
     string filename = "quests.txt";
 
-    cout << "\n--- Delete Quest ---\n";
-    cout << "----------------------\n";
-    cout << "Enter the quest: ";
+    cout << termcolor::bold << termcolor::magenta;
+    cout << "\n+-----------------------------+\n";
+    cout << "|      " << termcolor::bright_yellow << "   DELETE QUEST     " << termcolor::magenta << "      |\n";
+    cout << "+-----------------------------+\n";
+    cout << termcolor::reset;
+
+    cout << termcolor::bright_yellow;
+    cout << "Enter the quest name: ";
     getline(cin, quest);
-    cout << "Enter Token Amount: ";
+
+    cout  << "Enter Token Amount: ";
     cin >> tokenAmount;
+
     cout << "Enter Maximum Claims: ";
     cin >> studentLimit;
+    cout << termcolor::reset;
     cin.ignore();
 
     string concat = quest + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
     deleteLine(filename, concat);
+    clearSystem();
 }
 
 void questsTab() {
     int choice;
 
     do {
-        cout << "\n--- Quests Tab ---\n";
-        cout << "--------------------\n";
-        cout << "1. View Available Quests\n";
-        cout << "2. Approve Student Quest\n";
-        cout << "3. Create Quest\n";
-        cout << "4. Delete Quest\n";
-        cout << "5. Back\n";
-        cout << "--------------------\n";
-        cout << "Choice: ";
+        cout << termcolor::bold << termcolor::magenta;
+        cout << "\n+-------------------------------+\n";
+        cout << "|      " << termcolor::bright_yellow << "   QUESTS TAB            " << termcolor::magenta << "|\n";
+        cout << "+-------------------------------+\n";
+        cout << "|  1. View Available Quests     |\n";
+        cout << "|  2. Approve Student Quest     |\n";
+        cout << "|  3. Create Quest              |\n";
+        cout << "|  4. Delete Quest              |\n";
+        cout << "|  5. Back                      |\n";
+        cout << "+-------------------------------+\n";
+
+        cout << termcolor::bright_yellow << "Choice: ";
         cin >> choice;
         cin.ignore();
+        cout << termcolor::reset;
+        system("cls");
+
 
         switch (choice) {
             case 1:

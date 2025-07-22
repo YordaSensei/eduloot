@@ -54,7 +54,7 @@ int main(){
             getline(split, password, ',');
             
             if (inputEmail == email && inputPassword == password){
-                cout << "Logging in...\n";
+                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
                 loggedIn = true;
                 clearSystem();
                 adminMain();
@@ -78,7 +78,7 @@ int main(){
             getline(split, password, ',');
             
             if (inputEmail == email && inputPassword == password){
-                cout << "Logging in...\n";
+                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
                 loggedIn = true;
                 clearSystem();
                 merchantMain(email);
@@ -102,7 +102,7 @@ int main(){
             getline(split, password, ',');
             
             if (inputEmail == email && inputPassword == password){
-                cout << "Logging in...\n";
+                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
                 loggedIn = true;
                 clearSystem();
                 studentMain(email);
