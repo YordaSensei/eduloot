@@ -3,6 +3,6 @@
 
 class Teacher : public User {
 public:
-    void teacherMain(string email);
+    void teacherMain(string insertedEmail);
     
 };

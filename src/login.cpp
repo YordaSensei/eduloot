@@ -21,280 +21,95 @@ void studentMain();
 void teacherMain();
 void parentMain();
 
-int main(){
+int main() {
     string inputEmail;
     string inputPassword;
     bool loggedIn = false;
 
     while (!loggedIn) {
-        cout << termcolor::bold << termcolor::bright_magenta;
-        cout << "\n+============================================+" << endl;
-        cout << "|                                            |" << endl;
-        cout << "|         WELCOME TO EDULOOT SYSTEM          |" << endl;
-        cout << "|                                            |" << endl;
-        cout << "+============================================+\n" << termcolor::reset;
+        displayWelcomeMessage();
+        displayLoginPrompt(inputEmail, inputPassword);
 
-    cout << termcolor::bold << termcolor::bright_blue;
-    cout << "+--------------------------------------------+" << endl;
-    cout << "|                  LOGIN                     |" << endl;
-    cout << "+--------------------------------------------+" << termcolor::reset << endl;
-    cout << termcolor::bold << termcolor::bright_blue << "Email:   " << termcolor::reset;
-    cin >> inputEmail;
-    cout << termcolor::bold << termcolor::bright_blue << "Password:   " << termcolor::reset;
-    cin >> inputPassword;
-    
-    string line;
-
-    //Admin validation
-    ifstream adminInFile("adminAccount.txt");
-    while (getline(adminInFile, line)) {
-        if (!line.empty()) {
-            string email, username, password;
-            stringstream split(line);
-
-            getline(split, email, ',');
-            getline(split, username, ',');
-            getline(split, password, ',');
-            
-            if (inputEmail == email && inputPassword == password){
-                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
-                loggedIn = true;
-                clearSystem();
-                adminMain();
-                break;
-            }
+        if (validateLogin("adminAccount.txt", inputEmail, inputPassword, "admin")) {
+            cout << termcolor::red << "\nLogging in as Admin...\n" << termcolor::reset;
+            loggedIn = true;
+            clearSystem();
+            adminMain();
         }
-    }
-
-    adminInFile.close();
-    if (loggedIn) break;
-
-    //Merchant Validation
-    ifstream merchantInFile("merchantAccounts.txt");
-    while (getline(merchantInFile, line)) {
-        if (!line.empty()) {
-            string email, username, password;
-            stringstream split(line);
-
-            getline(split, email, ',');
-            getline(split, username, ',');
-            getline(split, password, ',');
-            
-            if (inputEmail == email && inputPassword == password){
-                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
-                loggedIn = true;
-                clearSystem();
-                merchantMain(email);
-                break;
-            }
+        else if (validateLogin("merchantAccounts.txt", inputEmail, inputPassword, "merchant")) {
+            cout << termcolor::red << "\nLogging in as Merchant...\n" << termcolor::reset;
+            loggedIn = true;
+            clearSystem();
+            merchantMain(inputEmail);
         }
-    }
-
-    merchantInFile.close();
-    if (loggedIn) break;
-
-    //Student Validation
-    ifstream studentInFile("studentAccounts.txt");
-    while (getline(studentInFile, line)) {
-        if (!line.empty()) {
-            string email, username, password;
-            stringstream split(line);
-
-            getline(split, email, ',');
-            getline(split, username, ',');
-            getline(split, password, ',');
-            
-            if (inputEmail == email && inputPassword == password){
-                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
-                loggedIn = true;
-                clearSystem();
-                studentMain(email);
-                break;
-            }
+        else if (validateLogin("studentAccounts.txt", inputEmail, inputPassword, "student")) {
+            cout << termcolor::red << "\nLogging in as Student...\n" << termcolor::reset;
+            loggedIn = true;
+            clearSystem();
+            studentMain(inputEmail);
         }
-    }
-
-    studentInFile.close();
-    if (loggedIn) break;
-
-    //Teacher Validation
-    ifstream teacherInFile("teacherAccounts.txt");
-    while (getline(teacherInFile, line)) {
-        if (!line.empty()) {
-            string email, username, password;
-            stringstream split(line);
-
-            getline(split, email, ',');
-            getline(split, username, ',');
-            getline(split, password, ',');
-            
-            if (inputEmail == email && inputPassword == password){
-                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
-                loggedIn = true;
-                clearSystem();
-                Teacher teacher;
-                teacher.teacherMain(email);
-                break;
-            }
+        else if (validateLogin("teacherAccounts.txt", inputEmail, inputPassword, "teacher")) {
+            cout << termcolor::red << "\nLogging in as Teacher...\n" << termcolor::reset;
+            loggedIn = true;
+            clearSystem();
+            Teacher teacher;
+            teacher.teacherMain(inputEmail);
         }
-    }
-
-    teacherInFile.close();
-    if (loggedIn) break;
-
-    //Parent Validation
-    ifstream parentInFile("parentAccounts.txt");
-    while (getline(parentInFile, line)) {
-        if (!line.empty()) {
-            string email, username, password;
-            stringstream split(line);
-
-            getline(split, email, ',');
-            getline(split, username, ',');
-            getline(split, password, ',');
-            
-            if (inputEmail == email && inputPassword == password){
-                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
-                loggedIn = true;
-                clearSystem();
-                Parent parent;
-                parent.parentMain(email);
-                break;
-            }
+        else if (validateLogin("parentAccounts.txt", inputEmail, inputPassword, "parent")) {
+            cout << termcolor::red << "\nLogging in as Parent...\n" << termcolor::reset;
+            loggedIn = true;
+            clearSystem();
+            Parent parent;
+            parent.parentMain(inputEmail);
         }
-    }
-
-    parentInFile.close();
-    if (loggedIn) break;
-
-    if (!loggedIn) {
-        cout << termcolor::red << "Invalid email or password. Please try again.\n\n" << termcolor::reset;
-        
-        string line;
-
-        ifstream adminInFile("adminAccount.txt");
-        while (getline(adminInFile, line)) {
-            if (!line.empty()) {
-                string email, username, password;
-                stringstream split(line);
-
-                getline(split, email, ',');
-                getline(split, username, ',');
-                getline(split, password, ',');
-                
-                if (inputEmail == email && inputPassword == password){
-                    cout << "Logging in...\n";
-                    loggedIn = true;
-                    clearSystem();
-                    adminMain();
-                    break;
-                }
-            }
-        }
-
-        adminInFile.close();
-        if (loggedIn) break;
-
-        ifstream merchantInFile("merchantAccounts.txt");
-        while (getline(merchantInFile, line)) {
-            if (!line.empty()) {
-                string email, username, password;
-                stringstream split(line);
-
-                getline(split, email, ',');
-                getline(split, username, ',');
-                getline(split, password, ',');
-                
-                if (inputEmail == email && inputPassword == password){
-                    cout << "Logging in...\n";
-                    loggedIn = true;
-                    clearSystem();
-                    merchantMain(email);
-                    break;
-                }
-            }
-        }
-
-        merchantInFile.close();
-        if (loggedIn) break;
-
-        ifstream studentInFile("studentAccounts.txt");
-        while (getline(studentInFile, line)) {
-            if (!line.empty()) {
-                string email, username, password;
-                stringstream split(line);
-
-                getline(split, email, ',');
-                getline(split, username, ',');
-                getline(split, password, ',');
-                
-                if (inputEmail == email && inputPassword == password){
-                    cout << "Logging in...\n";
-                    loggedIn = true;
-                    clearSystem();
-                    studentMain(email);
-                    break;
-                }
-            }
-        }
-
-        studentInFile.close();
-        if (loggedIn) break;
-
-        //Teacher Validation
-        ifstream teacherInFile("teacherAccounts.txt");
-        while (getline(teacherInFile, line)) {
-            if (!line.empty()) {
-                string email, username, password;
-                stringstream split(line);
-
-                getline(split, email, ',');
-                getline(split, username, ',');
-                getline(split, password, ',');
-                
-                if (inputEmail == email && inputPassword == password){
-                    cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
-                    loggedIn = true;
-                    clearSystem();
-                    Teacher teacher;
-                    teacher.teacherMain(email);
-                    break;
-                }
-            }
-        }
-
-        teacherInFile.close();
-        if (loggedIn) break;
-
-        //Parent Validation
-        ifstream parentInFile("parentAccounts.txt");
-        while (getline(parentInFile, line)) {
-            if (!line.empty()) {
-                string email, username, password;
-                stringstream split(line);
-
-                getline(split, email, ',');
-                getline(split, username, ',');
-                getline(split, password, ',');
-                
-                if (inputEmail == email && inputPassword == password){
-                    cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
-                    loggedIn = true;
-                    clearSystem();
-                    Parent parent;
-                    parent.parentMain(email);
-                    break;
-                }
-            }
-        }
-
-        parentInFile.close();
-        if (loggedIn) break;
-
-        if (!loggedIn) {
+        else {
             cout << termcolor::red << "Invalid email or password. Please try again.\n\n" << termcolor::reset;
         }
     }
 
     return 0;
+}
+
+void displayWelcomeMessage() {
+    cout << termcolor::bold << termcolor::bright_magenta;
+    cout << "\n+============================================+" << endl;
+    cout << "|                                            |" << endl;
+    cout << "|         WELCOME TO EDULOOT SYSTEM          |" << endl;
+    cout << "|                                            |" << endl;
+    cout << "+============================================+\n" << termcolor::reset;
+}
+
+void displayLoginPrompt(string& email, string& password) {
+    cout << termcolor::bold << termcolor::bright_blue;
+    cout << "+--------------------------------------------+" << endl;
+    cout << "|                  LOGIN                     |" << endl;
+    cout << "+--------------------------------------------+" << termcolor::reset << endl;
+    cout << termcolor::bold << termcolor::bright_blue << "Email:   " << termcolor::reset;
+    cin >> email;
+    cout << termcolor::bold << termcolor::bright_blue << "Password:   " << termcolor::reset;
+    cin >> password;
+}
+
+bool validateLogin(const string& filename, const string& inputEmail, const string& inputPassword, const string& userType) {
+    ifstream inFile(filename);
+    string line;
+
+    while (getline(inFile, line)) {
+        if (!line.empty()) {
+            string email, username, password;
+            stringstream split(line);
+
+            getline(split, email, ',');
+            getline(split, username, ',');
+            getline(split, password, ',');
+            
+            if (inputEmail == email && inputPassword == password) {
+                inFile.close();
+                return true;
+            }
+        }
+    }
+
+    inFile.close();
+    return false;
 }
