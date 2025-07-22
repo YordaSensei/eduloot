@@ -132,7 +132,8 @@ int main(){
                 cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
                 loggedIn = true;
                 clearSystem();
-                teacherMain(email);
+                Teacher teacher;
+                teacher.teacherMain(email);
                 break;
             }
         }
@@ -156,7 +157,8 @@ int main(){
                 cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
                 loggedIn = true;
                 clearSystem();
-                parentMain(email);
+                Parent parent;
+                parent.parentMain(email);
                 break;
             }
         }
@@ -254,7 +256,8 @@ int main(){
                     cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
                     loggedIn = true;
                     clearSystem();
-                    teacherMain(email);
+                    Teacher teacher;
+                    teacher.teacherMain(email);
                     break;
                 }
             }
@@ -278,7 +281,8 @@ int main(){
                     cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
                     loggedIn = true;
                     clearSystem();
-                    parentMain(email);
+                    Parent parent;
+                    parent.parentMain(email);
                     break;
                 }
             }
