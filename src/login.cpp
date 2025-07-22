@@ -7,6 +7,8 @@
 #include "adminMain.cpp"
 #include "merchantMain.cpp"
 #include "student.cpp"
+#include "Teacher.cpp"
+#include "Parent.cpp"
 #include "admin_helpers.cpp"
 #include "admin/admin_functions.h"
 #include "termcolor/termcolor.hpp"
@@ -17,6 +19,7 @@ void adminMain();
 void merchantMain();
 void studentMain();
 void teacherMain();
+void parentMain();
 
 int main(){
     string inputEmail;
@@ -114,6 +117,54 @@ int main(){
     studentInFile.close();
     if (loggedIn) break;
 
+    //Teacher Validation
+    ifstream teacherInFile("teacherAccounts.txt");
+    while (getline(teacherInFile, line)) {
+        if (!line.empty()) {
+            string email, username, password;
+            stringstream split(line);
+
+            getline(split, email, ',');
+            getline(split, username, ',');
+            getline(split, password, ',');
+            
+            if (inputEmail == email && inputPassword == password){
+                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
+                loggedIn = true;
+                clearSystem();
+                teacherMain(email);
+                break;
+            }
+        }
+    }
+
+    teacherInFile.close();
+    if (loggedIn) break;
+
+    //Parent Validation
+    ifstream parentInFile("parentAccounts.txt");
+    while (getline(parentInFile, line)) {
+        if (!line.empty()) {
+            string email, username, password;
+            stringstream split(line);
+
+            getline(split, email, ',');
+            getline(split, username, ',');
+            getline(split, password, ',');
+            
+            if (inputEmail == email && inputPassword == password){
+                cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
+                loggedIn = true;
+                clearSystem();
+                parentMain(email);
+                break;
+            }
+        }
+    }
+
+    parentInFile.close();
+    if (loggedIn) break;
+
     if (!loggedIn) {
         cout << termcolor::red << "Invalid email or password. Please try again.\n\n" << termcolor::reset;
         
@@ -186,6 +237,54 @@ int main(){
         }
 
         studentInFile.close();
+        if (loggedIn) break;
+
+        //Teacher Validation
+        ifstream teacherInFile("teacherAccounts.txt");
+        while (getline(teacherInFile, line)) {
+            if (!line.empty()) {
+                string email, username, password;
+                stringstream split(line);
+
+                getline(split, email, ',');
+                getline(split, username, ',');
+                getline(split, password, ',');
+                
+                if (inputEmail == email && inputPassword == password){
+                    cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
+                    loggedIn = true;
+                    clearSystem();
+                    teacherMain(email);
+                    break;
+                }
+            }
+        }
+
+        teacherInFile.close();
+        if (loggedIn) break;
+
+        //Parent Validation
+        ifstream parentInFile("parentAccounts.txt");
+        while (getline(parentInFile, line)) {
+            if (!line.empty()) {
+                string email, username, password;
+                stringstream split(line);
+
+                getline(split, email, ',');
+                getline(split, username, ',');
+                getline(split, password, ',');
+                
+                if (inputEmail == email && inputPassword == password){
+                    cout << termcolor::red << "\nLogging in...\n" << termcolor::reset;
+                    loggedIn = true;
+                    clearSystem();
+                    parentMain(email);
+                    break;
+                }
+            }
+        }
+
+        parentInFile.close();
         if (loggedIn) break;
 
         if (!loggedIn) {

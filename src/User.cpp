@@ -1,13 +1,19 @@
 #include "User.h"
 #include <iostream>
 #include <limits>
+#include <vector>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include "admin/admin_helpers.h"
+#include "product_helpers.h"
+#include "merchant_helpers.h"
 
 using namespace std;
-
-User::User(const string& name, int tokenBalance) : name(name), tokenBalance(tokenBalance) {}
+    
 enum class WalletOption { ViewBalance = 1, Purchase, Convert, Back };
 
-void User::wallet() const {
+void User::wallet() {
     int choice;
 
     do {
@@ -16,18 +22,20 @@ void User::wallet() const {
         cout << "2. Purchase Tokens\n";
         cout << "3. Convert to Cash\n";
         cout << "4. Back to Home\n";
-        cout << "Choice: ";
-        cin >> choice;
+
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 4)) {
+            continue;
+        }
 
         switch(static_cast<WalletOption>(choice)) {
             case WalletOption::ViewBalance:
                 viewBalance();
                 break;
             case WalletOption::Purchase:
-                purchase();
+                purchaseTokens();
                 break;
             case WalletOption::Convert:
-                convert();
+                convertTokens();
                 break;
             case WalletOption::Back:
             break;
@@ -35,18 +43,44 @@ void User::wallet() const {
     } while (choice != 4);
 }
 
-void User::viewBalance() const {
+void User::viewBalance() {
+    ifstream inFile(userType + "Balance.txt");
+    string line;
+    bool found = false;
     int choice;
 
-    cout << "You have " << getTokenBalance() << " tokens.\n";
     do {
+        while (getline(inFile, line)) {
+            if (!line.empty()) {
+                string strBalance;
+                stringstream split(line);
+
+                getline(split, this->email, ',');
+                getline(split, strBalance);
+
+                if (this->email == email) {
+                    this->tokenBalance = stoi(strBalance);
+                    cout << "Token Balance: " << this->tokenBalance << endl;
+                    found = true;
+                    break;
+                }
+            }
+        }
+        inFile.close();
+
+        if (!found) {
+            this->tokenBalance = 0;
+            cout << "Token Balance: 0\n";
+        }
+
         cout << "1. Back\n";
-        cout << "Choice: ";
-        cin >> choice;
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
+            continue;
+        }
     } while (choice != 1);
 }
 
-void User::purchase() const {
+void User::purchase() {
     int choice;
 
     do {
@@ -54,8 +88,10 @@ void User::purchase() const {
         cout << "1. Scan QR Code\n";
         cout << "2. Input Merchant Code\n";
         cout << "3. Back to Home\n";
-        cout << "Choice: ";
-        cin >> choice;
+
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 3)) {
+            continue;
+        }
 
         switch (choice) {
             case 1:
@@ -71,38 +107,72 @@ void User::purchase() const {
     } while (choice != 3);
 }
 
-void User::convert() const {
+void User::purchaseTokens() {
+    int choice = 0;
+
+    do {
+        cout << "\n--- Purchase Tokens ---\n";
+        cout << "\n---------------------\n";
+        cout << "1. Input token amount\n";
+        cout << "2. Back to Home\n";
+
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 2)) {
+            continue;
+        }
+
+        switch(choice) {
+            case 1:
+                int change;
+                if (!getValidInput(change, "Please input token amount : ", "Invalid amount entered.")) {
+                    continue;
+                }
+                updateTotalTokens(change);
+                break;
+            case 2:
+                break;
+        }
+    } while (choice !=2);
+}
+
+void User::convertTokens() {
     int choice;
 
     do {
         cout << "\n--- Convert Tokens ---\n";
         cout << "\n---------------------\n";
         cout << "1. Back to Home\n";
-        cout << "Choice: ";
-        cin >> choice;
+
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
+            continue;
+        }
+
     } while (choice != 1);
 }
 
-void User::notifications() const {
+void User::notifications() {
     int choice;
 
     do {
         cout << "\n--- Notifications ---\n";
         cout << "\n---------------------\n";
         cout << "1. Back to Home\n";
-        cout << "Choice: ";
-        cin >> choice;
+
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
+            continue;
+        }
     } while (choice != 1);
 }
 
-void User::transactions() const {
+void User::transactions() {
     int choice;
 
     do {
         cout << "\n--- Transaction History ---\n";
         cout << "\n---------------------------\n";
         cout << "1. Back to Home\n";
-        cout << "Choice: ";
-        cin >> choice;
+
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
+            continue;
+        }
     } while (choice != 1);
 }

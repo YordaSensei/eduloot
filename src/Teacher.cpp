@@ -2,21 +2,25 @@
 #include <iostream>
 
 using namespace std;
-Teacher::Teacher(const string& name, int tokenBalance) : User(name, tokenBalance) {}
+
 enum class TeacherMenuOption { Wallet = 1, Purchase, Notifications, Transactions, Back };
 
-void Teacher::teacherMain() {
-    int choice;
+void Teacher::teacherMain(string insertedEmail) {
+    setEmail(insertedEmail);
+    setUserType("teacher");
 
+    int choice;
     do {
-        cout << "\n--- Good day, Teacher " << getName() << "! ---\n";
+        cout << "\n--- Good day, Teacher! ---\n";
         cout << "1. Wallet\n";
         cout << "2. Purchase\n";
         cout << "3. Notifications\n";
         cout << "4. Transactions\n";
         cout << "5. Log Out\n";
-        cout << "Choice: ";
-        cin >> choice;
+
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 5)) {
+            continue;
+        }
 
         switch(static_cast<TeacherMenuOption>(choice)) {
             case TeacherMenuOption::Wallet:

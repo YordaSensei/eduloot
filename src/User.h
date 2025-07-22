@@ -3,51 +3,58 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <limits>
+#include "admin/admin_helpers.h"
+
 
 class User {
+
 public:
-    User(const std::string& name, int tokenBalance);
     virtual ~User() = default;
 
-    virtual void wallet() const;
-    virtual void viewBalance() const;
-    virtual void purchase() const;
-    virtual void convert() const;
-    virtual void notifications() const;
-    virtual void transactions() const;
-
-    std::string getName() const { return name; }
+    virtual void wallet();
+    virtual void viewBalance();
+    virtual void purchase();
+    virtual void purchaseTokens();
+    virtual void convertTokens();
+    virtual void notifications();
+    virtual void transactions();
+    
+    std::string getEmail() const { return email; }
     int getTokenBalance() const { return tokenBalance; }
+
+    void setUserType(const std::string& t) { userType = t; }
+    void setEmail(const std::string& e) { email = e; }
     
 protected:
-    void setTokenBalance(int newBalance) {
-        int systemTokens = 0;
-        string line;
-
-        ifstream inFile ("tokensSystem.txt");
-        if (inFile.is_open()) {
-            getline(inFile, line);
-            if (!line.empty()){
-                systemTokens = stoi(line);
-            }
-            inFile.close();
-        } else {
-            cout << "\nERROR opening file...\n";
+    template<typename T>
+    bool getValidInput(T& input, 
+                const std::string& prompt = "", 
+                const std::string& errorMsg = "Invalid input.",
+                T min = std::numeric_limits<T>::lowest(),
+                T max = std::numeric_limits<T>::max()) 
+    {
+        if (!prompt.empty()) std::cout << prompt;
+        
+        if (!(std::cin >> input)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << errorMsg << "\n";
+            return false;
         }
-
-        systemTokens += newBalance;
-        if (systemTokens < 0) systemTokens = 0;
-
-        ofstream outFile ("tokensSystem.txt");
-        if(outFile.is_open()) {
-            outFile << systemTokens << endl;
-            outFile.close();
-        } else {
-            cout << "\nERROR opening file...\n";
+        
+        if (input < min || input > max) {
+            std::cout << "Please enter a value between " << min 
+                    << " and " << max << "\n";
+            return false;
         }
+        
+        return true;
     }
+
     
 private:
-    std::string name;
+    string email;
+    string userType;
     int tokenBalance;
 };
