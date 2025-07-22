@@ -49,7 +49,6 @@ void purchaseTokens(string email) {
     cin >> choice;
 
     bool found = false;
-    int currentBalance = 0;
 
     if (choice == 'y' || choice == 'Y'){
         vector<Student> balance;

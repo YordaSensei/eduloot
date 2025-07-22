@@ -7,32 +7,7 @@ using namespace std;
 
 #include "student_wallet.cpp"
 #include "student_purchase.cpp"
-
-void quests () {
-    ifstream inFile ("quests.txt");
-    string line;
-
-    if (!inFile) {
-        cerr << "ERROR: Could not open quests.txt\n";
-        return;
-    }
-
-    cout << "\n--- Available Quests ---\n";
-    while (getline(inFile, line)) {
-        if (!line.empty()) {
-            string desc, rewardStr;
-            stringstream split(line);
-
-            getline(split, desc, ',');
-            getline(split, rewardStr, ',');
-            
-            cout << "Task: " << desc << " | Reward: " << rewardStr;
-        }
-    }
-    cout << "\n------------------------\n";
-
-    inFile.close();
-}
+#include "student_quests.cpp"
 
 void notification() {
     int choice;
@@ -81,7 +56,7 @@ void studentMain(string email) {
                 purchase(email);
                 break;
             case 3:
-                quests();
+                quests(email);
                 break;
             case 4:
                 break;

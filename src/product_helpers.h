@@ -7,7 +7,7 @@ using namespace std;
 struct Product {
     string merchant;
     string name;
-    double price;
+    int price;
     int quantity;
     string desc;
 };

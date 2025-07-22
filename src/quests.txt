@@ -1,1 +1,1 @@
-attend seminar,Tokens: 10,Claims: 10
+attend seminar,10,10
