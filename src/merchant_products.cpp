@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void editStock() {
+void editStock(string email) {
     vector<Product> productList;
     ifstream inFile("productList.txt");
     string line;
@@ -18,12 +18,13 @@ void editStock() {
             string strPrice, strQuantity;
             stringstream split(line);
 
+            getline(split, p.merchant, ',');
             getline(split, p.name, ',');
             getline(split, strPrice, ',');
             getline(split, strQuantity, ',');
             getline(split, p.desc);
 
-            p.price = stod(strPrice);
+            p.price = stoi(strPrice);
             p.quantity = stoi(strQuantity);
 
             productList.push_back(p);
@@ -31,42 +32,54 @@ void editStock() {
     }
     inFile.close();
 
-    if (productList.empty()) {
+    vector<Product> merchantProducts;
+    for (Product& p : productList) { 
+        if (p.merchant == email){
+            merchantProducts.push_back(p);
+        }
+    }
+
+    if (merchantProducts.empty()) {
         cout << "No products available to edit.\n";
         return;
     }
 
     cout << "\n--- Choose a product to edit ---\n";
-    for (size_t i = 0; i < productList.size(); ++i) {
-        cout << i + 1 << ". " << productList[i].name
-             << " (Current Stock: " << productList[i].quantity << ")\n";
+    for (size_t i = 0; i < merchantProducts.size(); ++i) {
+        cout << i + 1 << ". " << merchantProducts[i].name
+             << " (Current Stock: " << merchantProducts[i].quantity << ")\n";
     }
 
     int choice;
     cout << "Enter product number to edit: ";
     cin >> choice;
 
-    if (choice < 1 || choice > productList.size()) {
+    if (choice < 1 || choice > merchantProducts.size()) {
         cout << "Invalid choice.\n";
         return;
     }
 
     int newQty;
-    cout << "Enter new stock quantity for " << productList[choice - 1].name << ": ";
+    cout << "Enter new stock quantity for " << merchantProducts[choice - 1].name << ": ";
     cin >> newQty;
 
-    productList[choice - 1].quantity = newQty;
+    for (Product& p : productList) {
+        if (p.merchant == email && p.name == merchantProducts[choice - 1].name) {
+            p.quantity = newQty;
+            break;
+        }
+    }
 
     ofstream outFile("productList.txt");
     for (const Product& p : productList) {
-        outFile << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
+        outFile << p.merchant << "," << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
     }
     outFile.close();
 
     cout << "Stock updated successfully.\n";
 }
 
-void products() {
+void products(string email) {
     int choice;
 
     do {
@@ -75,29 +88,32 @@ void products() {
         ifstream inFile("productList.txt");
         string line;
         bool hasProducts = false;
+        vector<Product> merchantProducts;
 
         while (getline(inFile, line)) {
             if (!line.empty()) {
-                hasProducts = true;
-
-                // Parse using your Product struct
                 Product p;
                 stringstream split(line);
                 string priceStr, quantityStr;
 
+                getline(split, p.merchant, ',');
                 getline(split, p.name, ',');
                 getline(split, priceStr, ',');
                 getline(split, quantityStr, ',');
                 getline(split, p.desc);
 
-                p.price = stod(priceStr);
+                p.price = stoi(priceStr);
                 p.quantity = stoi(quantityStr);
 
-                // Display the product
-                cout << "Name: " << p.name
+                if (p.merchant == email) {
+                    hasProducts = true;
+                    merchantProducts.push_back(p);
+
+                    cout << "Name: " << p.name
                      << " | Token Price: " << p.price
                      << " | Quantity: " << p.quantity
                      << " | Description: " << p.desc << endl;
+                }   
             }
         }
 
@@ -115,7 +131,7 @@ void products() {
 
         switch (choice) {
             case 1:
-                editStock();
+                editStock(email);
                 break;
             case 2:
                 cout << "Returning to home...\n";

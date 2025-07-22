@@ -26,7 +26,7 @@ void merchantMain(string email) {
 
         switch(choice) {
             case 1:
-                products();
+                products(email);
                 break;
             case 2:
                 sales();

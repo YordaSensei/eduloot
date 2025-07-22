@@ -1,7 +1,0 @@
-add,cock,100,5,will get you high (grades)
-cashout,jk
-EduGate,add,brownies,20,10,fudgy
-EduGate,delete,brownies,hase out
-EduGate,add,Kiosk,200,3,RFID Kiosk System
-EduGate,add,Chocolate,5,40,Yum
-edit,EduGate,Chocolatey,10.00,30,Yay

@@ -1,2 +1,3 @@
-EduGate,Golden,999,5,WE'RE GOING UP UP UP
-CIIT,Suspension,999,1,Only one suspension allowed
+CIIT,Suspension,1,0,Only one suspension allowed
+CIIT,Burger,3,997,Nom nom nom
+EduGate,Golden,999,7,WE'RE GOING UP UP UP
