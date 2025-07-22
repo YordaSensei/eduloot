@@ -6,7 +6,6 @@
 #include <limits>
 #include "admin/admin_helpers.h"
 
-
 class User {
 
 public:
