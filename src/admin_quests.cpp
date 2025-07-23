@@ -61,33 +61,31 @@ void approveStudentQuests() {
     }
     inFile.close();
 
-    if (quests.empty()) {
-        cout << termcolor::bright_red << "\n[!] No completed quests found.\n" << termcolor::reset;
-        return;
-    }
-
     cout << termcolor::bold << termcolor::magenta;
     cout << "\n+----------------------------------------------+\n";
     cout << "| " << termcolor::bright_yellow << "        Quests Completed by Students    " << termcolor::magenta << "     |\n";
     cout << "+----------------------------------------------+\n";
     cout << termcolor::reset;
 
+    int displayIndex = 1;
+    bool hasRequests = false;
     for (size_t i = 0; i < quests.size(); i++) {
-        cout << termcolor::bright_yellow << (i + 1) << ". " << termcolor::reset
+        hasRequests = true;
+        cout << termcolor::bright_yellow << displayIndex << ". " << termcolor::reset
             << quests[i].email << " | "
             << quests[i].quest << " | "
             << quests[i].tokenAmount << endl;
+            displayIndex++;
+    }
+
+    if (!hasRequests) {
+        cout << termcolor::red << "(No pending quest requests)\n";
+        return;
     }
 
     cout << termcolor::magenta << "\n+----------------------------------------------+\n";
     
-    while (true) {
-        cout << termcolor::bright_yellow << "Enter accomplished student quest to approve: ";
-        if (cin >> index && index > 0 && index <= (int)quests.size()) break;
-        cout << termcolor::red << "Invalid input. Please enter a valid index.\n";
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
+    index = promptValidatedIndex("Enter request number to approve: ", quests.size());
 
     cin.ignore();
     cout << termcolor::reset;
@@ -176,24 +174,9 @@ void createQuest() {
     cout << "Quest: ";
     getline(cin, quest);
 
-    while (true) {
-        cout << "Token Reward: ";
-        if (cin >> tokenAmount && tokenAmount >= 0) break;
-        cout << termcolor::red << "Invalid input. Please enter a non-negative number.\n" << termcolor::bright_yellow;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-
-    while (true) {
-        cout << "Maximum Claims: ";
-        if (cin >> studentLimit && studentLimit >= 0) break;
-        cout << termcolor::red << "Invalid input. Please enter a non-negative number.\n" << termcolor::bright_yellow;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-
-    cout << termcolor::reset;
-    cin.ignore();
+    quest = promptNonEmptyInput("Quest: ");
+    tokenAmount = promptValidatedPrice("Token Reward: ");
+    studentLimit = promptValidatedQuantity("Maximum Claims: ");
 
     string concat = quest + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
 
@@ -220,28 +203,9 @@ void deleteQuest() {
     cout << "+-----------------------------+\n";
     cout << termcolor::reset;
 
-    cout << termcolor::bright_yellow;
-    cout << "Enter the quest name: ";
-    getline(cin, quest);
-
-    while (true) {
-        cout << "Enter Token Amount: ";
-        if (cin >> tokenAmount && tokenAmount >= 0) break;
-        cout << termcolor::red << "Invalid input. Please enter a non-negative number.\n" << termcolor::bright_yellow;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-
-    while (true) {
-        cout << "Enter Maximum Claims: ";
-        if (cin >> studentLimit && studentLimit >= 0) break;
-        cout << termcolor::red << "Invalid input. Please enter a non-negative number.\n" << termcolor::bright_yellow;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-
-    cout << termcolor::reset;
-    cin.ignore();
+    quest = promptNonEmptyInput("Quest: ");
+    tokenAmount = promptValidatedPrice("Token Reward: ");
+    studentLimit = promptValidatedQuantity("Maximum Claims: ");
 
     string concat = quest + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
     deleteLine(filename, concat);

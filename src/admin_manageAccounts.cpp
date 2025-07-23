@@ -2,31 +2,39 @@
 
 using namespace std;
 
+int printAccountTypeMenu(const string& title) {
+    int choice;
+    cout << termcolor::bold << termcolor::magenta;
+    cout << "\n+-------------------------------+\n";
+    cout << "|  " << termcolor::bright_yellow << setw(27) << left << title << termcolor::magenta <<   "|\n";
+    cout << "+-------------------------------+\n";
+    cout << "|  1. Student                   |\n";
+    cout << "|  2. Teacher                   |\n";
+    cout << "|  3. Merchant                  |\n";
+    cout << "|  4. Parent                    |\n";
+    cout << "|  5. Back                      |\n";
+    cout << "+-------------------------------+\n" << termcolor::reset;
+
+    while (true) {
+        cout << termcolor::bright_yellow << "Choice: ";
+        if (cin >> choice && choice >= 1 && choice <= 5) break;
+        cout << termcolor::red << "Invalid choice. Please enter 1-5.\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    clearSystem();
+    return choice;
+}
+
 void viewAccounts() {
     int choice;
     string line;
 
     do {
-        cout << termcolor::bold << termcolor::magenta;
-        cout << "\n+-------------------------------+\n";
-        cout << "|  " << termcolor::bright_yellow << "           VIEW              " << termcolor::magenta << "|\n";
-        cout << "+-------------------------------+\n";
-
-        cout << "|  1. Student                   |\n";
-        cout << "|  2. Teacher                   |\n";
-        cout << "|  3. Merchant                  |\n";
-        cout << "|  4. Parent                    |\n";
-        cout << "|  5. Back                      |\n";
-        cout << "+-------------------------------+\n" << termcolor::reset;
-
-        cout << termcolor::bright_yellow << "Choice: ";
-        cin >> choice;
-        cin.ignore();
-        cout << termcolor::reset;
-        clearSystem();
+        choice = printAccountTypeMenu("VIEW");
         
         ifstream file;
-
         switch (choice) {
             case 1:
                 file.open("studentAccounts.txt");
@@ -95,26 +103,7 @@ void createAccount() {
     ofstream accountsFile;
 
     do {
-        cout << termcolor::bold << termcolor::magenta;
-        cout << "\n+-------------------------------+\n";
-        cout << "|  " << termcolor::bright_yellow << "         CREATE              " << termcolor::magenta << "|\n";
-        cout << "+-------------------------------+\n";
-
-        cout << "|  1. Student                   |\n";
-        cout << "|  2. Teacher                   |\n";
-        cout << "|  3. Merchant                  |\n";
-        cout << "|  4. Parent                    |\n";
-        cout << "|  5. Back                      |\n";
-        cout << "+-------------------------------+\n" << termcolor::reset;
-
-       while (true) {
-            cout << termcolor::bright_yellow << "Choice: ";
-            if (cin >> choice && choice >= 1 && choice <= 5) break;
-            cout << termcolor::red << "Invalid choice. Please enter 1-5.\n";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-        system("cls");
+        choice = printAccountTypeMenu("CREATE");
 
     switch (choice) {
             case 1: case 2: case 4: {
@@ -125,8 +114,8 @@ void createAccount() {
                     cout << "\n+--------------------------------------------+\n";
                     cout << "|              STUDENT ACCOUNT               |\n";
                     cout << "+--------------------------------------------+\n";
-                cout << termcolor::reset;
-                }else if (choice == 2) {
+                    cout << termcolor::reset;
+                } else if (choice == 2) {
                     filename = "teacherAccounts.txt";
                     cout << termcolor::bold << termcolor::bright_green;
                     cout << "\n+--------------------------------------------+\n";
@@ -144,15 +133,10 @@ void createAccount() {
 
                 cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
 
-                do {
-                    cout << termcolor::bright_yellow << "CIIT Email: ";
-                    getline(cin, acc.ciitEmail);
-                    cout << termcolor::reset;
+                Account acc;
 
-                    if (acc.ciitEmail.empty()) {
-                        cout << termcolor::bright_red << "\nERROR: Email cannot be empty.\n" << termcolor::reset;
-                        continue;
-                    }
+                while (true) {
+                    acc.ciitEmail = promptNonEmptyInput("Email: ");
 
                     if (acc.ciitEmail.find("@ciit.edu.ph") == string::npos || acc.ciitEmail.find(" ") != string::npos) {
                         cout << termcolor::bright_red << "\nERROR: Please enter a valid CIIT Email (must contain @ciit.edu.ph and no spaces)\n" << termcolor::reset;
@@ -165,17 +149,10 @@ void createAccount() {
                     }
 
                     break;
-                } while (true);
+                }
 
-                do {
-                    cout << termcolor::bright_yellow << "Username: ";
-                    getline(cin, acc.username);
-                    cout << termcolor::reset;
-
-                    if (acc.username.empty()) {
-                        cout << termcolor::bright_red << "\nERROR: Username cannot be empty.\n" << termcolor::reset;
-                        continue;
-                    }
+                while (true) {
+                    acc.username = promptNonEmptyInput("Username: ");
 
                     if (isUsernameTaken(filename, acc.username)) {
                         cout << termcolor::bright_red << "\nERROR: Username already exists! Please try a different one.\n" << termcolor::reset;
@@ -183,22 +160,11 @@ void createAccount() {
                     }
 
                     break;
-                } while (true);
+                }
 
-                do {
-                    cout << termcolor::bright_yellow << "Password: ";
-                    getline(cin, acc.password);
-                    cout << termcolor::reset;
+                acc.password = promptNonEmptyInput("Password: ");
 
-                    if (acc.password.empty()) {
-                        cout << termcolor::bright_red << "\nERROR: Password cannot be empty.\n" << termcolor::reset;
-                        continue;
-                    }
-
-                    break;
-                } while (true);
-
-                accountsFile.open(filename, ios::app);
+                ofstream accountsFile(filename, ios::app);
                 if (accountsFile.is_open()) {
                     accountsFile << acc.ciitEmail << "," << acc.username << "," << acc.password << endl;
                     accountsFile.close();
@@ -222,16 +188,9 @@ void createAccount() {
                 cout << termcolor::reset;
 
                 cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-                
-                do {
-                    cout << termcolor::bright_yellow << "Shop Name: ";
-                    getline(cin, shop.shopname);
-                    cout << termcolor::reset;
 
-                    if (shop.shopname.empty()) {
-                        cout << termcolor::bright_red << "ERROR: Shop name cannot be empty.\n" << termcolor::reset;
-                        continue;
-                    }
+                while (true) {
+                    shop.shopname = promptNonEmptyInput("Shop Name: ");
 
                     if (isEmailTaken(filename, shop.shopname)) {
                         cout << termcolor::bright_red << "ERROR: Shop already exists!\n" << termcolor::reset;
@@ -239,17 +198,10 @@ void createAccount() {
                     }
 
                     break;
-                } while (true);
+                }
 
-                do {
-                    cout << termcolor::bright_yellow << "Username: ";
-                    getline(cin, shop.username);
-                    cout << termcolor::reset;
-
-                    if (shop.username.empty()) {
-                        cout << termcolor::bright_red << "ERROR: Username cannot be empty.\n" << termcolor::reset;
-                        continue;
-                    }
+                while (true) {
+                    shop.username = promptNonEmptyInput("Username: ");
 
                     if (isUsernameTaken(filename, shop.username)) {
                         cout << termcolor::bright_red << "ERROR: Username already exists! Please try a different one.\n" << termcolor::reset;
@@ -257,19 +209,9 @@ void createAccount() {
                     }
 
                     break;
-                } while (true);
-
-                do {
-                    cout << termcolor::bright_yellow << "Password: ";
-                    getline(cin, shop.password);
-                    cout << termcolor::reset;
-
-                    if (shop.password.empty()) {
-                        cout << termcolor::bright_red << "ERROR: Password cannot be empty.\n" << termcolor::reset;
-                    } else {
-                        break;
-                    }
-                } while (true);
+                }
+                
+                shop.password = promptNonEmptyInput("Password: ");
 
                 if (accountsFile.is_open()) {
                     accountsFile << shop.shopname << "," << shop.username << "," << shop.password << endl;
@@ -296,34 +238,12 @@ void createAccount() {
 
 void deleteAccount() {
     int choice;
-    string emailOrShop, username, password;
-    string filename;
-
     do {
-        cout << termcolor::bold << termcolor::magenta;
-        cout << "\n+-------------------------------+\n";
-        cout << "|  " << termcolor::bright_yellow << "          DELETE             " << termcolor::magenta << "|\n";
-        cout << "+-------------------------------+\n";
-        cout << "|  1. Student                   |\n";
-        cout << "|  2. Teacher                   |\n";
-        cout << "|  3. Merchant                  |\n";
-        cout << "|  4. Parent                    |\n";
-        cout << "|  5. Back                      |\n";
-        cout << "+-------------------------------+\n";
-        cout << termcolor::reset;
-
-        while (true) {
-            cout << termcolor::bright_yellow << "Choice: ";
-            if (cin >> choice && choice >= 1 && choice <= 5) break;
-            cout << termcolor::red << "Invalid choice. Please enter 1-5.\n";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-        system("cls");
+       choice = printAccountTypeMenu("DELETE");
 
         switch (choice) {
             case 1: case 2: case 3: case 4: {
-                string findemailOrShop, findusername, findpassword;
+                string findemailOrShop, findusername, findpassword, filename;
 
                 cout << termcolor::bold << termcolor::bright_yellow;
                 cout << "\n+----------------------------------------+\n";
@@ -331,43 +251,21 @@ void deleteAccount() {
                 cout << "+----------------------------------------+\n";
                 cout << termcolor::reset;
 
-                cout << termcolor::bright_yellow;
-
-                if (choice == 3)
-                    cout << "Shop Name: ";
-                else
-                    cout << "CIIT Email: ";
-
                 cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
 
-                getline(cin, findemailOrShop);
-                while (findemailOrShop.empty()) {
-                    cout << termcolor::red << "This field cannot be empty.\n Please enter a value: " << termcolor::reset;
-                    getline(cin, findemailOrShop);
+                string promptLabel = (choice == 3) ? "Shop Name: " : "CIIT Email: ";
+                findemailOrShop = promptNonEmptyInput(promptLabel);
+                findusername    = promptNonEmptyInput("Username: ");
+                findpassword    = promptNonEmptyInput("Password: ");
+
+                switch (choice) {
+                    case 1: filename = "studentAccounts.txt"; break;
+                    case 2: filename = "teacherAccounts.txt"; break;
+                    case 3: filename = "merchantAccounts.txt"; break;
+                    case 4: filename = "parentAccounts.txt"; break;
                 }
 
-                cout << "Username: ";
-                getline(cin, findusername);
-                while (findusername.empty()) {
-                    cout << termcolor::red << "Username cannot be empty.\n Please enter a username: " << termcolor::reset;
-                    getline(cin, findusername);
-                }
-
-                cout << "Password: ";
-                getline(cin, findpassword);
-                while (findpassword.empty()) {
-                    cout << termcolor::red << "Password cannot be empty.\n Please enter a password: " << termcolor::reset;
-                    getline(cin, findpassword);
-                }
-
-                cout << termcolor::reset;
-
-                if (choice == 1) filename = "studentAccounts.txt"; 
-                if (choice == 2) filename = "teacherAccounts.txt"; 
-                if (choice == 3)filename = "merchantAccounts.txt"; 
-                if (choice == 4)filename = "parentAccounts.txt"; 
-            
-                string concat = emailOrShop + "," + username + "," + password;
+                string concat = findemailOrShop + "," + findusername + "," + findpassword;
                 deleteLine(filename, concat);
                 clearSystem();
                 break;
@@ -376,46 +274,31 @@ void deleteAccount() {
             case 5:
                 system("cls");
                 break;
+
             default:
                 cout << termcolor::bright_red << "\nERROR: Enter a valid choice!\n" << termcolor::reset;
         }
     } while (choice != 5);
 }
 
-void editAccount () {
+void editAccount() {
     int choice;
-    string findemailOrShop, findusername, findpassword;
-    string emailOrShop, username, password;
-    string filename;
 
     do {
-        cout << termcolor::bold << termcolor::magenta;
-        cout << "\n+-------------------------------+\n";
-        cout << "|  " << termcolor::bright_yellow << "           EDIT               " << termcolor::magenta << "|\n";
-        cout << "+-------------------------------+\n";
-        cout << "|  1. Student                   |\n";
-        cout << "|  2. Teacher                   |\n";
-        cout << "|  3. Merchant                  |\n";
-        cout << "|  4. Parent                    |\n";
-        cout << "|  5. Back                      |\n";
-        cout << "+-------------------------------+\n";
-        cout << termcolor::reset;
+        string findemailOrShop, findusername, findpassword,
+                emailOrShop, username, password,
+                oldDetails, filename, line;
 
-        while (true) {
-            cout << termcolor::bright_yellow << "Choice: ";
-            if (cin >> choice && choice >= 1 && choice <= 5) break;
-            cout << termcolor::red << "Invalid choice. Please enter 1-5.\n";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-        system("cls");
+        choice = printAccountTypeMenu("EDIT");
 
         switch (choice) {
             case 1: case 2: case 3: case 4: {
-                if (choice == 1) filename = "studentAccounts.txt"; 
-                if (choice == 2) filename = "teacherAccounts.txt"; 
-                if (choice == 3)filename = "merchantAccounts.txt"; 
-                if (choice == 4)filename = "parentAccounts.txt"; 
+                if (choice == 1) filename = "studentAccounts.txt";
+                if (choice == 2) filename = "teacherAccounts.txt";
+                if (choice == 3) filename = "merchantAccounts.txt";
+                if (choice == 4) filename = "parentAccounts.txt";
+
+                string label = (choice == 3) ? "Shop Name: " : "CIIT Email: ";
 
                 cout << termcolor::bold << termcolor::bright_magenta;
                 cout << "\n+-----------------------------------------+\n";
@@ -423,37 +306,30 @@ void editAccount () {
                 cout << "+-----------------------------------------+\n";
                 cout << termcolor::reset;
 
-                cout << termcolor::bright_yellow;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-                if (choice == 3)
-                    cout << "Shop Name: ";
-                else
-                    cout << "CIIT Email: ";
+                while (true) {
+                findemailOrShop = promptNonEmptyInput(label);
+                    findusername = promptNonEmptyInput("Username: ");
+                    findpassword = promptNonEmptyInput("Password: ");
+                    oldDetails = findemailOrShop + "," + findusername + "," + findpassword;
 
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-                
-                getline(cin, findemailOrShop);
-                while (findemailOrShop.empty()) {
-                    cout << termcolor::red << "This field cannot be empty.\n Please enter a value: " << termcolor::reset;
-                    getline(cin, findemailOrShop);
+                    bool accountFound = false;
+                    ifstream findAccount(filename);
+                    while (getline(findAccount, line)) {
+                        if (line == oldDetails) {
+                            accountFound = true;
+                        } 
+                    } 
+                    findAccount.close();
+
+                    if (accountFound) {
+                        cout << termcolor::green << "Account found!\n" << termcolor::reset;
+                    } else {
+                        cout << termcolor::red << "Account not found.\n" << termcolor::reset;
+                        continue; 
+                    }
                 }
-
-                cout << "Username: ";
-                getline(cin, findusername);
-                while (findusername.empty()) {
-                    cout << termcolor::red << "Username cannot be empty.\n Please enter a username: " << termcolor::reset;
-                    getline(cin, findusername);
-                }
-
-                cout << "Password: ";
-                getline(cin, findpassword);
-                while (findpassword.empty()) {
-                    cout << termcolor::red << "Password cannot be empty.\n Please enter a password: " << termcolor::reset;
-                    getline(cin, findpassword);
-                }
-                cout << termcolor::reset;
-
-                string oldDetails = findemailOrShop + "," + findusername + "," + findpassword;
 
                 cout << termcolor::bold << termcolor::bright_magenta;
                 cout << "\n+----------------------------------------+\n";
@@ -461,50 +337,50 @@ void editAccount () {
                 cout << "+----------------------------------------+\n";
                 cout << termcolor::reset;
 
-                cout << termcolor::bright_magenta;
+                while (true) {
+                    emailOrShop = promptNonEmptyInput(label);
 
-                if (choice == 3)
-                    cout << "Shop Name: ";
-                else
-                    cout << "Email: ";
+                    if (emailOrShop == findemailOrShop) break;
 
-                getline(cin, emailOrShop);
-                while (emailOrShop.empty()) {
-                    cout << termcolor::red << "This field cannot be empty.\n Please enter a value: " << termcolor::reset;
-                    getline(cin, emailOrShop);
+                    if (isEmailTaken(filename, emailOrShop)) {
+                        cout << termcolor::bright_red << "ERROR: That " << ((choice == 3) ? "shop name" : "email") << " already exists!\n" << termcolor::reset;
+                        continue;
+                    }
+
+                    break;
                 }
 
-                cout << "Username: ";
-                getline(cin, username);
-                while (username.empty()) {
-                    cout << termcolor::red << "Username cannot be empty.\n Please enter a username: " << termcolor::reset;
-                    getline(cin, username);
+                while (true) {
+                    username = promptNonEmptyInput("Username: ");
+
+                    if (username == findusername) break;
+
+                    if (isUsernameTaken(filename, username)) {
+                        cout << termcolor::bright_red << "ERROR: Username already exists! Please try a different one.\n" << termcolor::reset;
+                        continue;
+                    }
+
+                    break;
                 }
 
-                cout << "Password: ";
-                getline(cin, password);
-                while (password.empty()) {
-                    cout << termcolor::red << "Password cannot be empty.\n Please enter a password: " << termcolor::reset;
-                    getline(cin, password);
-                }
-
-                cout << termcolor::reset;
-
+                password = promptNonEmptyInput("Password: ");
                 string newDetails = emailOrShop + "," + username + "," + password;
 
-                editLine (filename, oldDetails, newDetails);
+                editLine(filename, oldDetails, newDetails);
                 clearSystem();
                 break;
             }
-            case 5: 
+
+            case 5:
                 system("cls");
                 break;
+
             default:
                 cout << termcolor::bright_red << "\nERROR: Invalid Choice!\n" << termcolor::reset;
-                continue;
+                break;
         }
 
-    } while (choice !=5);
+    } while (choice != 5);
 }
 
 void manageAccounts () {
@@ -515,7 +391,6 @@ void manageAccounts () {
         cout << "\n+--------------------------------+\n";
         cout << "|  " << termcolor::bright_yellow << "      MANAGE ACCOUNTS         " << termcolor::magenta << "|\n";
         cout << "+--------------------------------+\n";
-
         cout << "|  1. View all accounts          |\n";
         cout << "|  2. Create accounts            |\n";
         cout << "|  3. Delete account             |\n";
@@ -553,5 +428,4 @@ void manageAccounts () {
         }
 
     } while (choice != 5);
-
 }

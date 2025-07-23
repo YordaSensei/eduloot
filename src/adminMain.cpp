@@ -10,62 +10,75 @@
 
 using namespace std;
 
+enum AdminMenu {
+    MANAGE_ACCOUNTS = 1,
+    NOTIFICATIONS,
+    QUESTS_TAB,
+    MERCHANT_REQUESTS,
+    BANK,
+    EMERGENCY_FUNDS,
+    VIEW_TRANSACTIONS,
+    LOG_OUT
+};
+
+void printAdminMenu() {
+    cout << termcolor::bold << termcolor::magenta;
+    cout << "\n+------------------------------+\n";
+    cout << "|  " << termcolor::bright_yellow << "     Good day, Admin!       " << termcolor::magenta << "|\n";
+    cout << "+------------------------------+\n";
+    cout << "|  1. Manage accounts          |\n";
+    cout << "|  2. Notifications            |\n";
+    cout << "|  3. Quests Tab               |\n";
+    cout << "|  4. Merchant Requests        |\n";
+    cout << "|  5. Bank                     |\n";
+    cout << "|  6. Emergency Funds          |\n";
+    cout << "|  7. View Transactions        |\n";
+    cout << "|  8. Log Out                  |\n";
+    cout << "+------------------------------+\n" << termcolor::reset;
+}
+
 void adminMain() {
     int choice;
 
     do {
-        cout << termcolor::bold << termcolor::magenta;
-        cout << "\n+------------------------------+\n";
-        cout << "|  " << termcolor::bright_yellow << "     Good day, Admin!       " << termcolor::magenta << "|\n";
-        cout << "+------------------------------+\n";
-        cout << "|  1. Manage accounts          |\n";
-        cout << "|  2. Notifications            |\n";
-        cout << "|  3. Quests Tab               |\n";
-        cout << "|  4. Merchant Requests        |\n";
-        cout << "|  5. Bank                     |\n";
-        cout << "|  6. Emergency Funds          |\n";
-        cout << "|  7. View Transactions        |\n";
-        cout << "|  8. Log Out                  |\n";
-        cout << "+------------------------------+\n"<< termcolor::reset;
+        printAdminMenu();
 
         while (true) {
             cout << termcolor::bright_yellow << "Choice: ";
-            if (cin >> choice && choice >= 1 && choice <= 8) break;
+            if (cin >> choice && choice >= MANAGE_ACCOUNTS && choice <= LOG_OUT) break;
             cout << termcolor::red << "Invalid choice. Please enter 1-8.\n";
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
+
         system("cls");
 
         switch (choice) {
-            case 1:
+            case MANAGE_ACCOUNTS:
                 manageAccounts();
                 break;
-            case 2:
+            case NOTIFICATIONS:
                 notifications();
                 break;
-            case 3:
+            case QUESTS_TAB:
                 questsTab();
                 break;
-            case 4:
+            case MERCHANT_REQUESTS:
                 merchantRequests();
                 break;
-            case 5:
+            case BANK:
                 bank();
                 break;
-            case 6:
+            case EMERGENCY_FUNDS:
                 emergencyFunds();
                 break;
-            case 7:
+            case VIEW_TRANSACTIONS:
                 viewTransactions();
                 break;
-            case 8:
+            case LOG_OUT:
                 break;
-            default:
-                cout << "\nERROR: Invalid Choice!\n";
-                continue;
         }
-    } while (choice != 8);
+    } while (choice != LOG_OUT);
 
     cout << termcolor::red << "\nLogging out...\n" << termcolor::reset;
     clearSystem();

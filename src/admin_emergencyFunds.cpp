@@ -3,82 +3,67 @@
 using namespace std;
 
 struct studentreq {
-    string email;
-    string reason;
+    string email, reason, originalLine;
     int tokenAmount;
-    string originalLine;
 };
 
 void emergencyFunds() {
-    cout << termcolor::bold << termcolor::magenta;
-    cout << "\n+---------------------------------+\n";
-    cout << "| "  << termcolor::yellow <<  "    Provide Emergency Funds    " << termcolor::magenta <<    " |\n";
-    cout << "+---------------------------------+\n";
-    cout << termcolor::reset;
+    cout << termcolor::bold << termcolor::magenta
+         << "\n+---------------------------------+\n"
+         << "| " << termcolor::yellow << "    Provide Emergency Funds    " 
+         << termcolor::magenta << " |\n"
+         << "+---------------------------------+\n" << termcolor::reset;
 
     vector<studentreq> funds;
-    ifstream inFile ("studentEmergencyFunds.txt"); 
+    ifstream inFile("studentEmergencyFunds.txt"); 
     string line;
 
     while (getline(inFile, line)) {
         studentreq req;
+        req.originalLine = line;
         string tokenStr;
         stringstream ss(line);
-        req.originalLine = line;
 
-        getline (ss, req.email, ',');
-        getline (ss, req.reason, ',');
-        getline (ss, tokenStr);
+        getline(ss, req.email, ',');
+        getline(ss, req.reason, ',');
+        getline(ss, tokenStr);
 
         try {
             req.tokenAmount = stoi(tokenStr);
+            funds.push_back(req);
         } catch (...) {
             continue;
         }
+    }
+    inFile.close();
 
-        funds.push_back(req);
+    if (funds.empty()) {
+        cout << termcolor::red << "(No pending emergency funds requests)\n" << termcolor::reset;
+        return;
     }
 
-    int displayedIndex = 1;
-    bool hasRequests = false;
     for (size_t i = 0; i < funds.size(); i++) {
-        hasRequests = true;
-        cout << termcolor::yellow << displayedIndex << ". " << funds[i].email << " | " 
-        << funds[i].reason << " | " << funds[i].tokenAmount << termcolor::reset << endl;
-            displayedIndex++;
+        cout << termcolor::yellow << i + 1 << ". " << funds[i].email << " | " 
+             << funds[i].reason << " | " << funds[i].tokenAmount << termcolor::reset << endl;
     }
 
-    if (!hasRequests) {
-        cout << termcolor::red << "(No pending emergency funds requests)\n";
-    }
+    cout << termcolor::magenta << "+-----------------------------------+\n" << termcolor::reset;
 
     int index;
-    cout << termcolor::magenta << "+-----------------------------------+\n" << termcolor::reset;
-    while (true) {
-        cout << termcolor::bright_yellow << "Enter request number to approve: ";
-        if (cin >> index && index > 0 && index <= (int)funds.size()) break;
-        cout << termcolor::red << "Invalid input. Please enter a valid index.\n";
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-
-    if (index <= 0 || index > funds.size()) return;
+    index = promptValidatedIndex("Enter request number to approve: ", funds.size());
 
     studentreq selected = funds[index - 1];
-
     updateTotalTokens(-selected.tokenAmount);
 
-    ofstream approveFile ("studentApprovedReqs.txt", ios::app);
-    approveFile << selected.originalLine << endl;
-    approveFile.close();
+    ofstream tokensOut("tokensOut.txt", ios::app);
+    tokensOut << selected.email << "," << selected.tokenAmount << endl;
+    tokensOut.close();
 
-    ofstream reminders ("studentLoan.txt", ios::app);
-    reminders << selected.originalLine;
-    reminders.close();
+    if (deleteLine("studentEmergencyFunds.txt", selected.originalLine)) {
+        ofstream("studentApprovedReqs.txt", ios::app) << selected.originalLine << endl;
+        ofstream("studentLoan.txt", ios::app) << selected.originalLine << endl;
 
-    deleteLine("studentEmergencyFunds.txt", selected.originalLine);
-
-        vector<string> balanceLines;
+        vector<string> lines;
         ifstream walletIn("studentBalance.txt");
         string walletLine;
         bool found = false;
@@ -90,27 +75,26 @@ void emergencyFunds() {
             getline(ss, balanceStr);
 
             if (username == selected.email) {
-                int balance = stoi(balanceStr);
-                balance += selected.tokenAmount;
-                balanceLines.push_back(username + "," + to_string(balance));
+                int balance = stoi(balanceStr) + selected.tokenAmount;
+                lines.push_back(username + "," + to_string(balance));
                 found = true;
             } else {
-                balanceLines.push_back(walletLine);
+                lines.push_back(walletLine);
             }
         }
         walletIn.close();
 
-        if (!found) {
-            balanceLines.push_back(selected.email + "," + to_string(selected.tokenAmount));
-        }
+        if (!found)
+            lines.push_back(selected.email + "," + to_string(selected.tokenAmount));
 
         ofstream walletOut("studentBalance.txt");
-        for (const string& line : balanceLines) {
-            walletOut << line << endl;
-        }
+        for (const auto& l : lines) walletOut << l << '\n';
         walletOut.close();
 
-        cout << termcolor::green << "Emergency fund approved. " << selected.tokenAmount << " tokens transferred to " << selected.email << termcolor::reset << endl;
+        cout << termcolor::green << "\nEmergency fund approved. " << selected.tokenAmount
+            << " tokens transferred to " << selected.email << termcolor::reset << endl;
+
         cout << termcolor::red << "\nReturning to menu...\n" << termcolor::reset;
         clearSystem();
+    }
 }

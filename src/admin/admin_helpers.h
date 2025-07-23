@@ -10,7 +10,12 @@ bool deleteLine(const string &filename, const string &targetLine);
 bool editLine(const string &filename, const string &targetLine, const string &updatedLine);
 void updateTotalTokens(int change);
 void updateTotalMoney(int pesos);
-void clearSystem(int delayMillis = 1000);
+void clearSystem(int delayMillis = 1200);
 void updateTotalMoney(float pesos);
+void clearSystem(int delayMillis);
+string promptNonEmptyInput(const string& promptText);
+double promptValidatedPrice(const string& promptText);
+int promptValidatedQuantity(const string& promptText);
+int promptValidatedIndex(const string& promptText, int maxIndex);
 
 #endif

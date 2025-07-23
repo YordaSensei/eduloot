@@ -1,5 +1,1 @@
-EduGate,add,Testing,10,4,mhm
-EduGate,delete,brownies,hase out
-EduGate,delete,Golden,Test
-EduGate,add,Bulbasaur,5,200,BULBASAURR
-EduGate,delete,Golden,Ayaw q na sa golden
+

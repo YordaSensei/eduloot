@@ -48,16 +48,22 @@ bool deleteLine(const string &filename, const string &targetLine) {
     ofstream tempFile("tempFile.txt");
 
     if (!inFile || !tempFile) {
-        cout << "\nERROR: Failed to access file.\n";
+        cout << "ERROR: Failed to access file.\n";
         return false;
     }
+
+    auto sanitize = [](string s) {
+        while (!s.empty() && (s.back() == '\r' || s.back() == '\n' || s.back() == ' '))
+            s.pop_back();
+        return s;
+    };
 
     string line;
     bool found = false;
 
     while (getline(inFile, line)) {
-        if (line != targetLine) {
-            tempFile << line << endl;
+        if (sanitize(line) != sanitize(targetLine)) {
+            tempFile << line << '\n';
         } else {
             found = true;
         }
@@ -66,13 +72,12 @@ bool deleteLine(const string &filename, const string &targetLine) {
     inFile.close();
     tempFile.close();
 
-    remove(filename.c_str());
-    rename("tempFile.txt", filename.c_str());
-
     if (found) {
-        cout << "\n-- Successful --\n";
+        remove(filename.c_str());
+        rename("tempFile.txt", filename.c_str());
+        cout << "Successful\n";
     } else {
-        cout << "\n-- NOT found (check spelling/case) --\n";
+        remove("tempFile.txt");
     }
 
     return found;
@@ -173,4 +178,58 @@ void clearSystem(int delayMillis) {
     system("cls");
 }
 
+string promptNonEmptyInput(const string& promptText) {
+    string input;
+    do {
+        cout << termcolor::bright_yellow << promptText;
+        getline(cin, input);
+        cout << termcolor::reset;
 
+        if (input.empty()) {
+            cout << termcolor::bright_red << "ERROR: Field cannot be empty.\n" << termcolor::reset;
+        }
+    } while (input.empty());
+    return input;
+}
+
+double promptValidatedPrice(const string& promptText) {
+    double price;
+    while (true) {
+        cout << termcolor::bright_yellow << promptText;
+        if (cin >> price && price >= 0) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return price;
+        }
+        cout << termcolor::bright_red << "ERROR: Invalid price input.\n" << termcolor::reset;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+}
+
+int promptValidatedQuantity(const string& promptText) {
+    int quantity;
+    while (true) {
+        cout << termcolor::bright_yellow << promptText;
+        if (cin >> quantity && quantity >= 0) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return quantity;
+        }
+        cout << termcolor::bright_red << "ERROR: Invalid quantity input.\n" << termcolor::reset;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+}
+
+int promptValidatedIndex(const string& promptText, int maxIndex) {
+    int index;
+    while (true) {
+        cout << termcolor::bright_yellow << promptText;
+        if (cin >> index && index > 0 && index <= maxIndex) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return index;
+        }
+        cout << termcolor::bright_red << "ERROR: Invalid index. Please enter a number from 1 to " << maxIndex << ".\n" << termcolor::reset;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+}
