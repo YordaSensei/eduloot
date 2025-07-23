@@ -102,6 +102,8 @@ void Parent::viewBalance() {
 void Parent::transferToChild(int amount) {
     if (amount > 0 && amount <= getTokenBalance()) {
         updateTotalTokens(getTokenBalance() - amount);
+
+        
         cout << "Successfully transferred " << amount << " tokens.\n";
     } else {
         cout << "Invalid transfer amount/Insufficient balance.\n";
