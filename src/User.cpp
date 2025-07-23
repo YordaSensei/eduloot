@@ -45,6 +45,12 @@ void User::wallet() {
 
 void User::viewBalance() {
     ifstream inFile(userType + "Balance.txt");
+
+    if (!inFile.is_open()) {
+        cout << "Error opening balance file.\n";
+        return;
+    }
+    
     string line;
     bool found = false;
     int choice;

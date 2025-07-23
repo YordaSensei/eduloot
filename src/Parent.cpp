@@ -58,6 +58,12 @@ void Parent::parentMain(string insertedEmail, string insertedChildEmail){
 
 void Parent::viewBalance() {
     ifstream inFile("studentBalance.txt");
+
+    if (!inFile.is_open()) {
+        cout << "Error opening student's balance file.\n";
+        return;
+    }
+
     string line;
     bool found = false;
     int choice;

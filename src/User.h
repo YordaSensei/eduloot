@@ -38,12 +38,12 @@ protected:
         if (!(std::cin >> input)) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << errorMsg << "\n";
+            std::cerr << errorMsg << "\n";
             return false;
         }
         
         if (input < min || input > max) {
-            std::cout << "Please enter a value between " << min 
+            std::cerr << "Please enter a value between " << min 
                     << " and " << max << "\n";
             return false;
         }

@@ -20,6 +20,9 @@ void merchantMain();
 void studentMain();
 void teacherMain();
 void parentMain();
+void displayWelcomeMessage();
+void displayLoginPrompt(string& email, string& password);
+bool validateLogin(const string& filename, const string& inputEmail, const string& inputPassword, const string& userType, bool skipPasswordCheck = false);
 
 int main() {
     string inputEmail;
@@ -58,12 +61,17 @@ int main() {
         else if (validateLogin("parentAccounts.txt", inputEmail, inputPassword, "parent")) {
             cout << termcolor::red << "\nLogging in as Parent...\n" << termcolor::reset;
             loggedIn = true;
+
             string inputChildEmail;
             cout << "Enter your child's email: ";
-            cin >> inputChildEmail;
+            while (!(cin >> inputChildEmail) || inputChildEmail.empty()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Invalid email. Please try again: ";
+            }
 
-            if (!validateLogin("studentAccounts.txt", inputChildEmail, "dummy", "student")) {
-                cout << termcolor::red << "Child email not found. Please try again.\n" << termcolor::reset;
+            if (!validateLogin("studentAccounts.txt", inputChildEmail, "dummyParentAccessed", "student", true)) {
+                cout << termcolor::red << "\nChild email not found. Please try again.\n" << termcolor::reset;
                 loggedIn = false;
                 continue;
             }
@@ -100,8 +108,12 @@ void displayLoginPrompt(string& email, string& password) {
     cin >> password;
 }
 
-bool validateLogin(const string& filename, const string& inputEmail, const string& inputPassword, const string& userType) {
+bool validateLogin(const string& filename, const string& inputEmail, const string& inputPassword, const string& userType, bool skipPasswordCheck = false) {
     ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        cerr << "Error opening file: " << filename << endl;
+        return false;
+    }
     string line;
 
     while (getline(inFile, line)) {
@@ -113,9 +125,11 @@ bool validateLogin(const string& filename, const string& inputEmail, const strin
             getline(split, username, ',');
             getline(split, password, ',');
             
-            if (inputEmail == email && inputPassword == password) {
-                inFile.close();
-                return true;
+            if (inputEmail == email) {
+                if (skipPasswordCheck || inputPassword == password) {
+                    inFile.close();
+                    return true;
+                }
             }
         }
     }
