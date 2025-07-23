@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "merchant_helpers.h"
 
 using namespace std;
 
@@ -47,19 +48,23 @@ void reqDeleteProduct(string email) {
             getline(ss, quantityStr, ',');
             getline(ss, p.desc);
 
-            try {
-                p.price = stod(priceStr);
-                p.quantity = stoi(quantityStr);
-            } catch (...) {
-                continue;
-            }
-
             if (store == email) {
+                try {
+                    p.price = stod(priceStr);
+                    p.quantity = stoi(quantityStr);
+                } catch (...) {
+                    continue; // skip invalid lines
+                }
                 productList.push_back(p);
             }
         }
     }
     inFile.close();
+
+    if (productList.empty()) {
+        cout << "No products found for deletion.\n";
+        return;
+    }
 
     cout << "\n--- Choose a product to delete ---\n";
     for (size_t i = 0; i < productList.size(); ++i) {
@@ -76,15 +81,60 @@ void reqDeleteProduct(string email) {
         return;
     }
 
+    cin.ignore(); // flush newline
     cout << "Reason for deletion: ";
-    cin.ignore();
     getline(cin, reason);
 
     ofstream outFile("productReq.txt", ios::app);
     outFile << email << ",delete," << productList[choice - 1].name << "," << reason << endl;
     outFile.close();
-    
+
     cout << "Deletion requested to admin.\n";
+}
+
+void reqCashout(string email) {
+    int quantity;
+    cout << "How many tokens would you like to convert?\n";
+    cout << "(PHP 3.00 = 1 Token) with a 5 percent fee.\n";
+    cout << "Tokens to convert: ";
+    cin >> quantity;
+
+    char choice;
+    float totalAmount = (quantity *3.0f) * 0.95f;
+    cout << "Total amount is PHP " << totalAmount << " (fee included).\n";
+    cout << "Are you sure you want to convert " << quantity << " tokens? (y/n)\n";
+    cout << "Choice: ";
+    cin >> choice;
+
+    if (choice == 'y' || choice == 'Y'){
+        vector<MerchantAcc> balance;
+        MerchantAcc m;
+        string line;
+        
+        ifstream inFile("merchantBalance.txt");
+        while (getline(inFile, line)) {
+            if (!line.empty()) {
+                string strBalance;
+                stringstream ss(line);
+                getline(ss, m.email, ',');
+                getline(ss, strBalance);
+                m.balance = stoi(strBalance);
+
+                if (m.email == email){
+                    if (m.balance >= quantity){
+                        ofstream outFile("cashout.txt", ios::app);
+                        outFile << email << "," << quantity << endl;
+                        outFile.close();
+
+                        cout << quantity << " tokens requested for cashout.\n";
+                    } else {
+                        cout << "You have don't have enough tokens to cashout.\n";
+                    }
+                }
+            }
+        }
+        inFile.close();
+    }
 }
 
 void reqChangePrice(string email) {
@@ -98,6 +148,7 @@ void reqChangePrice(string email) {
             string priceStr, quantityStr;
             stringstream ss(line);
 
+            getline(ss, p.merchant, ',');
             getline(ss, p.name, ',');
             getline(ss, priceStr, ',');
             getline(ss, quantityStr, ',');
@@ -110,24 +161,26 @@ void reqChangePrice(string email) {
                 continue;
             }
 
-            productList.push_back(p);
+            if (p.merchant == email){
+                productList.push_back(p);
+            }
         }
     }
     inFile.close();
 
     if (productList.empty()) {
-        cout << "No products available to edit.\n";
+        cout << "No products available to request price change.\n";
         return;
     }
 
-    cout << "\n--- Choose a product to edit ---\n";
+    cout << "\n--- Choose a product to request price change ---\n";
     for (size_t i = 0; i < productList.size(); ++i) {
         cout << i + 1 << ". " << productList[i].name
-             << " (Current Stock: " << productList[i].quantity << ")\n";
+             << " (Current Price: " << productList[i].price << ")\n";
     }
 
     int choice;
-    cout << "Enter product number to edit: ";
+    cout << "Enter product number to change price: ";
     cin >> choice;
 
     if (choice < 1 || choice > productList.size()) {
@@ -135,22 +188,31 @@ void reqChangePrice(string email) {
         return;
     }
 
-    int newQty;
-    cout << "Enter new stock quantity for " << productList[choice - 1].name << ": ";
-    cin >> newQty;
+    double newPrice;
+    cout << "Enter *new price* for " << productList[choice - 1].name << ": ";
+    cin >> newPrice;
 
-    productList[choice - 1].quantity = newQty;
+    cin.ignore();
+    string reason;
+    cout << "Enter reason for price change: ";
+    getline(cin, reason);
 
-    ofstream outFile("productList.txt");
-    for (const Product& p : productList) {
-        outFile << email << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
+    ofstream reqFile("productReq.txt", ios::app);
+    if (!reqFile) {
+        cout << "ERROR: Cannot open productReq.txt\n";
+        return;
     }
-    outFile.close();
 
-    cout << "Stock updated successfully.\n";
+    reqFile << email << ",change,"
+            << productList[choice - 1].name << ","
+            << newPrice << ","
+            << reason << "\n";
+
+    reqFile.close();
+    cout << "Price change request submitted successfully.\n";
 }
 
-void viewRequests() {
+void viewRequests(string email) {
     ifstream inFile("productReq.txt");
     string line;
 
@@ -166,29 +228,39 @@ void viewRequests() {
 
     while (getline(inFile, line)) {
         stringstream ss(line);
-        string email, action, name, price, quantity, desc;
+        string merchantEmail, action;
 
-        getline(ss, email, ',');
+        getline(ss, merchantEmail, ',');
         getline(ss, action, ',');
-        getline(ss, name, ',');
-        getline(ss, price, ',');
-        getline(ss, quantity, ',');
-        getline(ss, desc);
 
-        string formatted = "Requested by: " + email +
-                           "\n  Product: " + name +
-                           "\n  Price: " + price +
-                           "\n  Quantity: " + quantity +
-                           "\n  Description: " + desc + "\n";
-
+        if (merchantEmail != email) {
+            continue;
+        }
+        
         if (action == "add") {
+            string name, price, quantity, desc;
+            getline(ss, name, ',');
+            getline(ss, price, ',');
+            getline(ss, quantity, ',');
+            getline(ss, desc);
+
+            string formatted = "Product: " + name + "\nPrice: " + price + "\nQuantity: " + quantity + "\nDescription: " + desc + "\n";
             addRequests.push_back(formatted);
         } else if (action == "delete") {
+            string name, reason;
+            getline(ss, name, ',');
+            getline(ss, reason);
+
+            string formatted = "Product to delete: " + name + "\nReason: " + reason + "\n";
             deleteRequests.push_back(formatted);
-        } else if (action == "change_price") {
+        } else if (action == "change") {
+            string name, price, reason;
+            getline(ss, name, ',');
+            getline(ss, price, ',');
+            getline(ss, reason);
+
+            string formatted = "Product: " + name + "\nChange price to: " + price + "\nReason: " + reason + "\n";
             changePriceRequests.push_back(formatted);
-        } else if (action == "cashout") {
-            cashoutRequests.push_back(formatted);
         }
     }
 
@@ -217,15 +289,19 @@ void viewRequests() {
         }
     }
 
-    if (!cashoutRequests.empty()) {
-        cout << "\n[Cashout Requests]\n";
-        for (const string& req : cashoutRequests) {
-            cout << req << endl;
-        }
-    }
+    ifstream cashoutInFile("cashout.txt");
 
-    if (addRequests.empty() && deleteRequests.empty() && changePriceRequests.empty() && cashoutRequests.empty()) {
-        cout << "No requests found.\n";
+    cout << "\n[Token Cashout Requests]\n";
+    while (getline(cashoutInFile, line)) {
+        stringstream ss(line);
+        string merchantEmail, amount;
+
+        getline(ss, merchantEmail, ',');
+        getline(ss, amount);
+
+        if (merchantEmail == email) {
+            cout << "Requested " << amount << " token(s) for cashout.\n";
+        }
     }
 }
 
@@ -251,11 +327,13 @@ void requestAdmin(string email) {
                 reqDeleteProduct(email);
                 break;
             case 3:
+                reqChangePrice(email);
                 break;
             case 4:
+                reqCashout(email);
                 break;
             case 5:
-                viewRequests();
+                viewRequests(email);
                 break;
         }
     } while (choice != 6);

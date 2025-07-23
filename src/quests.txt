@@ -1,2 +1,2 @@
-attend seminar,10,10
-join org,5,15
+attend seminar,10,9
+join org,5,14

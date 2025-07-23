@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "merchant_products.cpp"
-#include "merchant_qr.cpp"
 #include "merchant_request.cpp"
 #include "merchant_sales.cpp"
 
@@ -19,8 +18,7 @@ void merchantMain(string email) {
         cout << "1. Products\n";
         cout << "2. Sales\n";
         cout << "3. Request To Admin\n";
-        cout << "4. QR Code\n";
-        cout << "5. Log Out\n";
+        cout << "4. Log Out\n";
         cout << "Choice: ";
         cin >> choice;
 
@@ -29,15 +27,13 @@ void merchantMain(string email) {
                 products(email);
                 break;
             case 2:
-                sales();
+                sales(email);
                 break;
             case 3:
                 requestAdmin(email); 
                 break;
-            case 4:
-                break;
         }
-    } while (choice != 5);
+    } while (choice != 4);
 
     cout << "Logging Out...";
 }

@@ -1,5 +1,7 @@
-string line;
+#include <ctime>
 #include "admin/admin_helpers.h"
+
+string line;
 
 void viewBalance(string email) {
     vector<Student> balance;
@@ -91,6 +93,26 @@ void purchaseTokens(string email) {
         updateTotalTokens(-quantity);
         updateTotalMoney(totalAmount);
         cout << quantity << " tokens purchased successfully.\n";
+
+        time_t now = time(0);
+        string dt = ctime(&now);
+        dt.pop_back();
+
+        ifstream currentBalOutFile("studentBalance.txt");
+        while (getline(currentBalOutFile, line)) {
+            if (!line.empty()) {
+                string studentEmail, strBalance;
+                stringstream split(line);
+
+                getline(split, studentEmail, ',');
+                getline(split, strBalance);
+
+                ofstream transactionOutFile("studentTokenTransactions.txt", ios::app);
+                transactionOutFile << email << ",Purchased," << quantity << "," << strBalance << "," << dt << endl;
+                transactionOutFile.close();
+            }
+        }
+        currentBalOutFile.close();
     }
 }
 
@@ -142,6 +164,26 @@ void convertTokens(string email) {
             outFile << s.email << "," << s.balance << endl;
         }
         outFile.close ();
+
+        time_t now = time(0);
+        string dt = ctime(&now);
+        dt.pop_back();
+
+        ifstream currentBalOutFile("studentBalance.txt");
+        while (getline(currentBalOutFile, line)) {
+            if (!line.empty()) {
+                string studentEmail, strBalance;
+                stringstream split(line);
+
+                getline(split, studentEmail, ',');
+                getline(split, strBalance);
+
+                ofstream transactionOutFile("studentTokenTransactions.txt", ios::app);
+                transactionOutFile << email << ",Converted," << quantity << "," << strBalance << "," << dt << endl;
+                transactionOutFile.close();
+            }
+        }
+        currentBalOutFile.close();
     }
 }
 

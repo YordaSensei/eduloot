@@ -1,6 +1,7 @@
 #include <vector>
 #include "product_helpers.h"
 #include "merchant_helpers.h"
+#include <ctime>
 
 void purchase(string email) {
     vector<string> merchantList;
@@ -186,12 +187,14 @@ void purchase(string email) {
                             }
                             productOutFile.close ();
 
+                            
+
                             cout << "Purchased successfully!\n";
                         } else {
                             cout << "You have don't have enough tokens to purchase.\n";
                         }
                     }
-
+                    
                     studentBalance.push_back(s);
                 }
             }
@@ -201,7 +204,51 @@ void purchase(string email) {
             for (const auto& s : studentBalance) {
                 studentOutFile << s.email << "," << s.balance << endl;
             }
-            studentOutFile.close ();
+            studentOutFile.close();
+
+            time_t now = time(0);
+            string dt = ctime(&now);
+            dt.pop_back();
+
+            string currentStudentBalance;
+            ifstream studentBalInFile("studentBalance.txt");
+            while (getline(studentBalInFile, line)) {
+                if (!line.empty()) {
+                    string studentEmail, strBalance;
+                    stringstream split(line);
+
+                    getline(split, studentEmail, ',');
+                    getline(split, strBalance);
+                    
+                    if (studentEmail == email){
+                        currentStudentBalance = strBalance;
+                        break;
+                    }
+                }
+            }
+            studentBalInFile.close();
+
+            string currentMerchantBalance;
+            ifstream merchantBalInFile("merchantBalance.txt");
+            while (getline(merchantBalInFile, line)) {
+                if (!line.empty()) {
+                    string merchantEmail, strBalance;
+                    stringstream split(line);
+
+                    getline(split, merchantEmail, ',');
+                    getline(split, strBalance);
+
+                    if (merchantEmail == selectedMerchant){
+                        currentMerchantBalance = strBalance;
+                        break;
+                    }
+                }
+            }
+            merchantBalInFile.close();
+
+            ofstream transactionOutFile("studentProductTransactions.txt", ios::app);
+            transactionOutFile << email << "," << selectedMerchant << "," << productList[productChoice - 1].name << "," << totalAmount << "," << productQty << "," << currentStudentBalance << "," << currentMerchantBalance << "," << dt << endl;
+            transactionOutFile.close();
         }
     }
 }
