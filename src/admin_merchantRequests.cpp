@@ -31,10 +31,13 @@ void merchantRequests() {
             cout << "|  4. Back                      |\n";
             cout << "+-------------------------------+\n";
 
-            cout << termcolor::bright_yellow << "Choice: ";
-            cin >> mainChoice;
-            cin.ignore();
-            cout << termcolor::reset;
+            while (true) {
+                cout << termcolor::bright_yellow << "Choice: ";
+                if (cin >> mainChoice && mainChoice >= 1 && mainChoice <= 5) break;
+                cout << termcolor::red << "Invalid choice. Please enter 1-4.\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
             system("cls");
 
         switch (mainChoice) {
@@ -50,10 +53,20 @@ void merchantRequests() {
                     cout << "|  4. Back                      |\n";
                     cout << "+-------------------------------+\n";
 
-                    cout << termcolor::bright_yellow << "Choice: ";
-                    cin >> productChoice;
-                    cin.ignore();
-                    cout << termcolor::reset;
+                    while (true) {
+                        cout << termcolor::bright_yellow << "Choice: ";
+                        cin >> productChoice;
+
+                        if (cin.fail() || productChoice < 1 || productChoice > 4) {
+                            cin.clear(); 
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+                            cout << termcolor::red << "Invalid choice. Try again...\n" << termcolor::reset;
+                        } else {
+                            cin.ignore(); 
+                            break; 
+                        }
+                    }
+
                     system("cls");
 
                     vector<Products> addEditReqs;
@@ -121,11 +134,13 @@ void merchantRequests() {
 
                             cout << termcolor::reset;
 
-                            cout << termcolor::yellow;
-                            cout << "\nEnter request number: ";
-                            cin >> index;
-                            cin.ignore();
-                            cout << termcolor::reset;
+                            while (true) {
+                                cout << termcolor::bright_yellow << "Enter request number to approve: ";
+                                if (cin >> index && index > 0 && index <= (int)addEditReqs.size()) break;
+                                cout << termcolor::red << "Invalid input. Please enter a valid index.\n";
+                                cin.clear();
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            }
 
                             if (index <= 0 || index > addEditReqs.size()) break;
 
@@ -178,11 +193,13 @@ void merchantRequests() {
 
                             cout << termcolor::reset;
 
-                            cout << termcolor::yellow;
-                            cout << "\nEnter request number: ";
-                            cin >> index;
-                            cin.ignore();
-                            cout << termcolor::reset;
+                            while (true) {
+                                cout << termcolor::bright_yellow << "Enter request number to approve: ";
+                                if (cin >> index && index > 0 && index <= (int)deleteReqs.size()) break;
+                                cout << termcolor::red << "Invalid input. Please enter a valid index.\n";
+                                cin.clear();
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            }
 
 
                             if (index <= 0 || index > deleteReqs.size()) break;
@@ -255,13 +272,13 @@ void merchantRequests() {
 
                             cout << termcolor::reset;
 
-                            cout << termcolor::yellow;
-                            cout << "\nEnter request number: ";
-                            cin >> index;
-                            cin.ignore();
-                            cout << termcolor::reset;
-
-                            if (index <= 0 || index > addEditReqs.size()) break;
+                            while (true) {
+                                cout << termcolor::bright_yellow << "Enter request number to approve: ";
+                                if (cin >> index && index > 0 && index <= (int)addEditReqs.size()) break;
+                                cout << termcolor::red << "Invalid input. Please enter a valid index.\n";
+                                cin.clear();
+                                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            }
 
                             Products p = addEditReqs[index - 1];
 
@@ -289,13 +306,33 @@ void merchantRequests() {
                             cout << termcolor::bright_yellow << "New Name: ";
                             getline(cin, newName);
 
-                            cout << "New Price: ";
-                            cin >> newPrice;
-                            cin.ignore();
+                            while (true) {
+                                cout << "New Price: ";
+                                cin >> newPrice;
 
-                            cout << "New Quantity: ";
-                            cin >> newQty;
-                            cin.ignore();
+                                if (cin.fail() || newPrice < 0) {
+                                    cin.clear();
+                                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                    cout << termcolor::red << "Invalid price. Please enter a positive number.\n" << termcolor::reset;
+                                } else {
+                                    cin.ignore();
+                                    break;
+                                }
+                            }
+
+                            while (true) {
+                                cout << "New Quantity: ";
+                                cin >> newQty;
+
+                                if (cin.fail() || newQty < 0) {
+                                    cin.clear();
+                                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                    cout << termcolor::red << "Invalid quantity. Please enter a non-negative integer.\n" << termcolor::reset;
+                                } else {
+                                    cin.ignore();
+                                    break;
+                                }
+                            }
 
                             cout << "New Description: ";
                             getline(cin, newDesc);
@@ -341,7 +378,6 @@ void merchantRequests() {
                 }
                 inFile.close();
 
-                // Display styled header
                 cout << termcolor::bold << termcolor::magenta;
                 cout << "\n+------------------------------------+\n";
                 cout << "| " << termcolor::bright_yellow << "   Pending Merchant Concerns   " << termcolor::magenta << "|\n";
@@ -355,9 +391,13 @@ void merchantRequests() {
                     displayedIndex++;
                 }
 
-                cout << termcolor::yellow << "\nSelect Concern Number: ";
-                cin >> index;
-                cout << termcolor::reset;
+                while (true) {
+                    cout << termcolor::bright_yellow << "Enter request number to approve: ";
+                    if (cin >> index && index > 0 && index <= (int)concerns.size()) break;
+                    cout << termcolor::red << "Invalid input. Please enter a valid index.\n";
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
 
                 if (index <= 0 || index > concerns.size()) {
                     cout << termcolor::red << "\nInvalid choice.\n" << termcolor::reset;
@@ -412,7 +452,7 @@ void merchantRequests() {
 
                 cout << termcolor::bold << termcolor::magenta;
                 cout << "\n+------------------------------------+\n";
-                cout << "| " << termcolor::bright_yellow << "     Pending Merchant Cash Out     " << termcolor::magenta << "|\n";
+                cout << "| " << termcolor::bright_yellow << "       Pending Merchant Cash Out       " << termcolor::magenta << "|\n";
                 cout << "+------------------------------------+\n";
                 cout << termcolor::reset;
 
@@ -424,9 +464,13 @@ void merchantRequests() {
                     displayedIndex++;
                 }
 
-                cout << termcolor::yellow << "\nSelect Cashout Number: ";
-                cin >> index;
-                cout << termcolor::reset;
+                while (true) {
+                    cout << termcolor::bright_yellow << "Select cash out number: ";
+                    if (cin >> index && index > 0 && index <= (int)cashout.size()) break;
+                    cout << termcolor::red << "Invalid input. Please enter a valid index.\n";
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
 
                 if (index <= 0 || index > cashout.size()) {
                     cout << termcolor::red << "\nInvalid choice.\n" << termcolor::reset;
@@ -446,6 +490,45 @@ void merchantRequests() {
 
                 updateTotalTokens(selected.tokenAmount); 
                 updateTotalMoney(-moneyAfterFee);
+
+                vector<string> balanceLines;
+                ifstream walletIn("merchantBalance.txt");
+                string walletLine;
+                bool found = false;
+
+                while (getline(walletIn, walletLine)) {
+                    stringstream ss(walletLine);
+                    string shopName, balanceStr;
+                    getline(ss, shopName, ',');
+                    getline(ss, balanceStr);
+
+                    if (shopName == selected.shopName) {
+                        int balance = stoi(balanceStr);
+
+                        if (balance < selected.tokenAmount) {
+                            cout << termcolor::red << "ERROR: Insufficient balance.\n" << termcolor::reset;
+                            walletIn.close();
+                            return;
+                        }
+
+                        balance -= selected.tokenAmount;
+                        balanceLines.push_back(shopName + "," + to_string(balance));
+                        found = true;
+                    } else {
+                        balanceLines.push_back(walletLine);
+                    }
+                }
+                walletIn.close();
+
+                if (!found) {
+                    balanceLines.push_back(selected.shopName + "," + to_string(selected.tokenAmount));
+                }
+
+                ofstream walletOut("merchantBalance.txt");
+                for (const string& line : balanceLines) {
+                    walletOut << line << endl;
+                }
+                walletOut.close();
 
                 cout << termcolor::green << "\nTokens Successfully Cashed Out!" << endl;
                 cout << "P" << moneyAfterFee << " transferred\n" << termcolor::reset;

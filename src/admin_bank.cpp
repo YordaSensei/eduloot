@@ -59,29 +59,38 @@ void bank () {
     cout << " Total Money (in system):    " << "P" << totalMoney << "\n";
     cout << " Admin Token Reserve:        " << tokensLeft << " tokens (P" << tokensLeft * tokenRate << ")\n" << termcolor::reset;
 
-
     cout << termcolor::magenta << "+--------------------------------------------------+\n" << termcolor::reset;
 
-    cout << termcolor::bright_yellow << "\nAdd tokens to the system? [y/n]: ";
-    cin.ignore();
-    getline (cin, choice);
-    cout << termcolor::reset;
+    while (true) {
+        cout << termcolor::bright_yellow << "\nAdd tokens to the system? [y/n]: ";
+        getline(cin, choice);
+        cout << termcolor::reset;
 
-    if (choice == "y" || choice == "Y") {
+        if (choice == "y" || choice == "Y" || choice == "n" || choice == "N") {
+            break;
+        } else {
+            cout << termcolor::bright_red << "Invalid input. Please enter 'y' or 'n'.\n" << termcolor::reset;
+        }
+    }
+
+   if (choice == "y" || choice == "Y") {
+    while (true) {
         cout << termcolor::bold << "\nEnter number of tokens to add: " << termcolor::reset;
         cin >> topUp;
 
-        if (topUp > 0) {
-            updateTotalTokens(topUp);
-            cout << termcolor::green << "\nSuccessfully added " << topUp << " tokens (₱" << topUp * tokenRate << ") to the system.\n" << termcolor::reset;
-            clearSystem();
+        if (cin.fail() || topUp <= 0) {
+            cin.clear(); // clear error flags
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard invalid input
+            cout << termcolor::red << "Invalid token amount. Please enter a positive number.\n" << termcolor::reset;
         } else {
-            cout << termcolor::red << "\nInvalid token amount.\n" << termcolor::reset;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // clean any trailing newline
+            break; // valid input
         }
-    } else if (choice == "n" || choice == "N") {
-        cout << termcolor::yellow << "\nReturning to dashboard...\n" << termcolor::reset;
-        clearSystem();
-    } else {
-        cout << termcolor::red << "\nInvalid choice.\n" << termcolor::reset;
     }
+
+        updateTotalTokens(topUp);
+        cout << termcolor::green << "\nSuccessfully added " << topUp << " tokens (₱" << topUp * tokenRate << ") to the system.\n" << termcolor::reset;
+        clearSystem();
+    }
+
 }

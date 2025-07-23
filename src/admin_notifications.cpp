@@ -18,7 +18,7 @@ void notifications() {
         {"Product Requests", "productReq.txt"},
         {"Merchant Concerns", "concerns.txt"},
         {"Merchant Cash Out Requests", "cashout.txt"},
-        {"Emergency Fund Requests", "emergencyfunds.txt"},
+        {"Emergency Fund Requests", "studentEmergencyFunds.txt"},
         {"Student Balances", "studentBalance.txt"},
         {"Student Accomplished Quests", "studentAccomplishedQuests.txt"}
     };

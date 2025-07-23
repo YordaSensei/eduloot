@@ -28,11 +28,14 @@ void adminMain() {
         cout << "|  8. Log Out                  |\n";
         cout << "+------------------------------+\n"<< termcolor::reset;
 
-        cout << termcolor::bright_yellow << "Choice: ";
-        cin >> choice;
-        cout << termcolor::reset;
+        while (true) {
+            cout << termcolor::bright_yellow << "Choice: ";
+            if (cin >> choice && choice >= 1 && choice <= 8) break;
+            cout << termcolor::red << "Invalid choice. Please enter 1-8.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
         system("cls");
-
 
         switch (choice) {
             case 1:

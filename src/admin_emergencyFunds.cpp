@@ -20,11 +20,6 @@ void emergencyFunds() {
     ifstream inFile ("studentEmergencyFunds.txt"); 
     string line;
 
-    if (inFile.peek() == std::ifstream::traits_type::eof()) {
-        cout << termcolor::red << "No available requests\n" << termcolor::reset;
-        return;
-    }
-
     while (getline(inFile, line)) {
         studentreq req;
         string tokenStr;
@@ -45,17 +40,27 @@ void emergencyFunds() {
     }
 
     int displayedIndex = 1;
+    bool hasRequests = false;
     for (size_t i = 0; i < funds.size(); i++) {
+        hasRequests = true;
         cout << termcolor::yellow << displayedIndex << ". " << funds[i].email << " | " 
         << funds[i].reason << " | " << funds[i].tokenAmount << termcolor::reset << endl;
             displayedIndex++;
     }
 
+    if (!hasRequests) {
+        cout << termcolor::red << "(No pending emergency funds requests)\n";
+    }
+
     int index;
     cout << termcolor::magenta << "+-----------------------------------+\n" << termcolor::reset;
-    cout << termcolor::yellow << "Select request to approve: ";
-    cin >> index; 
-    cout << termcolor::reset;
+    while (true) {
+        cout << termcolor::bright_yellow << "Enter request number to approve: ";
+        if (cin >> index && index > 0 && index <= (int)funds.size()) break;
+        cout << termcolor::red << "Invalid input. Please enter a valid index.\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 
     if (index <= 0 || index > funds.size()) return;
 

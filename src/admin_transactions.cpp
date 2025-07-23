@@ -50,7 +50,7 @@ void viewTransactions() {
         }
 
         if (empty) {
-            cout << termcolor::yellow << " (No entries found)                           " << termcolor::magenta << "\n";
+            cout << termcolor::yellow << " (No entries found)  " << termcolor::magenta << "\n";
         }
 
         cout << "+---------------------------------------------+\n" << termcolor::reset;

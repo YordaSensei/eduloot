@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <windows.h>
+#include <limits>
 
 #include "admin_structs.h"
 #include "admin_helpers.h"
