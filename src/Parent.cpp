@@ -1,13 +1,17 @@
 #include "Parent.h"
 #include <iostream>
 #include <limits>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 using namespace std;
 
 enum class ParentMenuOption { ViewBalance = 1, Transfer, Notifications, Transactions, Back };
 
-void Parent::parentMain(string insertedEmail){
+void Parent::parentMain(string insertedEmail, string insertedChildEmail){
     setEmail(insertedEmail);
+    setInsertedChildEmail(insertedChildEmail);
     setUserType("parent");
 
     int choice;
@@ -52,14 +56,37 @@ void Parent::parentMain(string insertedEmail){
 
 }
 
-
 void Parent::viewBalance() {
+    ifstream inFile("studentBalance.txt");
+    string line;
+    bool found = false;
     int choice;
 
-    cout << "Your child has " << getTokenBalance() << " tokens.\n";
     do {
-        cout << "1. Back\n";
+        while (getline(inFile, line)) {
+            if (!line.empty()) {
+                string strBalance;
+                stringstream split(line);
 
+                getline(split, this->childEmail, ',');
+                getline(split, strBalance);
+
+                if (this->childEmail == childEmail) {
+                    this->childTokenBalance = stoi(strBalance);
+                    cout << "Child's Token Balance: " << this->childTokenBalance << endl;
+                    found = true;
+                    break;
+                }
+            }
+        }
+        inFile.close();
+
+        if (!found) {
+            this->childTokenBalance = 0;
+            cout << "Child's Token Balance: 0\n";
+        }
+
+        cout << "1. Back\n";
         if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
             continue;
         }

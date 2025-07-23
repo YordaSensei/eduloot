@@ -58,9 +58,19 @@ int main() {
         else if (validateLogin("parentAccounts.txt", inputEmail, inputPassword, "parent")) {
             cout << termcolor::red << "\nLogging in as Parent...\n" << termcolor::reset;
             loggedIn = true;
+            string inputChildEmail;
+            cout << "Enter your child's email: ";
+            cin >> inputChildEmail;
+
+            if (!validateLogin("studentAccounts.txt", inputChildEmail, "dummy", "student")) {
+                cout << termcolor::red << "Child email not found. Please try again.\n" << termcolor::reset;
+                loggedIn = false;
+                continue;
+            }
+
             clearSystem();
             Parent parent;
-            parent.parentMain(inputEmail);
+            parent.parentMain(inputEmail, inputChildEmail);
         }
         else {
             cout << termcolor::red << "Invalid email or password. Please try again.\n\n" << termcolor::reset;
