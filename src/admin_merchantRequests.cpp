@@ -54,18 +54,11 @@ void merchantRequests() {
 
                     while (true) {
                         cout << termcolor::bright_yellow << "Choice: ";
-                        cin >> productChoice;
-
-                        if (cin.fail() || productChoice < 1 || productChoice > 4) {
-                            cin.clear(); 
-                            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-                            cout << termcolor::red << "Invalid choice. Try again...\n" << termcolor::reset;
-                        } else {
-                            cin.ignore(); 
-                            break; 
-                        }
+                        if (cin >> pro && productChoice >= 1 && productChoice <= 5) break;
+                        cout << termcolor::red << "Invalid choice. Please enter 1-4.\n";
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     }
-
                     system("cls");
 
                     vector<Products> addEditReqs;
@@ -334,7 +327,7 @@ void merchantRequests() {
 
                 cout << termcolor::bold << termcolor::magenta;
                 cout << "\n+------------------------------------+\n";
-                cout << "| " << termcolor::bright_yellow << "   Pending Merchant Concerns   " << termcolor::magenta << "|\n";
+                cout << "| " << termcolor::bright_yellow << "     Pending Merchant Concerns     " << termcolor::magenta << "|\n";
                 cout << "+------------------------------------+\n";
                 cout << termcolor::reset;
 

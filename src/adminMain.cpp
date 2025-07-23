@@ -43,14 +43,7 @@ void adminMain() {
     do {
         printAdminMenu();
 
-        while (true) {
-            cout << termcolor::bright_yellow << "Choice: ";
-            if (cin >> choice && choice >= MANAGE_ACCOUNTS && choice <= LOG_OUT) break;
-            cout << termcolor::red << "Invalid choice. Please enter 1-8.\n";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-
+        promptChoice(1, 8, "choice: ");
         system("cls");
 
         switch (choice) {

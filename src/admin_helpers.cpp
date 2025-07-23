@@ -233,3 +233,16 @@ int promptValidatedIndex(const string& promptText, int maxIndex) {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 }
+
+int promptChoice (int min, int max, int variable, const string& promptText) {
+    int choice;
+    while (true) {
+        cout << termcolor::bright_yellow << promptText;
+        if (cin >> choice && choice >= min && choice <= max) break;
+        cout << termcolor::red << "Invalid choice. Please enter 1-8.\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    return choice;
+}

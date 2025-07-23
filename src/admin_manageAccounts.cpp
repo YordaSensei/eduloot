@@ -6,7 +6,7 @@ int printAccountTypeMenu(const string& title) {
     int choice;
     cout << termcolor::bold << termcolor::magenta;
     cout << "\n+-------------------------------+\n";
-    cout << "|  " << termcolor::bright_yellow << setw(27) << left << title << termcolor::magenta <<   "|\n";
+    cout << "|  " << termcolor::bright_yellow << setw(29) << left << title << termcolor::magenta <<   "|\n";
     cout << "+-------------------------------+\n";
     cout << "|  1. Student                   |\n";
     cout << "|  2. Teacher                   |\n";
@@ -398,13 +398,7 @@ void manageAccounts () {
         cout << "|  5. Back to Dashboard          |\n";
         cout << "+--------------------------------+\n"<< termcolor::reset;
 
-        while (true) {
-            cout << termcolor::bright_yellow << "Choice: ";
-            if (cin >> choice && choice >= 1 && choice <= 5) break;
-            cout << termcolor::red << "Invalid choice. Please enter 1-5.\n";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
+        promptChoice(1, 5, "Choice: ")
         system("cls");
 
         switch (choice) {

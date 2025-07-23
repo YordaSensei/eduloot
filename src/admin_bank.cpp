@@ -50,11 +50,13 @@ void bank() {
     cout << "+--------------------------------------------------+\n" << termcolor::reset;
 
     cout << fixed << setprecision(2);
-    cout << termcolor::yellow << " Total Tokens (in system):   " << totalTokens << " tokens (₱" << totalTokens * tokenRate << ")\n";
-    cout << " Tokens Out:                 " << tokensOut << " tokens (₱" << tokensOut * tokenRate << ")\n";
-    cout << " Total Money (in system):    ₱" << totalMoney << "\n";
-    cout << " Admin Token Reserve:        " << tokensLeft << " tokens (₱" << tokensLeft * tokenRate << ")\n" << termcolor::reset;
+    cout << termcolor::yellow << " Total Tokens (in system):   " << totalTokens << " tokens (P" << totalTokens * tokenRate << ")\n";
+    cout << " Tokens Out:                 " << tokensOut << " tokens (P" << tokensOut * tokenRate << ")\n";
+    cout << " Total Money (in system):    P" << totalMoney << "\n";
+    cout << " Admin Token Reserve:        " << tokensLeft << " tokens (P" << tokensLeft * tokenRate << ")\n" << termcolor::reset;
     cout << termcolor::magenta << "+--------------------------------------------------+\n" << termcolor::reset;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
 
     while (true) {
         cout << termcolor::bright_yellow << "\nAdd tokens to the system? [y/n]: ";

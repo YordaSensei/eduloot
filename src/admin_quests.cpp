@@ -227,16 +227,7 @@ void questsTab() {
         cout << "|  5. Back                      |\n";
         cout << "+-------------------------------+\n";
 
-        while (true) {
-            cout << termcolor::bright_yellow << "Choice: ";
-            if (cin >> choice && choice >= 1 && choice <= 5) break;
-            cout << termcolor::red << "Invalid choice. Please enter 1-5.\n";
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-
-        cin.ignore();
-        cout << termcolor::reset;
+        promptChoice(1, 5, "choice: ");
         system("cls");
 
         switch (choice) {
