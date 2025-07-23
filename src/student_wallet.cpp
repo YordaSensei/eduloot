@@ -191,7 +191,9 @@ void wallet(string email) {
     int choice;
 
     do {
-        cout << "\n--- Token Wallet ---\n";
+        cout << termcolor::bold << termcolor::blue;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_cyan << "    Wallet      " << termcolor::blue << "|\n";
         cout << "1. View Balance\n";
         cout << "2. Purchase Tokens\n";
         cout << "3. Convert to Cash\n";

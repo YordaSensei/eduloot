@@ -4,6 +4,8 @@
 #include <string>
 #include "student_helpers.h"
 #include "termcolor/termcolor.hpp"
+#include <cstdlib>
+#include <iomanip>
 using namespace std;
 
 #include "student_wallet.cpp"
@@ -31,6 +33,8 @@ void studentMain(string email) {
         cout << "+------------------------------+\n"<< termcolor::reset;
         cout << termcolor::bright_cyan << "Choice: ";
         cin >> choice;
+        cout << termcolor::reset;
+        system("cls");
 
         switch(choice) {
             case 1:
