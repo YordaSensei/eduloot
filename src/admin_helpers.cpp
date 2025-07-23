@@ -234,7 +234,7 @@ int promptValidatedIndex(const string& promptText, int maxIndex) {
     }
 }
 
-int promptChoice (int min, int max, int variable, const string& promptText) {
+int promptChoice (int min, int max, const string& promptText) {
     int choice;
     while (true) {
         cout << termcolor::bright_yellow << promptText;

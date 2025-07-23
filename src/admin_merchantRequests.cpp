@@ -30,13 +30,7 @@ void merchantRequests() {
             cout << "|  4. Back                      |\n";
             cout << "+-------------------------------+\n";
 
-            while (true) {
-                cout << termcolor::bright_yellow << "Choice: ";
-                if (cin >> mainChoice && mainChoice >= 1 && mainChoice <= 5) break;
-                cout << termcolor::red << "Invalid choice. Please enter 1-4.\n";
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            }
+            mainChoice = promptChoice(1, 4, "Choice: ");
             system("cls");
 
         switch (mainChoice) {
@@ -52,13 +46,7 @@ void merchantRequests() {
                     cout << "|  4. Back                      |\n";
                     cout << "+-------------------------------+\n";
 
-                    while (true) {
-                        cout << termcolor::bright_yellow << "Choice: ";
-                        if (cin >> pro && productChoice >= 1 && productChoice <= 5) break;
-                        cout << termcolor::red << "Invalid choice. Please enter 1-4.\n";
-                        cin.clear();
-                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    }
+                    productChoice = promptChoice(1, 4, "Choice: ");
                     system("cls");
 
                     vector<Products> addEditReqs;

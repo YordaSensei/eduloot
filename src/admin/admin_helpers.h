@@ -17,5 +17,6 @@ string promptNonEmptyInput(const string& promptText);
 double promptValidatedPrice(const string& promptText);
 int promptValidatedQuantity(const string& promptText);
 int promptValidatedIndex(const string& promptText, int maxIndex);
+int promptChoice (int min, int max, const string& promptText);
 
 #endif

@@ -227,7 +227,7 @@ void questsTab() {
         cout << "|  5. Back                      |\n";
         cout << "+-------------------------------+\n";
 
-        promptChoice(1, 5, "choice: ");
+        choice = promptChoice(1, 5, "choice: ");
         system("cls");
 
         switch (choice) {

@@ -10,17 +10,6 @@
 
 using namespace std;
 
-enum AdminMenu {
-    MANAGE_ACCOUNTS = 1,
-    NOTIFICATIONS,
-    QUESTS_TAB,
-    MERCHANT_REQUESTS,
-    BANK,
-    EMERGENCY_FUNDS,
-    VIEW_TRANSACTIONS,
-    LOG_OUT
-};
-
 void printAdminMenu() {
     cout << termcolor::bold << termcolor::magenta;
     cout << "\n+------------------------------+\n";
@@ -43,35 +32,35 @@ void adminMain() {
     do {
         printAdminMenu();
 
-        promptChoice(1, 8, "choice: ");
+        choice = promptChoice(1, 5, "Choice: ");
         system("cls");
 
         switch (choice) {
-            case MANAGE_ACCOUNTS:
+            case 1:
                 manageAccounts();
                 break;
-            case NOTIFICATIONS:
+            case 2:
                 notifications();
                 break;
-            case QUESTS_TAB:
+            case 3:
                 questsTab();
                 break;
-            case MERCHANT_REQUESTS:
+            case 4:
                 merchantRequests();
                 break;
-            case BANK:
+            case 5:
                 bank();
                 break;
-            case EMERGENCY_FUNDS:
+            case 6:
                 emergencyFunds();
                 break;
-            case VIEW_TRANSACTIONS:
+            case 7:
                 viewTransactions();
                 break;
-            case LOG_OUT:
+            case 8:
                 break;
         }
-    } while (choice != LOG_OUT);
+    } while (choice != 8);
 
     cout << termcolor::red << "\nLogging out...\n" << termcolor::reset;
     clearSystem();

@@ -23,7 +23,7 @@ int printAccountTypeMenu(const string& title) {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    clearSystem();
+    system("cls");
     return choice;
 }
 
@@ -398,7 +398,7 @@ void manageAccounts () {
         cout << "|  5. Back to Dashboard          |\n";
         cout << "+--------------------------------+\n"<< termcolor::reset;
 
-        promptChoice(1, 5, "Choice: ")
+        choice = promptChoice(1, 5, "Choice: ");
         system("cls");
 
         switch (choice) {
