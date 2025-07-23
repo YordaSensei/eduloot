@@ -50,7 +50,12 @@ void emergencyFunds() {
     cout << termcolor::magenta << "+-----------------------------------+\n" << termcolor::reset;
 
     int index;
-    index = promptValidatedIndex("Enter request number to approve: ", funds.size());
+    cout << termcolor::cyan << "Enter 0 to return to menu.\n" << termcolor::reset;
+    index = promptValidatedIndex("Enter request number to approve: ", funds.size(), true); 
+    if (index == 0) {
+        cout << termcolor::red << "\nReturning to menu...\n" << termcolor::reset;
+        return;
+    }
 
     studentreq selected = funds[index - 1];
     updateTotalTokens(-selected.tokenAmount);

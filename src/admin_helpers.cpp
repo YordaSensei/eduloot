@@ -220,15 +220,22 @@ int promptValidatedQuantity(const string& promptText) {
     }
 }
 
-int promptValidatedIndex(const string& promptText, int maxIndex) {
-    int index;
+int promptValidatedIndex(const string& promptText, size_t max, bool allowCancel) {
+    int choice;
+
     while (true) {
         cout << termcolor::bright_yellow << promptText;
-        if (cin >> index && index > 0 && index <= maxIndex) {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            return index;
+        if (cin >> choice) {
+            if (allowCancel && choice == 0) return 0;
+            if (choice >= 1 && choice <= static_cast<int>(max)) return choice;
         }
-        cout << termcolor::bright_red << "ERROR: Invalid index. Please enter a number from 1 to " << maxIndex << ".\n" << termcolor::reset;
+
+        cout << termcolor::red << "Invalid input. ";
+        if (allowCancel)
+            cout << "Enter 1-" << max << " or 0 to cancel.\n";
+        else
+            cout << "Enter a number between 1 and " << max << ".\n";
+
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
@@ -239,7 +246,7 @@ int promptChoice (int min, int max, const string& promptText) {
     while (true) {
         cout << termcolor::bright_yellow << promptText;
         if (cin >> choice && choice >= min && choice <= max) break;
-        cout << termcolor::red << "Invalid choice. Please enter 1-8.\n";
+        cout << termcolor::red << "Invalid choice. Please enter 1-"<< max << ".\n";
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }

@@ -85,7 +85,12 @@ void approveStudentQuests() {
 
     cout << termcolor::magenta << "\n+----------------------------------------------+\n";
     
-    index = promptValidatedIndex("Enter request number to approve: ", quests.size());
+    index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", quests.size(), true);
+    if (index == 0) {
+        cout << termcolor::yellow << "Cancelled. Returning to menu...\n" << termcolor::reset;
+        return;
+    }
+
 
     cin.ignore();
     cout << termcolor::reset;

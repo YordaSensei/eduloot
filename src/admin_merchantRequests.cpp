@@ -91,7 +91,7 @@ void merchantRequests() {
                        case 1: {
                             cout << termcolor::bold << termcolor::magenta;
                             cout << "\n+----------------------------------------------+\n";
-                            cout << "| " << termcolor::bright_yellow << "     Pending [Add] Product Requests     " << termcolor::magenta << "|\n";
+                            cout << "|   " << termcolor::bright_yellow << "     Pending [Add] Product Requests     " << termcolor::magenta << "  |\n";
                             cout << "+----------------------------------------------+\n";
 
                             bool hasAddRequests = false;
@@ -115,9 +115,12 @@ void merchantRequests() {
 
                             cout << termcolor::reset;
 
-                            int index = promptValidatedIndex("Enter request number to approve: ", addEditReqs.size());
+                            int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", addEditReqs.size(), true);
+                            if (index == 0) {
+                                cout << termcolor::yellow << "Cancelled.\n" << termcolor::reset;
+                                break;
+                            }
 
-                            if (index <= 0 || index > addEditReqs.size()) break;
 
                             Products p = addEditReqs[index - 1];
 
@@ -149,7 +152,7 @@ void merchantRequests() {
                         case 2: {
                             cout << termcolor::bold << termcolor::magenta;
                             cout << "\n+----------------------------------------------+\n";
-                            cout << "| " << termcolor::bright_yellow << "   Pending [Delete] Product Requests    " << termcolor::magenta << "|\n";
+                            cout << "|   " << termcolor::bright_yellow << "   Pending [Delete] Product Requests    " << termcolor::magenta << "  |\n";
                             cout << "+----------------------------------------------+\n";
 
                             bool hasDeleteRequests = false;
@@ -169,9 +172,11 @@ void merchantRequests() {
 
                             cout << termcolor::reset;
 
-                            int index = promptValidatedIndex("Enter request number to approve: ", deleteReqs.size());
-
-                            if (index <= 0 || index > deleteReqs.size()) break;
+                           int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", deleteReqs.size(), true);
+                            if (index == 0) {
+                                cout << termcolor::yellow << "Cancelled.\n" << termcolor::reset;
+                                break;
+                            }
 
                             Products p = deleteReqs[index - 1]; 
 
@@ -242,7 +247,11 @@ void merchantRequests() {
 
                             cout << termcolor::reset;
 
-                            int index = promptValidatedIndex("Enter request number to approve: ", addEditReqs.size());
+                            int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", addEditReqs.size(), true);
+                            if (index == 0) {
+                                cout << termcolor::yellow << "Cancelled.\n" << termcolor::reset;
+                                break;
+                            }
 
                             Products p = addEditReqs[index - 1];
 
@@ -333,10 +342,9 @@ void merchantRequests() {
                     break;
                 }
 
-                index = promptValidatedIndex("Enter request number to approve: ", concerns.size());
-
-                if (index <= 0 || index > concerns.size()) {
-                    cout << termcolor::red << "\nInvalid choice.\n" << termcolor::reset;
+                index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", concerns.size(), true);
+                if (index == 0) {
+                    cout << termcolor::yellow << "Cancelled.\n" << termcolor::reset;
                     break;
                 }
 
@@ -407,10 +415,9 @@ void merchantRequests() {
                     break;
                 }
 
-                index = promptValidatedIndex("Enter request number to approve: ", cashout.size());
-
-                if (index <= 0 || index > cashout.size()) {
-                    cout << termcolor::red << "\nInvalid choice.\n" << termcolor::reset;
+                index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", cashout.size(), true);
+                if (index == 0) {
+                    cout << termcolor::yellow << "Cancelled.\n" << termcolor::reset;
                     break;
                 }
 

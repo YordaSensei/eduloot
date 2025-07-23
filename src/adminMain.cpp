@@ -32,7 +32,7 @@ void adminMain() {
     do {
         printAdminMenu();
 
-        choice = promptChoice(1, 5, "Choice: ");
+        choice = promptChoice(1, 8, "Choice: ");
         system("cls");
 
         switch (choice) {

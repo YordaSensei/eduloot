@@ -16,6 +16,7 @@ void viewTransactions() {
 
     TransactionFile transactionFiles[] = {
         {"Token Purchases (Student)", "studentBalance.txt"},
+        {"Emergency Funds", "studentApprovedReqs.txt"},
         {"Token Purchases (Teacher)", "teacherBalance.txt"},
         {"Token Refunds", "tokenRefunds.txt"},
         {"Quest Approvals", "approvedQuests.txt"},
