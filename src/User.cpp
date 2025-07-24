@@ -205,14 +205,14 @@ void User::transactions() {
             }
             
             inFile.close();
-            
+
         } else {
             cout << "No transaction history available.\n";
         }
         
         cout << "\n---------------------------\n";
         cout << "1. Back to Home\n";
-        cout << "2. Refresh\n";  // Added refresh option
+        cout << "2. Refresh\n";
 
         if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 2)) {
             continue;
