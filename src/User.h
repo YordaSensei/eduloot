@@ -26,6 +26,10 @@ public:
     void setEmail(const std::string& e) { email = e; }
     
 protected:
+    void displayMerchants();
+    void displayProducts(const std::string& selectedMerchant);
+    bool processPurchase(const std::string& selectedMerchant, const Product& product, int productQty, int totalAmount);
+
     void updateBalanceInFile(int newBalance) {
         tokenBalance = newBalance;
         vector<string> lines;
@@ -61,20 +65,77 @@ protected:
         outFile.close();
     }
 
+    void updateProductQuantity(const std::string& selectedMerchant, const Product& product, int productQty) {
+        vector<Product> products;
+        ifstream productInFile("productList.txt");
+        string line;
+
+        while (getline(productInFile, line)) {
+            if (!line.empty()) {
+                Product p;
+                string strPrice, strQuantity;
+                stringstream split(line);
+
+                getline(split, p.merchant, ',');
+                getline(split, p.name, ',');
+                getline(split, strPrice, ',');
+                getline(split, strQuantity, ',');
+                getline(split, p.desc);
+
+                p.price = stod(strPrice);
+                p.quantity = stoi(strQuantity);
+
+                if (p.merchant == selectedMerchant && p.name == product.name) {
+                    p.quantity -= productQty;
+                }
+
+                products.push_back(p);
+            }
+        }
+        productInFile.close();
+
+        ofstream productOutFile("productList.txt");
+        for (const auto& p : products) {
+            productOutFile << p.merchant << "," << p.name << "," 
+                        << p.price << "," << p.quantity << "," 
+                        << p.desc << endl;
+        }
+        productOutFile.close();
+    }
+
     void recordTransaction(const string& type, int amount, int newBalance) {
+        time_t now = time(0);
+        string dt = ctime(&now);
+        dt.pop_back();
+
         ofstream outFile(userType + "TokenTransactions.txt", ios::app);
         if (outFile.is_open()) {
-            outFile << email << "," << type << "," << amount << "," << newBalance << "\n";
+            outFile << email << "," << type << "," << amount << "," << newBalance << "," << dt << endl;
             outFile.close();
         }
     }
 
+    void recordProductTransaction(const std::string& selectedMerchant,
+                                  const Product& product,
+                                  int totalAmount,
+                                  int productQty,
+                                  const std::string& currentUserBalance,
+                                  const std::string& currentMerchantBalance) {
+        time_t now = time(0);
+        string dt = ctime(&now);
+        dt.pop_back();
+
+        ofstream transactionOutFile(userType + "ProductTransactions.txt", ios::app);
+        transactionOutFile << email << "," << selectedMerchant << "," 
+                        << product.name << "," << totalAmount << "," 
+                        << productQty << "," << currentUserBalance << "," 
+                        << currentMerchantBalance << "," << dt << endl;
+        transactionOutFile.close();
+    }
+
     template<typename T>
-    bool getNumericInput(T& input, 
-                const std::string& prompt = "", 
-                const std::string& errorMsg = "Invalid input.",
-                T min = std::numeric_limits<T>::lowest(),
-                T max = std::numeric_limits<T>::max()) 
+    bool getNumericInput(T& input, const std::string& prompt = "", const std::string& errorMsg = "Invalid input.", 
+        T min = std::numeric_limits<T>::lowest(), T max = std::numeric_limits<T>::max()) 
     {
         if (!prompt.empty()) std::cout << prompt;
         
@@ -94,9 +155,8 @@ protected:
         return true;
     }
 
-    bool getYesNoInput(char& input, 
-                  const std::string& prompt = "",
-                  const std::string& errorMsg = "Please enter 'y' or 'n'.") 
+    bool getYesNoInput(char& input, const std::string& prompt = "", 
+        const std::string& errorMsg = "Please enter 'y' or 'n'.") 
     {
         while (true) {
             if (!prompt.empty()) std::cout << prompt;
