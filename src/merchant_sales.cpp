@@ -24,7 +24,10 @@ void totalSales(string email) {
 
                 if (m.email == email){
                     m.balance = stoi(strBalance);
-                    cout << "Total Sales: " << m.balance <<  " token(s)." << endl;
+                    cout << termcolor::bold << termcolor::yellow;
+                    cout << "\n+------------------------------+\n";
+                    cout << "|" << termcolor::bright_white << "  Total Sales: " <<  m.balance << setw(12) << left << " token(s)." << termcolor::yellow << "|";
+                    cout << "\n+------------------------------+\n";
                     found = true;
                 }
             }
@@ -32,61 +35,97 @@ void totalSales(string email) {
         inFile.close();
 
         if (!found) {
-            cout << "Total Sales: 0 token(s).\n";
+            cout << termcolor::bold << termcolor::yellow;
+            cout << "\n+------------------------------+\n";
+            cout << "|" << termcolor::bright_white << setw(30) << left << "  Total Sales: 0 token(s)" << termcolor::yellow << "|";
+            cout << "\n+------------------------------+\n";
         }
 
         cout << "1. Back\n";
-        cout << "Choice: ";
+        cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
     } while (choice != 1);
 }
 
 void merchantTransactions (string email){
     string line;
-    cout << "\n----- Transactions -----\n";
-    ifstream productInFile("studentProductTransactions.txt");
+    int choice;
 
-    while (getline(productInFile, line)) {
-        if (!line.empty()) {
-            string studentEmail, merchant, name, price, quantity, currentBal, merchantBal, time;
-            stringstream split(line);
+    do {
+        cout << termcolor::bold << termcolor::yellow;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_white << "       Transactions         " << termcolor::yellow << "|\n";
+        cout << "+------------------------------+\n";
+        ifstream productInFile("studentProductTransactions.txt");
 
-            getline(split, studentEmail, ',');
-            getline(split, merchant, ',');
-            getline(split, name, ',');
-            getline(split, price, ',');
-            getline(split, quantity, ',');
-            getline(split, currentBal, ',');
-            getline(split, merchantBal, ',');
-            getline(split, time);
+        while (getline(productInFile, line)) {
+            if (!line.empty()) {
+                string studentEmail, merchant, name, price, quantity, currentBal, merchantBal, time;
+                stringstream split(line);
 
-            if (merchant == email){
-                cout << "Student " << studentEmail << " bought " << quantity << " " << name << "(s) for " << price << " token(s) at " << time << " | You currently have " << merchantBal << " token(s)." << endl; 
+                getline(split, studentEmail, ',');
+                getline(split, merchant, ',');
+                getline(split, name, ',');
+                getline(split, price, ',');
+                getline(split, quantity, ',');
+                getline(split, currentBal, ',');
+                getline(split, merchantBal, ',');
+                getline(split, time);
+
+                if (merchant == email){
+                    cout << "Student " << studentEmail << " bought " << quantity << " " << name << "(s) for " << price << " token(s) at " << time << " | You currently have " << merchantBal << " token(s)." << endl; 
+                }
             }
         }
-    }
-    productInFile.close();
-    cout << "\n-------------------------\n";
+        productInFile.close();
+        cout << "+------------------------------+\n";
+        cout << "1. Back\n";
+        cout << termcolor::bright_white << "Choice: ";
+        cin >> choice;
+
+        switch (choice){
+            case 1:
+                system("cls");
+                break;
+            default:
+                cout << termcolor::red << "Invalid choice.";
+                clearSystem();
+                break;
+        }
+    } while (choice != 1);
 }
 
 void sales(string email) {
     int choice;
 
     do {
-        cout << "\n--- Sales ---\n";
-        cout << "1. View Total Sales\n";
-        cout << "2. Transactions\n";
-        cout << "3. Back to Home";
-        cout << "\n-------------\n";
-        cout << "Choice: ";
+        cout << termcolor::bold << termcolor::yellow;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_white << "           Sales            " << termcolor::yellow << "|\n";
+        cout << "+------------------------------+\n";
+        cout << "|  1. View Total Sales         |\n";
+        cout << "|  2. Transactions             |\n";
+        cout << "|  3. Back to Home             |\n";
+        cout << "+------------------------------+\n";
+        cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
 
         switch (choice){
             case 1:
+                system("cls");
                 totalSales(email);
                 break;
             case 2:
-                merchantTransactions(email);
+                system("cls");
+                merchantTransactions(email);               
+                break;
+            case 3: 
+                cout << termcolor::red << "Returning to home...";    
+                clearSystem();          
+                break;
+            default:
+                cout << termcolor::red << "Invalid choice.";               
+                clearSystem();
                 break;
         }
     } while (choice != 3);

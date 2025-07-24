@@ -14,13 +14,18 @@ void merchantMain(string email) {
     int choice;
 
     do {
-        cout << "\n--- Good day, " << email << "! ---\n";
-        cout << "1. Products\n";
-        cout << "2. Sales\n";
-        cout << "3. Request To Admin\n";
-        cout << "4. Log Out\n";
-        cout << "Choice: ";
+        cout << termcolor::bold << termcolor::yellow;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_white << "   Good day, Merchant!      " << termcolor::yellow << "|\n";
+        cout << "+------------------------------+\n";
+        cout << "|  1. Products                 |\n";
+        cout << "|  2. Sales                    |\n";
+        cout << "|  3. Request To Admin         |\n";
+        cout << "|  4. Log Out                  |\n";
+        cout << "+------------------------------+\n";
+        cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
+        system("cls");
 
         switch(choice) {
             case 1:
@@ -32,8 +37,10 @@ void merchantMain(string email) {
             case 3:
                 requestAdmin(email); 
                 break;
+            case 4:
+                cout << termcolor::red << "Logging Out...";
+                clearSystem();
         }
     } while (choice != 4);
-
-    cout << "Logging Out...";
+    cout << termcolor::reset;
 }

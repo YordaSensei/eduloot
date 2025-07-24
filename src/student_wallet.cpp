@@ -171,7 +171,7 @@ void convertTokens(string email) {
                         s.balance -= quantity;
                         updateTotalTokens(quantity);
                         updateTotalMoney(-totalAmount);
-                        cout << << termcolor::red << quantity << " tokens converted successfully.\n";
+                        cout << termcolor::red << quantity << " tokens converted successfully.\n";
                     } else {
                         cout << termcolor::red << "You have don't have enough tokens to convert.\n";
                     }

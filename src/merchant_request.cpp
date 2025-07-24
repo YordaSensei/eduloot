@@ -11,7 +11,12 @@ void reqAddProduct(string email) {
     ofstream outFile("productReq.txt", ios::app);
     Product p;
 
-    cout << "Enter Product Name: ";
+    cout << termcolor::bold << termcolor::yellow;
+    cout << "\n+------------------------------+\n";
+    cout << "|  " << termcolor::bright_white << "        Add Product          " << termcolor::yellow << "|\n";
+    cout << "+------------------------------+\n";
+
+    cout << termcolor::bright_white << "Enter Product Name: ";
     cin.ignore();
     getline(cin, p.name);
 
@@ -28,7 +33,8 @@ void reqAddProduct(string email) {
     outFile << email << ",add," << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
 
     outFile.close();
-    cout << "Product requested to admin.\n";
+    cout << termcolor::red << "Product requested to admin.\n";
+    clearSystem();
 }
 
 void reqDeleteProduct(string email) {
@@ -66,18 +72,23 @@ void reqDeleteProduct(string email) {
         return;
     }
 
-    cout << "\n--- Choose a product to delete ---\n";
+    cout << termcolor::bold << termcolor::yellow;
+    cout << "\n+------------------------------+\n";
+    cout << "|  " << termcolor::bright_white << "        Delete Product         " << termcolor::yellow << "|\n";
+    cout << "+------------------------------+\n";
     for (size_t i = 0; i < productList.size(); ++i) {
         cout << i + 1 << ". " << productList[i].name
              << " (Current Stock: " << productList[i].quantity << ")\n";
     }
+    cout << "+------------------------------+\n";
 
     int choice;
-    cout << "Enter product number to delete: ";
+    cout << termcolor::bright_white << "Enter product number to delete: ";
     cin >> choice;
 
     if (choice < 1 || choice > productList.size()) {
-        cout << "Invalid choice.\n";
+        cout << termcolor::red << "Invalid choice.\n";
+        clearSystem();
         return;
     }
 
@@ -89,21 +100,27 @@ void reqDeleteProduct(string email) {
     outFile << email << ",delete," << productList[choice - 1].name << "," << reason << endl;
     outFile.close();
 
-    cout << "Deletion requested to admin.\n";
+    cout << termcolor::red << "Deletion requested to admin.\n";
+    clearSystem(2000);
 }
 
 void reqCashout(string email) {
     int quantity;
+    cout << termcolor::bold << termcolor::yellow;
+    cout << "\n+------------------------------+\n";
+    cout << "|  " << termcolor::bright_white << "        Request Cashout         " << termcolor::yellow << "|\n";
+    cout << "+------------------------------+\n";
+
     cout << "How many tokens would you like to convert?\n";
     cout << "(PHP 3.00 = 1 Token) with a 5 percent fee.\n";
-    cout << "Tokens to convert: ";
+    cout << termcolor::bright_white << "Tokens to convert: ";
     cin >> quantity;
 
     char choice;
     float totalAmount = (quantity *3.0f) * 0.95f;
-    cout << "Total amount is PHP " << totalAmount << " (fee included).\n";
+    cout << termcolor::yellow << "Total amount is PHP " << totalAmount << " (fee included).\n";
     cout << "Are you sure you want to convert " << quantity << " tokens? (y/n)\n";
-    cout << "Choice: ";
+    cout << termcolor::bright_white << "Choice: ";
     cin >> choice;
 
     if (choice == 'y' || choice == 'Y'){
@@ -126,9 +143,11 @@ void reqCashout(string email) {
                         outFile << email << "," << quantity << endl;
                         outFile.close();
 
-                        cout << quantity << " tokens requested for cashout.\n";
+                        cout << termcolor::red << quantity << " tokens requested for cashout.\n";
+                        clearSystem(2000);
                     } else {
-                        cout << "You have don't have enough tokens to cashout.\n";
+                        cout << termcolor::red << "You have don't have enough tokens to cashout.\n";
+                        clearSystem(2000);
                     }
                 }
             }
@@ -169,27 +188,31 @@ void reqChangePrice(string email) {
     inFile.close();
 
     if (productList.empty()) {
-        cout << "No products available to request price change.\n";
+        cout << termcolor::red << "No products available to request price change.\n";
         return;
     }
 
-    cout << "\n--- Choose a product to request price change ---\n";
+    cout << termcolor::bold << termcolor::yellow;
+    cout << "\n+------------------------------+\n";
+    cout << "|  " << termcolor::bright_white << " Choose Product for Price Change " << termcolor::yellow << "|\n";
+    cout << "+------------------------------+\n";
     for (size_t i = 0; i < productList.size(); ++i) {
         cout << i + 1 << ". " << productList[i].name
              << " (Current Price: " << productList[i].price << ")\n";
     }
 
     int choice;
-    cout << "Enter product number to change price: ";
+    cout << termcolor::bright_white << "Enter product number to change price: ";
     cin >> choice;
 
     if (choice < 1 || choice > productList.size()) {
-        cout << "Invalid choice.\n";
+        cout << termcolor::red << "Invalid choice.\n";
+        clearSystem();
         return;
     }
 
     double newPrice;
-    cout << "Enter *new price* for " << productList[choice - 1].name << ": ";
+    cout << "Enter new price for " << productList[choice - 1].name << ": ";
     cin >> newPrice;
 
     cin.ignore();
@@ -199,7 +222,7 @@ void reqChangePrice(string email) {
 
     ofstream reqFile("productReq.txt", ios::app);
     if (!reqFile) {
-        cout << "ERROR: Cannot open productReq.txt\n";
+        cout << termcolor::red << "ERROR: Cannot open productReq.txt\n";
         return;
     }
 
@@ -209,7 +232,8 @@ void reqChangePrice(string email) {
             << reason << "\n";
 
     reqFile.close();
-    cout << "Price change request submitted successfully.\n";
+    cout << termcolor::red << "Price change request submitted successfully.\n";
+    clearSystem(2000);
 }
 
 void viewRequests(string email) {
@@ -217,7 +241,7 @@ void viewRequests(string email) {
     string line;
 
     if (!inFile) {
-        cout << "\nERROR: Could not open productReq.txt\n";
+        cout << termcolor::red << "\nERROR: Could not open productReq.txt\n";
         return;
     }
 
@@ -266,24 +290,36 @@ void viewRequests(string email) {
 
     inFile.close();
 
-    cout << "\n--- Product Request(s) ---\n";
+    cout << termcolor::bold << termcolor::yellow;
+    cout << "\n+------------------------------+\n";
+    cout << "|  " << termcolor::bright_white << "       Product Request        " << termcolor::yellow << "|\n";
+    cout << "+------------------------------+\n";
 
     if (!addRequests.empty()) {
-        cout << "\n[Add Product Requests]\n";
+        cout << termcolor::bold << termcolor::yellow;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_white << "      Add Product Requests       " << termcolor::yellow << "|\n";
+        cout << "+------------------------------+\n";
         for (const string& req : addRequests) {
             cout << req << endl;
         }
     }
 
     if (!deleteRequests.empty()) {
-        cout << "\n[Delete Product Requests]\n";
+        cout << termcolor::bold << termcolor::yellow;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_white << "      Delete Product Requests       " << termcolor::yellow << "|\n";
+        cout << "+------------------------------+\n";
         for (const string& req : deleteRequests) {
             cout << req << endl;
         }
     }
 
     if (!changePriceRequests.empty()) {
-        cout << "\n[Change Price Requests]\n";
+        cout << termcolor::bold << termcolor::yellow;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_white << "      Change Price Requests       " << termcolor::yellow << "|\n";
+        cout << "+------------------------------+\n";
         for (const string& req : changePriceRequests) {
             cout << req << endl;
         }
@@ -291,7 +327,10 @@ void viewRequests(string email) {
 
     ifstream cashoutInFile("cashout.txt");
 
-    cout << "\n[Token Cashout Requests]\n";
+    cout << termcolor::bold << termcolor::yellow;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_white << "      Token Cashout Requests       " << termcolor::yellow << "|\n";
+        cout << "+------------------------------+\n";
     while (getline(cashoutInFile, line)) {
         stringstream ss(line);
         string merchantEmail, amount;
@@ -309,31 +348,47 @@ void requestAdmin(string email) {
     int choice;
 
     do {
-        cout << "\n--- What would you like to request? ---\n";
+        cout << termcolor::bold << termcolor::yellow;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_white << "     Request to Admin       " << termcolor::yellow << "|\n";
+        cout << "+------------------------------+\n";
         cout << "1. Add Product\n";
         cout << "2. Delete Product\n";
         cout << "3. Change Product Price\n";
         cout << "4. Cashout\n";
         cout << "5. View Requests\n";
         cout << "6. Back to Home\n";
-        cout << "Choice: ";
+        cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
 
         switch(choice) {
             case 1:
+                system("cls");
                 reqAddProduct(email);
                 break;
             case 2:
+                system("cls");
                 reqDeleteProduct(email);
                 break;
             case 3:
+                system("cls");
                 reqChangePrice(email);
                 break;
             case 4:
+                system("cls");
                 reqCashout(email);
                 break;
             case 5:
+                system("cls");
                 viewRequests(email);
+                break;
+            case 6:
+                cout << termcolor::red << "Returning to Home...\n";
+                clearSystem();
+                break;
+            default:
+                cout << termcolor::red << "Invalid choice.\n";
+                clearSystem();
                 break;
         }
     } while (choice != 6);

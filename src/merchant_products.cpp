@@ -40,22 +40,27 @@ void editStock(string email) {
     }
 
     if (merchantProducts.empty()) {
-        cout << "No products available to edit.\n";
+        cout << termcolor::red << "No products available to edit.\n";
         return;
     }
 
-    cout << "\n--- Choose a product to edit ---\n";
+    cout << termcolor::bold << termcolor::yellow;
+    cout << "\n+------------------------------+\n";
+    cout << "|  " << termcolor::bright_white << "  Change Product Stock    " << termcolor::yellow << "|\n";
+    cout << "+------------------------------+\n";
     for (size_t i = 0; i < merchantProducts.size(); ++i) {
         cout << i + 1 << ". " << merchantProducts[i].name
-             << " (Current Stock: " << merchantProducts[i].quantity << ")\n";
+             << " (Current Stock: " << merchantProducts[i].quantity << ")\n";   
     }
+    cout << "+------------------------------+\n";
 
     int choice;
-    cout << "Enter product number to edit: ";
+    cout << termcolor::bright_white << "Enter product number to edit stock: ";
     cin >> choice;
 
     if (choice < 1 || choice > merchantProducts.size()) {
-        cout << "Invalid choice.\n";
+        cout << termcolor::red << "Invalid choice.\n";
+        clearSystem();
         return;
     }
 
@@ -76,14 +81,18 @@ void editStock(string email) {
     }
     outFile.close();
 
-    cout << "Stock updated successfully.\n";
+    cout << termcolor::red << "Stock updated successfully.\n";
+    clearSystem();
 }
 
 void products(string email) {
     int choice;
 
     do {
-        cout << "\n--- Products ---\n";
+        cout << termcolor::bold << termcolor::yellow;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_white << "         Products           " << termcolor::yellow << "|\n";
+        cout << "+------------------------------+\n";
 
         ifstream inFile("productList.txt");
         string line;
@@ -118,27 +127,30 @@ void products(string email) {
         }
 
         if (!hasProducts) {
-            cout << "No products found.\n";
+            cout << termcolor::red << "No products found.\n";
         }
 
         inFile.close();
 
-        cout << "\n----------------\n";
+        cout << termcolor::yellow << "+------------------------------+\n";
         cout << "1. Edit Stock\n";
         cout << "2. Back to Home\n";
-        cout << "Choice: ";
+        cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
 
         switch (choice) {
             case 1:
                 editStock(email);
+                system("cls");
                 break;
             case 2:
-                cout << "Returning to home...\n";
+                cout << termcolor::red << "Returning to Home...\n";
+                clearSystem();
                 break;
             default:
-                cout << "Invalid choice.\n";
+                cout << termcolor::red << "Invalid choice.\n";
+                clearSystem();
+                break;
         }
-
     } while (choice != 2);
 }

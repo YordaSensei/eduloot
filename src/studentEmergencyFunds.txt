@@ -1,7 +1,0 @@
-123,I need money,20
-123,I just want to,5
-123,test,1
-123,test,1
-123,Testing,10
-123,Test,123
-123,test,123
