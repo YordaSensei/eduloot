@@ -21,8 +21,6 @@ void quests(string email) {
 
         cout << termcolor::bright_cyan << "Choice: ";
         cin >> choice;
-        cout << termcolor::reset;
-        system("cls");
 
         switch (choice) {
             case 1: {

@@ -21,7 +21,10 @@ void viewBalance(string email) {
 
                 if (s.email == email){
                     s.balance = stoi(strBalance);
-                    cout << "Token Balance: " << s.balance << endl;
+                    cout << termcolor::bold << termcolor::blue;
+                    cout << "\n+------------------------------+\n";
+                    cout << "|" << termcolor::bright_cyan << "  Token Balance: " << setw(13) << left << s.balance << termcolor::blue << "|";
+                    cout << "\n+------------------------------+\n";
                     found = true;
                 }
             }
@@ -29,12 +32,25 @@ void viewBalance(string email) {
         inFile.close();
 
         if (!found) {
-            cout << "Token Balance: 0\n";
+            cout << termcolor::bold << termcolor::blue;
+            cout << "\n+------------------------------+\n";
+            cout << "|" << termcolor::bright_cyan << setw(30) << left << "  Token Balance: 0" << termcolor::blue << "|";
+            cout << "\n+------------------------------+\n";
         }
 
         cout << "1. Back\n";
-        cout << "Choice: ";
+        cout << termcolor::bright_cyan << "Choice: ";
         cin >> choice;
+        
+        switch(choice) {
+            case 1:
+                system("cls");
+                break;
+            default:
+                cout << termcolor::red << "Invalid choice.\n";
+                clearSystem();
+                break;
+        }
     } while (choice != 1);
 }
 
@@ -93,6 +109,7 @@ void purchaseTokens(string email) {
         updateTotalTokens(-quantity);
         updateTotalMoney(totalAmount);
         cout << quantity << " tokens purchased successfully.\n";
+        clearSystem();
 
         time_t now = time(0);
         string dt = ctime(&now);
@@ -113,6 +130,12 @@ void purchaseTokens(string email) {
             }
         }
         currentBalOutFile.close();
+    } else if (choice == 'n' || choice == 'N') {
+        cout << termcolor::red << "Conversion cancelled.\n";
+        clearSystem();
+    } else {
+        cout << termcolor::red << "Invalid choice.\n";
+        clearSystem();
     }
 }
 
@@ -150,7 +173,7 @@ void convertTokens(string email) {
                         updateTotalMoney(-totalAmount);
                         cout << quantity << " tokens converted successfully.\n";
                     } else {
-                        cout << "You have don't have enough tokens to convert.\n";
+                        cout << termcolor::red << "You have don't have enough tokens to convert.\n";
                     }
                 }
 
@@ -184,6 +207,13 @@ void convertTokens(string email) {
             }
         }
         currentBalOutFile.close();
+        clearSystem();
+    } else if (choice == 'n' || choice == 'N') {
+        cout << termcolor::red << "Conversion cancelled.\n";
+        clearSystem();
+    } else {
+        cout << termcolor::red << "Invalid choice.\n";
+        clearSystem();
     }
 }
 
@@ -202,17 +232,18 @@ void wallet(string email) {
         cout << "+------------------------------+\n"<< termcolor::reset;
         cout << termcolor::bright_cyan << "Choice: ";
         cin >> choice;
-        cout << termcolor::reset;
-        system("cls");
 
         switch(choice) {
             case 1:
+                system("cls");
                 viewBalance(email);
                 break;
             case 2:
+                system("cls");
                 purchaseTokens(email);
                 break;
             case 3:
+                system("cls");
                 convertTokens(email);
                 break;
             case 4:

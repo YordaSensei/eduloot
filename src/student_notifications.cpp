@@ -5,7 +5,7 @@ void studentNotifications(string email) {
     do {
     cout << termcolor::bold << termcolor::blue;
     cout << "\n+------------------------------+\n";
-    cout << "|" << termcolor::bright_cyan << "       Quests Approved        "<< termcolor::blue <<"|\n";
+    cout << "|" << termcolor::bright_cyan << "        Quests Approved        "<< termcolor::blue <<"|\n";
     cout << "+------------------------------+\n" << endl;
     ifstream questInFile("approvedQuests.txt");
 

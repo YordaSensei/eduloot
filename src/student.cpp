@@ -55,8 +55,9 @@ void studentMain(string email) {
             case 6:
                 emergencyFunds(email);
                 break;
+            case 7:
+                cout << termcolor::red << "Logging Out...";
+                clearSystem();
         }
     } while (choice != 7);
-
-    cout << "Logging Out...";
 }

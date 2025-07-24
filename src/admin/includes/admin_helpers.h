@@ -12,7 +12,7 @@ void updateTotalTokens(int change);
 void updateTotalMoney(int pesos);
 void clearSystem(int delayMillis);
 void updateTotalMoney(float pesos);
-void clearSystem(int delayMillis);
+void clearSystem(int delayMillis = 1200);
 string promptNonEmptyInput(const string& promptText);
 double promptValidatedPrice(const string& promptText);
 int promptValidatedQuantity(const string& promptText);

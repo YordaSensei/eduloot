@@ -3,7 +3,12 @@ void emergencyFunds(string email) {
     string reason;
     int amount;
 
-    cout << "Reason: ";
+    cout << termcolor::bold << termcolor::blue;
+    cout << "\n+------------------------------+\n";
+    cout << "|" << termcolor::bright_cyan << "   Request Emergency Funds   "<< termcolor::blue <<"|\n";
+    cout << "+------------------------------+\n";
+
+    cout << termcolor::bright_cyan << "Reason: ";
     cin.ignore();
     getline(cin, reason);
 
@@ -13,5 +18,6 @@ void emergencyFunds(string email) {
     outFile << email << "," << reason << "," << amount << endl;
 
     outFile.close();
-    cout << amount << " token(s) has been requested to admin. Approval will take a while.\n";
+    cout << termcolor::red << amount << " token(s) has been requested to admin. Approval will take a while.\n";
+    clearSystem(3000);
 }
