@@ -12,6 +12,7 @@
 using namespace std;
     
 enum class WalletOption { ViewBalance = 1, Purchase, Convert, Back };
+int tokenToPHPValue = 3;
 
 void User::wallet() {
     int choice;
@@ -23,7 +24,7 @@ void User::wallet() {
         cout << "3. Convert to Cash\n";
         cout << "4. Back to Home\n";
 
-        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 4)) {
+        if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 4)) {
             continue;
         }
 
@@ -44,6 +45,7 @@ void User::wallet() {
 }
 
 void User::viewBalance() {
+    string line;
     ifstream inFile(userType + "Balance.txt");
 
     if (!inFile.is_open()) {
@@ -51,7 +53,6 @@ void User::viewBalance() {
         return;
     }
     
-    string line;
     bool found = false;
     int choice;
 
@@ -60,11 +61,12 @@ void User::viewBalance() {
             if (!line.empty()) {
                 string strBalance;
                 stringstream split(line);
+                string fileEmail;
 
-                getline(split, this->email, ',');
+                getline(split, fileEmail, ',');
                 getline(split, strBalance);
 
-                if (this->email == email) {
+                if (fileEmail == email) {
                     this->tokenBalance = stoi(strBalance);
                     cout << "Token Balance: " << this->tokenBalance << endl;
                     found = true;
@@ -80,79 +82,73 @@ void User::viewBalance() {
         }
 
         cout << "1. Back\n";
-        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
+        if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
             continue;
         }
     } while (choice != 1);
 }
 
 void User::purchase() {
-    int choice;
-
-    do {
-        cout << "\n--- Make a Purchase ---\n";
-        cout << "1. Scan QR Code\n";
-        cout << "2. Input Merchant Code\n";
-        cout << "3. Back to Home\n";
-
-        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 3)) {
-            continue;
-        }
-
-        switch (choice) {
-            case 1:
-                cout << "Please input QR CODE : \n"; //temp
-                break;
-            case 2:
-                string code;
-                cout << "Merchant Code : ";
-                cin >> code;
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                break;
-        }
-    } while (choice != 3);
 }
 
 void User::purchaseTokens() {
-    int choice = 0;
+    int inputAmount;
+    cout << "\n--- Purchase Tokens ---\n";
+    cout << "How many tokens would you like to purchase? (PHP 3.00 = 1 Token): ";
+    
+    if (!getNumericInput(inputAmount, "PHP", "Invalid amount. Please enter a positive number.", 1)) {
+        return;
+    }
 
-    do {
-        cout << "\n--- Purchase Tokens ---\n";
-        cout << "\n---------------------\n";
-        cout << "1. Input token amount\n";
-        cout << "2. Back to Home\n";
+    char choice;
+    int tokensToAdd = inputAmount / tokenToPHPValue;
+    cout << "Total tokens to be recieved : " << tokensToAdd << ".\n";
+    cout << "Are you sure you want to purchase PHP" << inputAmount << " amount of tokens? (y/n)\n";
 
-        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 2)) {
-            continue;
-        }
+    if (!getYesNoInput(choice, "Choice: ", "Invalid choice.")) {
+        return;
+    }
 
-        switch(choice) {
-            case 1:
-                int change;
-                if (!getValidInput(change, "Please input token amount : ", "Invalid amount entered.")) {
-                    continue;
-                }
-                updateTotalTokens(change);
-                break;
-            case 2:
-                break;
-        }
-    } while (choice !=2);
+    if (choice == 'y') {
+        int newBalance = tokenBalance + tokensToAdd;
+        updateBalanceInFile(newBalance);
+        recordTransaction("PURCHASE", tokensToAdd, newBalance);
+        viewBalance();
+        cout << "Purchase successful! New balance: " << newBalance << " tokens.\n";
+    } else {
+        cout << "Purchase cancelled.\n";
+    }
 }
 
 void User::convertTokens() {
-    int choice;
+    int tokensToConvert;
+    cout << "\n--- Convert Tokens to PHP ---\n";
+    cout << "Current exchange rate: 1 Token = PHP 3.00\n";
+    cout << "How many tokens would you like to convert to PHP? ";
+    
+    if (!getNumericInput(tokensToConvert, "Tokens: ", "Invalid amount. Please enter a positive number.", 1, tokenBalance)) {
+        return;
+    }
 
-    do {
-        cout << "\n--- Convert Tokens ---\n";
-        cout << "\n---------------------\n";
-        cout << "1. Back to Home\n";
+    char choice;
+    int phpAmount = tokensToConvert * tokenToPHPValue;
+    cout << "You will receive PHP" << phpAmount << " for " << tokensToConvert << " tokens.\n";
+    cout << "Confirm conversion? (y/n): ";
+    
+    if (!getYesNoInput(choice, "Choice: ", "Invalid choice.")) {
+        return;
+    }
 
-        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
-            continue;
-        }
+    if (choice == 'y') {
+        int newBalance = tokenBalance - tokensToConvert;
+        updateBalanceInFile(newBalance);
+        recordTransaction("CONVERSION", -tokensToConvert, newBalance);
+        viewBalance();
+        cout << "Conversion successful! New balance: " << newBalance << " tokens.\n";
 
-    } while (choice != 1);
+    } else {
+        cout << "Conversion cancelled.\n";
+    }
 }
 
 void User::notifications() {
@@ -163,7 +159,7 @@ void User::notifications() {
         cout << "\n---------------------\n";
         cout << "1. Back to Home\n";
 
-        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
+        if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
             continue;
         }
     } while (choice != 1);
@@ -171,14 +167,60 @@ void User::notifications() {
 
 void User::transactions() {
     int choice;
-
+    ifstream inFile(userType + "TokenTransactions.txt");
+    
     do {
         cout << "\n--- Transaction History ---\n";
+        cout << "---------------------------\n";
+        
+        if (inFile.is_open()) {
+            string line;
+            bool hasTransactions = false;
+            
+            while (getline(inFile, line)) {
+                if (!line.empty()) {
+                    stringstream ss(line);
+                    string fileEmail, type, amountStr, balanceStr;
+                    
+                    getline(ss, fileEmail, ',');
+                    getline(ss, type, ',');
+                    getline(ss, amountStr, ',');
+                    getline(ss, balanceStr);
+                    
+                    if (fileEmail == email) {
+                        hasTransactions = true;
+                        int amount = stoi(amountStr);
+                        int balance = stoi(balanceStr);
+                        
+                        cout << "Type: " << type 
+                             << " | Amount: " << (amount >= 0 ? "+" : "") << amount
+                             << " | Balance: " << balance
+                             << endl;
+                    }
+                }
+            }
+            
+            if (!hasTransactions) {
+                cout << "No transactions found.\n";
+            }
+            
+            inFile.close();
+            
+        } else {
+            cout << "No transaction history available.\n";
+        }
+        
         cout << "\n---------------------------\n";
         cout << "1. Back to Home\n";
+        cout << "2. Refresh\n";  // Added refresh option
 
-        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
+        if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 2)) {
             continue;
         }
+        
+        if (choice == 2) {
+            inFile.open(userType + "TokenTransactions.txt");
+        }
+
     } while (choice != 1);
 }
