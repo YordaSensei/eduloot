@@ -8,7 +8,10 @@ void purchase(string email) {
     ifstream merchantInFile("merchantAccounts.txt");
     string line;
 
-    cout << "\n--- Select a Merchant ---\n";
+    cout << termcolor::bold << termcolor::blue;
+    cout << "\n+------------------------------+\n";
+    cout << "|" << termcolor::bright_cyan << "      Select a Merchant       "<< termcolor::blue <<"|\n";
+    cout << "+------------------------------+\n";
     while (getline(merchantInFile, line)) {
         if (!line.empty()) {
             string merchantEmail, username, password;
@@ -19,9 +22,12 @@ void purchase(string email) {
             getline(split, password);
 
             merchantList.push_back(merchantEmail);
-            cout << merchantList.size() << ". " << merchantEmail << endl;
+            cout << "|  " << merchantList.size() << ". " << setw(25) << left << merchantEmail << termcolor::blue << "|" << endl;
         }
     }
+
+    cout << "|  " << "3. " << setw(25) << left << termcolor::bright_cyan << "Back to Home" << termcolor::blue << "|" << endl;
+    cout << "+------------------------------+\n";
     merchantInFile.close();
 
     if (merchantList.empty()) {
@@ -30,11 +36,16 @@ void purchase(string email) {
     }
 
     int merchantChoice;
-    cout << "Select number of merchant: ";
+    cout << termcolor::bright_cyan << "Select number of merchant: ";
     cin >> merchantChoice;
 
     if (merchantChoice < 1 || merchantChoice > merchantList.size()) {
-        cout << "Invalid choice.\n";
+        if (merchantChoice == 3){
+            cout << termcolor::red << "Returning to Home...\n";
+        } else {
+            cout << termcolor::red << "Invalid choice.\n"; 
+        }
+        clearSystem();
         return;
     }
 
@@ -70,19 +81,22 @@ void purchase(string email) {
         return;
     }
 
-    cout << "\n--- Choose a product to purchase ---\n";
+    cout << termcolor::bold << termcolor::blue;
+    cout << "\n+------------------------------+\n";
+    cout << "|" << termcolor::bright_cyan << "        " << selectedMerchant << " Products         "<< termcolor::blue <<"|\n";
+    cout << "+------------------------------+\n";
     for (size_t i = 0; i < productList.size(); ++i) {
-        cout << i + 1 << ". " << productList[i].name
-             << " | Price: " << productList[i].price << "tokens"
-             << " | Stock(s) left: " << productList[i].quantity << endl;
+        cout << (i + 1) << ". " << productList[i].name << " | Price: " << productList[i].price << " tokens" << " | Stock(s) left: " << productList[i].quantity << endl;
     }
+    cout << "+------------------------------+\n";
 
     int productChoice;
-    cout << "Select number of product: ";
+    cout << termcolor::bright_cyan << "Select number of product: ";
     cin >> productChoice;
 
     if (productChoice < 1 || productChoice > productList.size()) {
-        cout << "Invalid product selection.\n";
+        cout << termcolor::red << "Invalid product selection.\n";
+        clearSystem();
         return;
     }
 
@@ -95,7 +109,7 @@ void purchase(string email) {
     int totalAmount = productQty * productList[productChoice - 1].price;
     if (productQty > 0 && productQty <= productList[productChoice - 1].quantity){
         cout << "Total Amount: " << totalAmount << endl;
-        cout << "Are you sure you want to purchase " << productQty << " " << productList[productChoice - 1].name << "? (y/n)";
+        cout << "Are you sure you want to purchase " << productQty << " " << productList[productChoice - 1].name << "? (y/n): ";
         char choice;
         cin >> choice;
 
@@ -190,8 +204,10 @@ void purchase(string email) {
                             
 
                             cout << "Purchased successfully!\n";
+                            clearSystem();
                         } else {
-                            cout << "You have don't have enough tokens to purchase.\n";
+                            cout << termcolor::red << "You don't have enough tokens to purchase.\n";
+                            clearSystem();
                         }
                     }
                     

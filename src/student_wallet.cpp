@@ -193,13 +193,17 @@ void wallet(string email) {
     do {
         cout << termcolor::bold << termcolor::blue;
         cout << "\n+------------------------------+\n";
-        cout << "|  " << termcolor::bright_cyan << "    Wallet      " << termcolor::blue << "|\n";
-        cout << "1. View Balance\n";
-        cout << "2. Purchase Tokens\n";
-        cout << "3. Convert to Cash\n";
-        cout << "4. Back to Home\n";
-        cout << "Choice: ";
+        cout << "|  " << termcolor::bright_cyan << "          Wallet            " << termcolor::blue << "|\n";
+        cout << "+------------------------------+\n";
+        cout << "|  1. View Balance             |\n";
+        cout << "|  2. Purchase Tokens          |\n";
+        cout << "|  3. Convert to Cash          |\n";
+        cout << "|  4. "<< termcolor::bright_cyan <<"Back to Home             "<< termcolor::blue <<"|\n";
+        cout << "+------------------------------+\n"<< termcolor::reset;
+        cout << termcolor::bright_cyan << "Choice: ";
         cin >> choice;
+        cout << termcolor::reset;
+        system("cls");
 
         switch(choice) {
             case 1:
@@ -211,6 +215,9 @@ void wallet(string email) {
             case 3:
                 convertTokens(email);
                 break;
+            case 4:
+                cout << termcolor::red << "Returning to Home...\n";
+                clearSystem();
         }
     } while (choice != 4);
 }
