@@ -162,7 +162,7 @@ void approveStudentQuests() {
 
     ofstream approvedQuests ("approvedQuests.txt", ios::app);
     approvedQuests << q.originalLine << endl;
-    clearSystem();
+    clearSystem(3000);
 }
 
 void createQuest() {
@@ -214,7 +214,7 @@ void deleteQuest() {
 
     string concat = quest + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
     deleteLine(filename, concat);
-    clearSystem();
+    clearSystem(2000);
 }
 
 void questsTab() {

@@ -37,25 +37,25 @@ int main() {
         if (validateLogin("adminAccount.txt", inputEmail, inputPassword, "admin", false)) {
             cout << termcolor::red << "\nLogging in as Admin...\n" << termcolor::reset;
             loggedIn = true;
-            clearSystem();
+            clearSystem(1200);
             adminMain();
         }
         else if (validateLogin("merchantAccounts.txt", inputEmail, inputPassword, "merchant", false)) {
             cout << termcolor::red << "\nLogging in as Merchant...\n" << termcolor::reset;
             loggedIn = true;
-            clearSystem();
+            clearSystem(1200);
             merchantMain(inputEmail);
         }
         else if (validateLogin("studentAccounts.txt", inputEmail, inputPassword, "student", false)) {
             cout << termcolor::red << "\nLogging in as Student...\n" << termcolor::reset;
             loggedIn = true;
-            clearSystem();
+            clearSystem(1200);
             studentMain(inputEmail);
         }
         else if (validateLogin("teacherAccounts.txt", inputEmail, inputPassword, "teacher", false)) {
             cout << termcolor::red << "\nLogging in as Teacher...\n" << termcolor::reset;
             loggedIn = true;
-            clearSystem();
+            clearSystem(1200);
             Teacher teacher;
             teacher.teacherMain(inputEmail);
         }
@@ -77,7 +77,7 @@ int main() {
                 continue;
             }
 
-            clearSystem();
+            clearSystem(1200);
             Parent parent;
             parent.parentMain(inputEmail, inputChildEmail);
         }
