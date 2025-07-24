@@ -4,14 +4,14 @@
 #include <string>
 #include <cstdlib>
 
-#include "adminMain.cpp"
+#include "admin/core/adminMain.cpp"  
 #include "merchantMain.cpp"
 #include "student.cpp"
 #include "User.cpp"
 #include "Teacher.cpp"
 #include "Parent.cpp"
 #include "admin_helpers.cpp"
-#include "admin/admin_functions.h"
+#include "admin/core/admin_functions.h"
 #include "termcolor/termcolor.hpp"
 
 using namespace std;

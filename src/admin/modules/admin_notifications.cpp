@@ -1,38 +1,38 @@
-#include "admin/admin_includes.h"
+#include "../includes/admin_includes.h"
 
 using namespace std;
 
-void viewTransactions() {
+void notifications() {
     cout << termcolor::bold << termcolor::magenta;
     cout << "\n+---------------------------------------------+\n";
-    cout << "|     " << termcolor::bright_yellow << "         TRANSACTION LOGS               " << termcolor::magenta << "|\n";
+    cout << "|     " << termcolor::bright_yellow << "          NOTIFICATIONS                 " << termcolor::magenta << "|\n";
     cout << "+---------------------------------------------+\n";
     cout << termcolor::reset;
 
-    struct TransactionFile {
+    struct NotificationFile {
         string title;
         string filename;
     };
 
-    TransactionFile transactionFiles[] = {
-        {"Token Purchases (Student)", "studentBalance.txt"},
-        {"Emergency Funds", "studentApprovedReqs.txt"},
-        {"Token Purchases (Teacher)", "teacherBalance.txt"},
-        {"Token Refunds", "tokenRefunds.txt"},
-        {"Quest Approvals", "approvedQuests.txt"},
-        {"Merchant Cash Outs", "cashout.txt"}
+    NotificationFile notifFiles[] = {
+        {"Product Requests", "productReq.txt"},
+        {"Merchant Concerns", "concerns.txt"},
+        {"Merchant Cash Out Requests", "cashout.txt"},
+        {"Emergency Fund Requests", "studentEmergencyFunds.txt"},
+        {"Student Balances", "studentBalance.txt"},
+        {"Student Accomplished Quests", "studentAccomplishedQuests.txt"}
     };
 
-    for (const auto& tx : transactionFiles) {
+    for (const auto& notif : notifFiles) {
         cout << termcolor::bold << termcolor::bright_yellow;
-        cout << "\n[" << tx.title << "]\n";
+        cout << "\n[" << notif.title << "]\n";
         cout << termcolor::reset << termcolor::magenta;
         cout << "+---------------------------------------------+\n";
 
-        ifstream file(tx.filename);
+        ifstream file(notif.filename);
         if (!file) {
-            cout << termcolor::red << " File not found: " << tx.filename;
-            int space = 43 - (int)tx.filename.length();
+            cout << termcolor::red << " File not found: " << notif.filename;
+            int space = 43 - (int)notif.filename.length();
             cout << string(space, ' ') << termcolor::magenta << "\n";
             cout << "+---------------------------------------------+\n";
             continue;
@@ -51,12 +51,12 @@ void viewTransactions() {
         }
 
         if (empty) {
-            cout << termcolor::yellow << " (No entries found)  " << termcolor::magenta << "\n";
+            cout << termcolor::yellow << " (No pending entries)                        " << termcolor::magenta << "\n";
         }
 
         cout << "+---------------------------------------------+\n" << termcolor::reset;
         file.close();
     }
 
-    cout << termcolor::bold << termcolor::yellow << "\nEnd of Transactions\n" << termcolor::reset;
+    cout << termcolor::bold << termcolor::yellow << "\nEnd of Notifications\n" << termcolor::reset;
 }

@@ -1,12 +1,13 @@
-#include "admin/admin_includes.h"
+#include "../includes/admin_includes.h"
+#include "adminMain.h"
 
-#include "admin_manageAccounts.cpp"
-#include "admin_notifications.cpp"
-#include "admin_quests.cpp"
-#include "admin_merchantRequests.cpp"
-#include "admin_bank.cpp"
-#include "admin_transactions.cpp"
-#include "admin_emergencyFunds.cpp"
+#include "../modules/admin_manageAccounts.cpp"
+#include "../modules/admin_notifications.cpp"
+#include "../modules/admin_quests.cpp"
+#include "../modules/admin_merchantRequests.cpp"
+#include "../modules/admin_bank.cpp"
+#include "../modules/admin_transactions.cpp"
+#include "../modules/admin_emergencyFunds.cpp"
 
 using namespace std;
 

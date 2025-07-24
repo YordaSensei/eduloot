@@ -1,4 +1,4 @@
-#include "admin/admin_includes.h"
+#include "../includes/admin_includes.h"
 
 using namespace std;
 
@@ -47,7 +47,7 @@ void emergencyFunds() {
              << funds[i].reason << " | " << funds[i].tokenAmount << termcolor::reset << endl;
     }
 
-    cout << termcolor::magenta << "+-----------------------------------+\n" << termcolor::reset;
+    cout << termcolor::magenta << "+---------------------------------+\n" << termcolor::reset;
 
     int index;
     cout << termcolor::cyan << "Enter 0 to return to menu.\n" << termcolor::reset;
