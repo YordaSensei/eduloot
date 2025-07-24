@@ -23,7 +23,7 @@ void Parent::parentMain(string insertedEmail, string insertedChildEmail){
         cout << "4. Transactions\n";
         cout << "5. Log Out\n";
 
-        if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 5)) {
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 5)) {
             continue;
         }
 
@@ -93,7 +93,7 @@ void Parent::viewBalance() {
         }
 
         cout << "1. Back\n";
-        if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
             continue;
         }
     } while (choice != 1);

@@ -18,7 +18,7 @@ void Teacher::teacherMain(string insertedEmail) {
         cout << "4. Transactions\n";
         cout << "5. Log Out\n";
 
-        if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 5)) {
+        if (!getValidInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 5)) {
             continue;
         }
 

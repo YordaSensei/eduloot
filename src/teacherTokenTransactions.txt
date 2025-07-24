@@ -1,3 +1,0 @@
-teacher@ciit.edu.ph,PURCHASE,333,833
-teacher@ciit.edu.ph,PURCHASE,166,999
-teacher@ciit.edu.ph,CONVERSION,-500,499
