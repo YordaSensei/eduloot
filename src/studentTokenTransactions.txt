@@ -11,3 +11,7 @@
 123,Converted,3,40,Wed Jul 23 20:52:02 2025
 123,Purchased,5,110,Thu Jul 24 16:24:36 2025
 123,Purchased,5,40128,Thu Jul 24 16:24:36 2025
+123,Converted,123,110,Thu Jul 24 19:03:07 2025
+123,Converted,123,40005,Thu Jul 24 19:03:07 2025
+123,Purchased,2,110,Thu Jul 24 19:03:25 2025
+123,Purchased,2,40007,Thu Jul 24 19:03:25 2025

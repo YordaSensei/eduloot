@@ -108,7 +108,7 @@ void purchaseTokens(string email) {
 
         updateTotalTokens(-quantity);
         updateTotalMoney(totalAmount);
-        cout << quantity << " tokens purchased successfully.\n";
+        cout << termcolor::red << quantity << " tokens purchased successfully.\n";
         clearSystem();
 
         time_t now = time(0);
@@ -171,7 +171,7 @@ void convertTokens(string email) {
                         s.balance -= quantity;
                         updateTotalTokens(quantity);
                         updateTotalMoney(-totalAmount);
-                        cout << quantity << " tokens converted successfully.\n";
+                        cout << << termcolor::red << quantity << " tokens converted successfully.\n";
                     } else {
                         cout << termcolor::red << "You have don't have enough tokens to convert.\n";
                     }

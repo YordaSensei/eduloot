@@ -24,6 +24,7 @@ void quests(string email) {
 
         switch (choice) {
             case 1: {
+                system("cls");
                 vector<Quest> questList;
                 ifstream questInFile("quests.txt");
                 string line;
@@ -56,16 +57,19 @@ void quests(string email) {
                     return;
                 }
 
-                cout << "\n--- Available Quests ---\n";
+                cout << termcolor::bold << termcolor::blue;
+                cout << "\n+------------------------------+\n";
+                cout << "|" << termcolor::bright_cyan << "     Available Quests     " << termcolor::blue <<"|\n";
+                cout << "+------------------------------+\n";
                 for (size_t i = 0; i < questList.size(); ++i) {
                     cout << i + 1 << ". Task: " << questList[i].desc
                          << " | Reward: " << questList[i].reward
                          << " tokens | Claims left: " << questList[i].claims << endl;
                 }
-                cout << "------------------------\n";
+                cout << "+------------------------------+\n";
 
                 int questChoice;
-                cout << "Select number of quest: ";
+                cout << termcolor::bright_cyan << "Select number of quest: ";
                 cin >> questChoice;
 
                 if (questChoice < 1 || questChoice > questList.size()) {
@@ -82,9 +86,10 @@ void quests(string email) {
                             << "," << selected.claims << endl;
                     outFile.close();
 
-                    cout << "Quest claimed! Admin confirmation will take a while.\n";
+                    cout << termcolor::red << "Quest claimed! Admin confirmation will take a while.\n";
+                    clearSystem(2000);
                 } else {
-                    cout << "Failed to write to studentAccomplishedQuests.txt\n";
+                    cout << termcolor::red << "Failed to write to studentAccomplishedQuests.txt\n";
                 }
 
                 break;

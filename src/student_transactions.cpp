@@ -56,7 +56,7 @@ void studentTransactions(string email) {
         }
     }
     productInFile.close();
-    cout << "\n+------------------------------+\n" << endl;
+    cout << "\n+------------------------------+" << endl;
 
     cout << "1. " << termcolor::bright_cyan << "Back to Home\n";
     cout << "Choice: ";
