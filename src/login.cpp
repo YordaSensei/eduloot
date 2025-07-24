@@ -10,7 +10,7 @@
 #include "User.cpp"
 #include "Teacher.cpp"
 #include "Parent.cpp"
-#include "admin_helpers.cpp"
+#include "admin/core/admin_helpers.cpp"
 #include "admin/core/admin_functions.h"
 #include "termcolor/termcolor.hpp"
 

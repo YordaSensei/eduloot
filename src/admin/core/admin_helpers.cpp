@@ -1,4 +1,4 @@
-#include "admin/includes/admin_includes.h"
+#include "../includes/admin_includes.h"  
 
 using namespace std;
 
