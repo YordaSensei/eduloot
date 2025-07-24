@@ -1,7 +1,12 @@
 void studentNotifications(string email) {
     string line;
+    int choice;
 
-    cout << "\n----- Quests Approved -----\n";
+    do {
+    cout << termcolor::bold << termcolor::blue;
+    cout << "\n+------------------------------+\n";
+    cout << "|" << termcolor::bright_cyan << "        Quests Approved        "<< termcolor::blue <<"|\n";
+    cout << "+------------------------------+\n" << endl;
     ifstream questInFile("approvedQuests.txt");
 
     while (getline(questInFile, line)) {
@@ -13,16 +18,19 @@ void studentNotifications(string email) {
             getline(ss, quest, ',');
             getline(ss, reward, ',');
             getline(ss, claims);
-
+            
             if (studentEmail == email) {
                 cout << "Quest: " << quest << " has been approved. " << reward << " token(s) added to balance.\n";
             }
         }
     }
     questInFile.close();
-    cout << "-------------------------\n";
+    cout << "\n+------------------------------+\n";
 
-    cout << "\n----- Emergency Funds Approved -----\n";
+    cout << termcolor::bold << termcolor::blue;
+    cout << "\n+------------------------------+\n";
+    cout << "|" << termcolor::bright_cyan << "   Emergency Funds Approved   "<< termcolor::blue <<"|\n";
+    cout << "+------------------------------+\n" << endl;
     ifstream emergencyFundsInFile("studentApprovedReqs.txt");
 
     while (getline(emergencyFundsInFile, line)) {
@@ -40,5 +48,18 @@ void studentNotifications(string email) {
         }
     }
     emergencyFundsInFile.close();
-    cout << "-------------------------\n";
+    cout << "\n+------------------------------+\n";
+
+    cout << "1. " << termcolor::bright_cyan << "Back to Home\n";
+    cout << "Choice: ";
+    cin >> choice;
+
+    if (choice != 1){
+        cout << termcolor::red << "Invalid choice.\n";
+        clearSystem();
+    }
+    } while (choice != 1);
+
+    cout << termcolor::red << "Returning to Home...\n";
+    clearSystem();
 }

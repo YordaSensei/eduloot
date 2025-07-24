@@ -169,10 +169,10 @@ void createAccount() {
                     accountsFile << acc.ciitEmail << "," << acc.username << "," << acc.password << endl;
                     accountsFile.close();
                     cout << termcolor::green << "\nAccount created successfully!\n" << termcolor::reset;
-                    clearSystem();
+                    clearSystem(2000);
                 } else {
                     cout << termcolor::bright_red << "\nERROR: Cannot open file.\n" << termcolor::reset;
-                    clearSystem();
+                    clearSystem(2000);
                 }
                 break;
             }
@@ -217,16 +217,16 @@ void createAccount() {
                     accountsFile << shop.shopname << "," << shop.username << "," << shop.password << endl;
                     accountsFile.close();
                     cout << termcolor::green << "\nShop created successfully!\n" << termcolor::reset;
-                    clearSystem();
+                    clearSystem(2000);
                 } else {
                     cout << termcolor::bright_red << "\nERROR: Cannot open file\n" << termcolor::reset;
-                    clearSystem();
+                    clearSystem(2000);
                 }
                 break;
             }
             case 5:
                 cout << "\nReturning to menu...\n";
-                clearSystem();
+                clearSystem(1500);
                 break;
             default:
                 cout << termcolor::bright_red << "\nERROR: Invalid Choice!\n";
@@ -267,7 +267,7 @@ void deleteAccount() {
 
                 string concat = findemailOrShop + "," + findusername + "," + findpassword;
                 deleteLine(filename, concat);
-                clearSystem();
+                clearSystem(2000);
                 break;
             }
 
@@ -367,7 +367,7 @@ void editAccount() {
                 string newDetails = emailOrShop + "," + username + "," + password;
 
                 editLine(filename, oldDetails, newDetails);
-                clearSystem();
+                clearSystem(2000);
                 break;
             }
 

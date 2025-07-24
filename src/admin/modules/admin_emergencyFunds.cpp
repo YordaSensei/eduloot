@@ -54,6 +54,7 @@ void emergencyFunds() {
     index = promptValidatedIndex("Enter request number to approve: ", funds.size(), true); 
     if (index == 0) {
         cout << termcolor::red << "\nReturning to menu...\n" << termcolor::reset;
+        clearSystem(1200);
         return;
     }
 
@@ -100,6 +101,6 @@ void emergencyFunds() {
             << " tokens transferred to " << selected.email << termcolor::reset << endl;
 
         cout << termcolor::red << "\nReturning to menu...\n" << termcolor::reset;
-        clearSystem();
+        clearSystem(2000);
     }
 }

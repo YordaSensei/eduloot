@@ -64,5 +64,5 @@ void adminMain() {
     } while (choice != 8);
 
     cout << termcolor::red << "\nLogging out...\n" << termcolor::reset;
-    clearSystem();
+    clearSystem(1200);
 }

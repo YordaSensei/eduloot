@@ -10,10 +10,16 @@ using namespace std;
 void quests(string email) {
     int choice;
     do {
-        cout << "1. Claim quest\n";
-        cout << "2. Back to Home\n";
 
-        cout << "Choice: ";
+        cout << termcolor::bold << termcolor::blue;
+        cout << "\n+-------------------------------+\n";
+        cout << "|"<<termcolor::bright_cyan <<"            QUESTS             "<<termcolor::blue<<"|\n";
+        cout << "+-------------------------------+\n";
+        cout << "|  1. Claim quest               |\n";
+        cout << "|  2. "<< termcolor::bright_cyan <<"Back to Home              "<<termcolor::blue<<"|\n";
+        cout << "+-------------------------------+\n"<< termcolor::reset;
+
+        cout << termcolor::bright_cyan << "Choice: ";
         cin >> choice;
 
         switch (choice) {
@@ -85,11 +91,13 @@ void quests(string email) {
             }
 
             case 2:
-                cout << "Returning to home...\n";
+                cout << termcolor::red << "Returning to Home...\n";
+                clearSystem();
                 break;
 
             default:
-                cout << "Invalid choice. Try again.\n";
+                cout << termcolor::red << "Invalid choice.\n";
+                clearSystem();
         }
     } while (choice != 2);
 }

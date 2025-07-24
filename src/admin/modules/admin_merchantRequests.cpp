@@ -144,7 +144,7 @@ void merchantRequests() {
                                 approvedFile.close();
 
                                 cout << "\nProduct approved and added to the product list.\n";
-                                clearSystem();
+                                clearSystem(2000);
                             }
                             break;
                         }
@@ -212,7 +212,7 @@ void merchantRequests() {
                                 approvedFile.close();
 
                                 cout << "\nProduct deleted successfully.\n";
-                                clearSystem();
+                                clearSystem(2000);
                             }
                             break;
                         }
@@ -294,7 +294,7 @@ void merchantRequests() {
                                 approvedFile << "edit," + newLine << endl;
                                 approvedFile.close();
                                 cout << "\nProduct edited and request approved.\n";
-                                clearSystem();
+                                clearSystem(2000);
                             }
 
                             break;
@@ -357,7 +357,7 @@ void merchantRequests() {
                 outFile.close();
 
                 cout << termcolor::green << "\nConcern approved.\n" << termcolor::reset;
-                clearSystem();
+                clearSystem(2000);
                 break;
 
             }
@@ -477,7 +477,7 @@ void merchantRequests() {
                 cout << termcolor::green << "\nTokens Successfully Cashed Out!" << endl;
                 cout << "P" << moneyAfterFee << " transferred\n" << termcolor::reset;
 
-                clearSystem();
+                clearSystem(3000);
                 break;
             }
 

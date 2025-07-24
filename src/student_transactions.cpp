@@ -1,7 +1,12 @@
 void studentTransactions(string email) {
     string line;
+    int choice;
 
-    cout << "\n----- Token Transactions -----\n";
+    do {
+    cout << termcolor::bold << termcolor::blue;
+    cout << "\n+------------------------------+\n";
+    cout << "|" << termcolor::bright_cyan << "      Token Transactions      "<< termcolor::blue <<"|\n";
+    cout << "+------------------------------+\n" << endl;
     ifstream tokenInFile("studentTokenTransactions.txt");
 
     while (getline(tokenInFile, line)) {
@@ -22,9 +27,12 @@ void studentTransactions(string email) {
         }
     }
     tokenInFile.close();
-    cout << "-------------------------\n";
+    cout << "\n+------------------------------+\n" << endl;
 
-    cout << "\n----- Product Transactions -----\n";
+    cout << termcolor::bold << termcolor::blue;
+    cout << "\n+------------------------------+\n";
+    cout << "|" << termcolor::bright_cyan << "     Product Transactions     "<< termcolor::blue <<"|\n";
+    cout << "+------------------------------+\n" << endl;
     ifstream productInFile("studentProductTransactions.txt");
 
     while (getline(productInFile, line)) {
@@ -48,5 +56,18 @@ void studentTransactions(string email) {
         }
     }
     productInFile.close();
-    cout << "-------------------------\n";
+    cout << "\n+------------------------------+\n" << endl;
+
+    cout << "1. " << termcolor::bright_cyan << "Back to Home\n";
+    cout << "Choice: ";
+    cin >> choice;
+
+    if (choice != 1){
+        cout << termcolor::red << "Invalid choice.\n";
+        clearSystem();
+    }
+    } while (choice != 1);
+
+    cout << termcolor::red << "Returning to Home...\n";
+    clearSystem();
 }

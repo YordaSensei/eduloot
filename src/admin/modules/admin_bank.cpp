@@ -84,6 +84,6 @@ void bank() {
 
         updateTotalTokens(topUp);
         cout << termcolor::green << "\nSuccessfully added " << topUp << " tokens (₱" << topUp * tokenRate << ") to the system.\n" << termcolor::reset;
-        clearSystem();
+        clearSystem(3000);
     }
 }
