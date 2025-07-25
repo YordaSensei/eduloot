@@ -1,7 +1,7 @@
 #include <vector>
-#include "product_helpers.h"
-#include "merchant_helpers.h"
 #include <ctime>
+#include "../../product_helpers.h"
+#include "../../merchant/core/merchant_helpers.h"
 
 void purchase(string email) {
     vector<string> merchantList;

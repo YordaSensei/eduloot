@@ -2,18 +2,19 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "student_helpers.h"
-#include "termcolor/termcolor.hpp"
 #include <cstdlib>
 #include <iomanip>
 using namespace std;
 
-#include "student_wallet.cpp"
-#include "student_purchase.cpp"
-#include "student_quests.cpp"
-#include "student_notifications.cpp"
-#include "student_transactions.cpp"
-#include "student_emergencyFunds.cpp"
+#include "../../termcolor/termcolor.hpp"
+
+#include "student_helpers.h"
+#include "../modules/student_wallet.cpp"
+#include "../modules/student_purchase.cpp"
+#include "../modules/student_quests.cpp"
+#include "../modules/student_notifications.cpp"
+#include "../modules/student_transactions.cpp"
+#include "../modules/student_emergencyFunds.cpp"
 
 void studentMain(string email) {
     int choice;

@@ -19,11 +19,15 @@ void User::wallet() {
     int choice;
 
     do {
-        cout << "\n--- Token Wallet ---\n";
-        cout << "1. View Balance\n";
-        cout << "2. Purchase Tokens\n";
-        cout << "3. Convert to Cash\n";
-        cout << "4. Back to Home\n";
+        cout << termcolor::bold << termcolor::blue;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_cyan << "          Wallet            " << termcolor::blue << "|\n";
+        cout << "+------------------------------+\n";
+        cout << "|  1. View Balance             |\n";
+        cout << "|  2. Purchase Tokens          |\n";
+        cout << "|  3. Convert to Cash          |\n";
+        cout << "|  4. "<< termcolor::bright_cyan <<"Back to Home             "<< termcolor::blue <<"|\n";
+        cout << "+------------------------------+\n"<< termcolor::reset;
 
         if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 4)) {
             continue;
@@ -31,30 +35,31 @@ void User::wallet() {
 
         switch(static_cast<WalletOption>(choice)) {
             case WalletOption::ViewBalance:
+                system("cls");
                 viewBalance();
                 break;
             case WalletOption::Purchase:
+                system("cls");
                 purchaseTokens();
                 break;
             case WalletOption::Convert:
+                system("cls");
                 convertTokens();
                 break;
             case WalletOption::Back:
+                cout << termcolor::red << "Returning to Home...\n";
+                clearSystem();
             break;
         }
     } while (choice != 4);
 }
 
 void User::viewBalance() {
+    initializeBalanceIfNeeded(userType + "Balance.txt");
+    
     string line;
     ifstream inFile(userType + "Balance.txt");
 
-    if (!inFile.is_open()) {
-        cout << "Error opening balance file.\n";
-        return;
-    }
-    
-    bool found = false;
     int choice;
 
     do {
@@ -69,20 +74,17 @@ void User::viewBalance() {
 
                 if (fileEmail == email) {
                     this->tokenBalance = stoi(strBalance);
-                    cout << "Token Balance: " << this->tokenBalance << endl;
-                    found = true;
+                    cout << termcolor::bold << termcolor::blue;
+                    cout << "\n+------------------------------+\n";
+                    cout << "|" << termcolor::bright_cyan << " Token Balance: " << setw(13) << left <<  this->tokenBalance << termcolor::blue << "|";
+                    cout << "\n+------------------------------+\n";
                     break;
                 }
             }
         }
         inFile.close();
 
-        if (!found) {
-            this->tokenBalance = 0;
-            cout << "Token Balance: 0\n";
-        }
-
-        cout << "1. Back\n";
+        cout << "1. " << termcolor::bright_cyan << "Back to Home\n";
         if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
             continue;
         }
@@ -94,8 +96,9 @@ void User::purchase() {
     ifstream merchantInFile("merchantAccounts.txt");
     string line;
 
+    cout << termcolor::bold << termcolor::blue;
     cout << "\n+------------------------------+\n";
-    cout << "|      Select a Merchant       |\n";
+    cout << "|" << termcolor::bright_cyan << "      Select a Merchant       "<< termcolor::blue <<"|\n";
     cout << "+------------------------------+\n";
     
     while (getline(merchantInFile, line)) {
@@ -108,11 +111,11 @@ void User::purchase() {
             getline(split, password);
 
             merchantList.push_back(merchantEmail);
-            cout << "|  " << merchantList.size() << ". " << setw(25) << left << merchantEmail << "|" << endl;
+            cout << "|  " << merchantList.size() << ". " << setw(25) << left << merchantEmail << termcolor::blue << "|" << endl;
         }
     }
 
-    cout << "|  " << merchantList.size() + 1 << ". " << setw(25) << left << "Back to Home" << "|" << endl;
+    cout << "|  " << merchantList.size() + 1 << ". " << setw(25) << left << termcolor::bright_cyan << "Back to Home" << termcolor::blue << "|" << endl;
     cout << "+------------------------------+\n";
     merchantInFile.close();
 
@@ -122,13 +125,12 @@ void User::purchase() {
     }
 
     int merchantChoice;
-    cout << "Select number of merchant: ";
-    if (!getNumericInput<int>(merchantChoice, "", "Invalid choice.", 1, static_cast<int>(merchantList.size() + 1))) {
+    if (!getNumericInput<int>(merchantChoice, "Select number of merchant: ", "Invalid choice.", 1, static_cast<int>(merchantList.size() + 1))) {
         return;
     }
 
     if (merchantChoice == merchantList.size() + 1) {
-        cout << "Returning to Home...\n";
+        cout << termcolor::red << "Returning to Home...\n";
         return;
     }
 
@@ -168,9 +170,10 @@ void User::displayProducts(const std::string& selectedMerchant) {
         cout << "No products available for this merchant.\n";
         return;
     }
-
+    
+    cout << termcolor::bold << termcolor::blue;
     cout << "\n+------------------------------+\n";
-    cout << "|        " << selectedMerchant << " Products         |\n";
+    cout << "|" << termcolor::bright_cyan << "        " << selectedMerchant << " Products         "<< termcolor::blue <<"|\n";
     cout << "+------------------------------+\n";
     for (size_t i = 0; i < productList.size(); ++i) {
         cout << (i + 1) << ". " << productList[i].name 
@@ -367,7 +370,7 @@ void User::notifications() {
     do {
         cout << "\n--- Notifications ---\n";
         cout << "\n---------------------\n";
-        cout << "1. Back to Home\n";
+        cout << "1. " << termcolor::bright_cyan << "Back to Home\n";
 
         if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 1)) {
             continue;
@@ -377,17 +380,20 @@ void User::notifications() {
 
 void User::transactions() {
     int choice;
-    ifstream inFile(userType + "TokenTransactions.txt");
+    ifstream tokenInFile(userType + "TokenTransactions.txt");
+    ifstream productInFile(userType + "ProductTransactions.txt");
     
     do {
-        cout << "\n--- Transaction History ---\n";
-        cout << "---------------------------\n";
+        cout << termcolor::bold << termcolor::blue;
+        cout << "\n+------------------------------+\n";
+        cout << "|" << termcolor::bright_cyan << "      Token Transactions      "<< termcolor::blue <<"|\n";
+        cout << "+------------------------------+\n" << endl;
         
-        if (inFile.is_open()) {
+        if (tokenInFile.is_open()) {
             string line;
             bool hasTransactions = false;
             
-            while (getline(inFile, line)) {
+            while (getline(tokenInFile, line)) {
                 if (!line.empty()) {
                     stringstream ss(line);
                     string fileEmail, type, amountStr, balanceStr;
@@ -414,22 +420,67 @@ void User::transactions() {
                 cout << "No transactions found.\n";
             }
             
-            inFile.close();
+            tokenInFile.close();
 
         } else {
-            cout << "No transaction history available.\n";
+            cout << "No token transaction history available.\n";
         }
+
+        cout << "\n+------------------------------+\n" << endl;
+
+        cout << termcolor::bold << termcolor::blue;
+        cout << "\n+------------------------------+\n";
+        cout << "|" << termcolor::bright_cyan << "     Product Transactions     "<< termcolor::blue <<"|\n";
+        cout << "+------------------------------+\n" << endl;
+
+        if (productInFile.is_open()) {
+            string line;
+            bool hasTransactions = false;
+            
+            while (getline(productInFile, line)) {
+                if (!line.empty()) {
+                    string fileEmail, merchant, name, price, quantity, userBal, merchantBal, time;
+                    stringstream split(line);
+
+                    getline(split, fileEmail, ',');
+                    getline(split, merchant, ',');
+                    getline(split, name, ',');
+                    getline(split, price, ',');
+                    getline(split, quantity, ',');
+                    getline(split, userBal, ',');
+                    getline(split, merchantBal, ',');
+                    getline(split, time);
+
+                    if (fileEmail == email) {
+                        cout << "You bought " << quantity << " " << name << "(s) from " << merchant
+                        << " for " << price << " token(s) at " << time << " | You currently have " << userBal << " token(s)." << endl;
+                    }
+                }
+            }
+            
+            if (!hasTransactions) {
+                cout << "No transactions found.\n";
+            }
+            
+            productInFile.close();
+
+        } else {
+            cout << "No product transaction history available.\n";
+        }
+
+
+        cout << "\n+------------------------------+\n" << endl;
         
-        cout << "\n---------------------------\n";
-        cout << "1. Back to Home\n";
-        cout << "2. Refresh\n";
+        cout << "1. " << termcolor::bright_cyan << "Back to Home\n" << termcolor::blue;
+        cout << "2. " << termcolor::bright_cyan << "Refresh\n";
 
         if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 2)) {
             continue;
         }
         
         if (choice == 2) {
-            inFile.open(userType + "TokenTransactions.txt");
+            tokenInFile.open(userType + "TokenTransactions.txt");
+            productInFile.open(userType + "ProductTransactions.txt");
         }
 
     } while (choice != 1);

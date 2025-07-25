@@ -1,11 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-#include "student_helpers.h"
-#include "quest_helpers.h"
-using namespace std;
+#include "../../quest_helpers.h"
 
 void quests(string email) {
     int choice;

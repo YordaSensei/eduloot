@@ -11,12 +11,16 @@ void Teacher::teacherMain(string insertedEmail) {
 
     int choice;
     do {
-        cout << "\n--- Good day, Teacher! ---\n";
-        cout << "1. Wallet\n";
-        cout << "2. Purchase\n";
-        cout << "3. Notifications\n";
-        cout << "4. Transactions\n";
-        cout << "5. Log Out\n";
+        cout << termcolor::bold << termcolor::blue;
+        cout << "\n+------------------------------+\n";
+        cout << "|  " << termcolor::bright_cyan << "    Good day, Teacher!      " << termcolor::blue << "|\n";
+        cout << "+------------------------------+\n";
+        cout << "|  1. Wallet                   |\n";
+        cout << "|  2. Purchase                 |\n";
+        cout << "|  3. Notification             |\n";
+        cout << "|  4. Transactions             |\n";
+        cout << "|  5. Log Out                  |\n";
+        cout << "+------------------------------+\n"<< termcolor::reset;
 
         if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 5)) {
             continue;
@@ -36,10 +40,9 @@ void Teacher::teacherMain(string insertedEmail) {
                 transactions();
                 break;
             case TeacherMenuOption::Back:
+                cout << termcolor::red << "Logging Out...";
+                clearSystem();
                 break;
         }
     } while (choice != 5);
-
-    cout << "Logging Out...";
-
 }
