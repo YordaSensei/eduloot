@@ -11,7 +11,6 @@
 #include "Teacher.cpp"
 #include "Parent.cpp"
 #include "admin/core/admin_helpers.cpp"
-#include "admin/core/admin_functions.h"
 #include "termcolor/termcolor.hpp"
 
 using namespace std;
@@ -34,7 +33,7 @@ int main() {
         displayWelcomeMessage();
         displayLoginPrompt(inputEmail, inputPassword);
 
-        if (validateLogin("adminAccount.txt", inputEmail, inputPassword, "admin", false)) {
+        if (validateLogin("admin/files/adminAccount.txt", inputEmail, inputPassword, "admin", false)) {
             cout << termcolor::red << "\nLogging in as Admin...\n" << termcolor::reset;
             loggedIn = true;
             clearSystem(1200);

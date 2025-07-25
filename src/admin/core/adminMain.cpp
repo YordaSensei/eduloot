@@ -1,13 +1,12 @@
 #include "../includes/admin_includes.h"
-#include "adminMain.h"
 
-#include "../modules/admin_manageAccounts.cpp"
-#include "../modules/admin_notifications.cpp"
-#include "../modules/admin_quests.cpp"
-#include "../modules/admin_merchantRequests.cpp"
-#include "../modules/admin_bank.cpp"
-#include "../modules/admin_transactions.cpp"
-#include "../modules/admin_emergencyFunds.cpp"
+#include "../modules/admin_manageAccounts.h"
+#include "../modules/admin_notifications.h"
+#include "../modules/admin_quests.h"
+#include "../modules/admin_merchantRequests.h"
+#include "../modules/admin_bank.h"
+#include "../modules/admin_transactions.h"
+#include "../modules/admin_emergencyFunds.h"
 
 using namespace std;
 
@@ -38,28 +37,43 @@ void adminMain() {
 
         switch (choice) {
             case 1:
-                manageAccounts();
+                AccountManager accounts;
+                accounts.manageAccounts();
                 break;
-            case 2:
-                notifications();
+            case 2: {
+                NotificationModule notifications;
+                notifications.showNotifications();
                 break;
-            case 3:
-                questsTab();
+            }
+            case 3: {
+                questsModule quests;
+                quests.questsTab();
                 break;
-            case 4:
-                merchantRequests();
+            }
+            case 4: {
+                MerchantRequestsModule merchantModule;
+                merchantModule.merchantRequest();
                 break;
-            case 5:
-                bank();
+            }
+            case 5: {
+                bankModule bank;
+                bank.showBankSummary();
                 break;
+            }
             case 6:
-                emergencyFunds();
+                emergencyFundsModule funds;
+                funds.emergencyFunds();
                 break;
-            case 7:
-                viewTransactions();
+            case 7: {
+                TransactionsModule transactions;
+                transactions.showTransactions();
                 break;
+            }
             case 8:
                 break;
+            default: 
+                cout << termcolor::bright_red << "\nInvalid choice!\n" << termcolor::reset;
+                continue;
         }
     } while (choice != 8);
 

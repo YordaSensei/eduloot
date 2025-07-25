@@ -123,7 +123,7 @@ void updateTotalTokens (int change) {
     int systemTokens = 0;
     string line;
 
-    ifstream inFile ("tokensSystem.txt");
+    ifstream inFile ("admin/files/tokensSystem.txt");
     if (inFile.is_open()) {
         getline(inFile, line);
         if (!line.empty()){
@@ -137,7 +137,7 @@ void updateTotalTokens (int change) {
     systemTokens += change;
     if (systemTokens < 0) systemTokens = 0;
 
-    ofstream outFile ("tokensSystem.txt");
+    ofstream outFile ("admin/files/tokensSystem.txt");
     if(outFile.is_open()) {
         outFile << systemTokens << endl;
         outFile.close();
@@ -150,7 +150,7 @@ void updateTotalMoney (float pesos) {
     float systemMoney = 0;
     string line;
 
-    ifstream inFile ("moneySystem.txt");
+    ifstream inFile ("admin/files/moneySystem.txt");
     if (inFile.is_open()) {
         getline(inFile, line);
         if (!line.empty()){
@@ -164,7 +164,7 @@ void updateTotalMoney (float pesos) {
     systemMoney += pesos;
     if (systemMoney < 0) systemMoney = 0;
 
-    ofstream outFile ("moneySystem.txt");
+    ofstream outFile ("admin/files/moneySystem.txt");
     if(outFile.is_open()) {
         outFile << systemMoney << endl;
         outFile.close();

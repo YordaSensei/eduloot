@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "merchant_helpers.h"
+#include "termcolor/termcolor.hpp"
 
 using namespace std;
 

@@ -1,2 +1,0 @@
-123,join org,5,14
-123,attend seminar,10,9

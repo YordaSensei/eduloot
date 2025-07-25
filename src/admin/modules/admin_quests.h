@@ -1,19 +1,39 @@
+#pragma once
 #include "../includes/admin_includes.h"
 
 using namespace std;
 
-struct completedQuests {
+struct CompletedQuests {
     string email;
     string quest;
     int tokenAmount;
     string originalLine;
 }; 
 
-void viewQuests() {
-    ifstream inFile("quests.txt");
+struct Quests {
+    string name;
+    int reward;
+    int claimsLeft;
+};
+
+class questsModule {
+    public:
+        void questsTab();
+
+    private:
+        void viewQuests();
+        void approveStudentQuests();
+        void createQuest();
+        void deleteQuest();
+        void updateQuestClaims(const string& questName, int decrement);
+        void updateStudentBalance(const string& email, int tokens);
+};
+
+void questsModule::viewQuests() {
+    ifstream questFile("quests.txt");
     string line;
 
-    if (!inFile) {
+    if (!questFile) {
         cerr << "ERROR: Could not open quests.txt\n";
         return;
     }
@@ -24,32 +44,29 @@ void viewQuests() {
     cout << "+-----------------------------+\n";
     cout << termcolor::reset;
 
-    while (getline(inFile, line)) {
+    while (getline(questFile, line)) {
         cout << termcolor::yellow << "- " << line << termcolor::reset << endl;
     }
 
     cout << termcolor::magenta <<  "+-----------------------------+\n" << termcolor::reset;
 
-    inFile.close();
+    questFile.close();
 }
 
-void approveStudentQuests() {
-    string readFile = "studentAccomplishedQuests.txt";
+void questsModule::approveStudentQuests() {
+    ifstream accomplishedQuestsFile("studentAccomplishedQuests.txt");
+    vector<CompletedQuests> quests;
     string line;
-    int index;
 
-    vector<completedQuests> quests;
-
-    ifstream inFile(readFile);
-    while (getline(inFile, line)) {
-        completedQuests q;
+    while (getline(accomplishedQuestsFile, line)) {
+        CompletedQuests q;
         string tokenStr;
-        stringstream ss(line);
+        stringstream split(line);
         q.originalLine = line;
 
-        getline(ss, q.email, ',');
-        getline(ss, q.quest, ',');
-        getline(ss, tokenStr, ',');
+        getline(split, q.email, ',');
+        getline(split, q.quest, ',');
+        getline(split, tokenStr, ',');
 
         try {
             q.tokenAmount = stoi(tokenStr);
@@ -59,7 +76,12 @@ void approveStudentQuests() {
 
         quests.push_back(q);
     }
-    inFile.close();
+    accomplishedQuestsFile.close();
+
+    if (quests.empty()) {
+        cout << termcolor::red << "(No pending quest requests)\n" << termcolor::reset;
+        return;
+    }
 
     cout << termcolor::bold << termcolor::magenta;
     cout << "\n+----------------------------------------------+\n";
@@ -68,9 +90,7 @@ void approveStudentQuests() {
     cout << termcolor::reset;
 
     int displayIndex = 1;
-    bool hasRequests = false;
     for (size_t i = 0; i < quests.size(); i++) {
-        hasRequests = true;
         cout << termcolor::bright_yellow << displayIndex << ". " << termcolor::reset
             << quests[i].email << " | "
             << quests[i].quest << " | "
@@ -78,26 +98,31 @@ void approveStudentQuests() {
             displayIndex++;
     }
 
-    if (!hasRequests) {
-        cout << termcolor::red << "(No pending quest requests)\n";
-        return;
-    }
-
     cout << termcolor::magenta << "\n+----------------------------------------------+\n";
     
-    index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", quests.size(), true);
+    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", quests.size(), true);
     if (index == 0) {
         cout << termcolor::yellow << "Cancelled. Returning to menu...\n" << termcolor::reset;
         return;
     }
-
-
-    cin.ignore();
     cout << termcolor::reset;
 
-    completedQuests q = quests[index - 1];
-    deleteLine(readFile, q.originalLine);
+    CompletedQuests selected = quests[index - 1];
+    deleteLine("studentAccomplishedQuests.txt", selected.originalLine);
 
+    updateStudentBalance(selected.email, selected.tokenAmount);
+    updateQuestClaims(selected.quest, 1);
+
+    ofstream approvedQuests ("admin/files/approvedQuests.txt", ios::app);
+    approvedQuests << selected.originalLine << endl;
+    approvedQuests.close();
+
+    cout << termcolor::green << "\nQuest Approved and " << selected.tokenAmount
+        << " tokens added to " << selected.email << "'s wallet.\n" << termcolor::reset;
+    clearSystem(3000);
+}
+
+void questsModule::updateStudentBalance(const string &email, int tokenAmount) {
     vector<string> balanceLines;
     ifstream walletIn("studentBalance.txt");
     string walletLine;
@@ -108,9 +133,8 @@ void approveStudentQuests() {
         getline(ss, username, ',');
         getline(ss, balanceStr);
 
-        if (username == q.email) {
-            int balance = stoi(balanceStr);
-            balance += q.tokenAmount;
+        if (username == email) {
+            int balance = stoi(balanceStr) + tokenAmount;
             balanceLines.push_back(username + "," + to_string(balance));
         } else {
             balanceLines.push_back(walletLine);
@@ -123,7 +147,9 @@ void approveStudentQuests() {
         walletOut << line << endl;
     }
     walletOut.close();
+}
 
+void questsModule::updateQuestClaims (const string &questName, int decrement) {
     // Update claims
     ifstream questsIn("quests.txt");
     vector<string> updatedQuests;
@@ -131,24 +157,24 @@ void approveStudentQuests() {
 
     while (getline(questsIn, questLine)) {
         stringstream ss(questLine);
-        string questName, tokenStr, claimsStr;
+        string name, tokenStr, claimsStr;
 
-        getline(ss, questName, ',');
+        getline(ss, name, ',');
         getline(ss, tokenStr, ',');
         getline(ss, claimsStr);
 
-        if (questName == q.quest) {
-            int claims = stoi(claimsStr);
-            if (claims > 0) claims--;
-            if (claims == 0) continue;
-
-            string updatedLine = questName + "," + tokenStr + "," + to_string(claims);
+        if (name == questName) {
+            int claims = stoi(claimsStr) - decrement;
+            if (claims > 0) {
+                string updatedLine = questName + "," + tokenStr + "," + to_string(claims);
             updatedQuests.push_back(updatedLine);
+            } 
+            
+            if (claims == 0) continue;
         } else {
             updatedQuests.push_back(questLine);
         }
     }
-
     questsIn.close();
 
     ofstream questsOut("quests.txt");
@@ -156,50 +182,34 @@ void approveStudentQuests() {
         questsOut << line << endl;
     }
     questsOut.close();
-
-    cout << termcolor::green << "\nQuest Approved and " << q.tokenAmount
-        << " tokens added to " << q.email << "'s wallet.\n" << termcolor::reset;
-
-    ofstream approvedQuests ("approvedQuests.txt", ios::app);
-    approvedQuests << q.originalLine << endl;
-    clearSystem(3000);
 }
 
-void createQuest() {
-    int tokenAmount, studentLimit;
-    string quest;
-
+void questsModule::createQuest() {
     cout << termcolor::bold << termcolor::magenta;
     cout << "\n+-----------------------------+\n";
-    cout << "|     " << termcolor::bright_yellow << "CREATE QUEST     " << termcolor::magenta << "       |\n";
+    cout << "|        " << termcolor::bright_yellow << "CREATE QUEST     " << termcolor::magenta << "    |\n";
     cout << "+-----------------------------+\n";
     cout << termcolor::reset;
 
-    cout << termcolor::bright_yellow;
-    cout << "Quest: ";
-    getline(cin, quest);
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    quest = promptNonEmptyInput("Quest: ");
-    tokenAmount = promptValidatedPrice("Token Reward: ");
-    studentLimit = promptValidatedQuantity("Maximum Claims: ");
+    string questName = promptNonEmptyInput("Quest: ");
+    int tokenAmount = promptValidatedPrice("Token Reward: ");
+    int studentLimit = promptValidatedQuantity("Maximum Claims: ");
 
-    string concat = quest + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
+    string quest = questName + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
 
-    ofstream outFile("quests.txt", ios::app);
-    if (!outFile) {
+    ofstream questFile("quests.txt", ios::app);
+    if (!questFile) {
         cerr << "ERROR: Could not open quests.txt\n";
         return;
     }
 
-    outFile << concat << endl;
-    outFile.close();
+    questFile << quest << endl;
+    questFile.close();
 }
 
-void deleteQuest() {
-    string quest;
-    int tokenAmount, studentLimit;
-    string filename = "quests.txt";
-
+void questsModule::deleteQuest() {
     viewQuests();
 
     cout << termcolor::bold << termcolor::magenta;
@@ -208,16 +218,18 @@ void deleteQuest() {
     cout << "+-----------------------------+\n";
     cout << termcolor::reset;
 
-    quest = promptNonEmptyInput("Quest: ");
-    tokenAmount = promptValidatedPrice("Token Reward: ");
-    studentLimit = promptValidatedQuantity("Maximum Claims: ");
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    string quest = promptNonEmptyInput("Quest: ");
+    int tokenAmount = promptValidatedPrice("Token Reward: ");
+    int studentLimit = promptValidatedQuantity("Maximum Claims: ");
 
     string concat = quest + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
-    deleteLine(filename, concat);
+    deleteLine("quests.txt", concat);
     clearSystem(2000);
 }
 
-void questsTab() {
+void questsModule::questsTab() {
     int choice;
 
     do {
@@ -236,20 +248,17 @@ void questsTab() {
         system("cls");
 
         switch (choice) {
-            case 1:
-                viewQuests();
+            case 1:viewQuests();break;
+            case 2:approveStudentQuests(); break;
+            case 3: createQuest(); break;
+            case 4: deleteQuest(); break;
+            case 5: 
+                cout << termcolor::bright_red << "\nReturning to dashboard...\n" << termcolor::reset;
+                clearSystem(1200);
                 break;
-            case 2:
-                approveStudentQuests();
-                break;
-            case 3:
-                createQuest();
-                break;
-            case 4:
-                deleteQuest();
-                break;
-            case 5:
-                break;
+            default:
+                cout << termcolor::bright_red << "\nInvalid choice!\n" << termcolor::reset;
+                continue;
         }
     } while (choice != 5);
 }

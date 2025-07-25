@@ -1,1 +1,2 @@
 teacher@ciit.edu.ph,teacher,tc123
+meme@ciit.edu.ph,meme,123

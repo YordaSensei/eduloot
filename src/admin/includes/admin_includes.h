@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <windows.h>
 #include <limits>
+#include <map>
 
 #include "admin_structs.h"
 #include "admin_helpers.h"

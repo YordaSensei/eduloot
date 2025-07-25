@@ -1,1 +1,2 @@
 parent@ciit.edu.ph,parent,pt123
+nanay@ciit.edu.ph,nanay,123
