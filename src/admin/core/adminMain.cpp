@@ -10,6 +10,7 @@
 
 using namespace std;
 
+// displayds admin menu
 void printAdminMenu() {
     cout << termcolor::bold << termcolor::magenta;
     cout << "\n+------------------------------+\n";
@@ -26,14 +27,15 @@ void printAdminMenu() {
     cout << "+------------------------------+\n" << termcolor::reset;
 }
 
+// runs admin menu
 void adminMain() {
     int choice;
 
     do {
         printAdminMenu();
 
-        choice = promptChoice(1, 8, "Choice: ");
-        system("cls");
+        choice = promptChoice(1, 8, "Choice: "); // helper function
+        system("cls"); // clears the terminal
 
         switch (choice) {
             case 1:

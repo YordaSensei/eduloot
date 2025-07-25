@@ -7,7 +7,7 @@
 #include <string>
 #include "admin/includes/admin_helpers.h"
 #include "product_helpers.h"
-#include "merchant_helpers.h"
+#include "merchant/core/merchant_helpers.h"
 #include <iomanip>
 
 using namespace std;

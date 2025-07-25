@@ -2,47 +2,53 @@
 
 using namespace std;
 
+// verifies if the username already exists
 bool isUsernameTaken (const string &accountsFile, const string &usernameToCheck) {
     ifstream file (accountsFile);
     if (!file.is_open()) return false;
     string line;
 
     while (getline(file, line)) {
-        size_t pos1 = line.find(',');
-        if (pos1 == string::npos) continue;
+        stringstream split (line);
+        string email, username, password;
 
-        size_t pos2 = line.find(',', pos1 + 1);
-        if (pos2 == string::npos) continue;
-
-        string username = line.substr(pos1 + 1, pos2 - pos1 - 1);
+        if (getline(split, email, ',') &&
+            getline(split, username, ',') &&
+            getline(split, password)) {
         
-        if (username == usernameToCheck) {
-            return true;
+                if (username == usernameToCheck) {
+                return true;
+            }
         }
     }
 
     return false;
 }
 
+// verifies if the email already exists
 bool isEmailTaken (const string &accountsFile, const string &emailToCheck) {
     ifstream file (accountsFile);
     if (!file.is_open()) return false;
     string line;
 
     while (getline(file, line)) {
-        size_t pos1 = line.find(',');
-        if (pos1 == string::npos) continue;
+        stringstream split (line);
+        string email, username, password;
 
-        string email = line.substr(0, pos1);
+        if (getline(split, email, ',') &&
+            getline(split, username, ',') &&
+            getline(split, password)) {
         
-        if (email == emailToCheck) {
-            return true;
+                if (email == emailToCheck) {
+                return true;
+            }
         }
     }
 
     return false;
 }
 
+// deletes a matching line from the file
 bool deleteLine(const string &filename, const string &targetLine) {
     ifstream inFile(filename);
     ofstream tempFile("tempFile.txt");
@@ -52,17 +58,11 @@ bool deleteLine(const string &filename, const string &targetLine) {
         return false;
     }
 
-    auto sanitize = [](string s) {
-        while (!s.empty() && (s.back() == '\r' || s.back() == '\n' || s.back() == ' '))
-            s.pop_back();
-        return s;
-    };
-
     string line;
     bool found = false;
 
     while (getline(inFile, line)) {
-        if (sanitize(line) != sanitize(targetLine)) {
+        if (line != targetLine) {
             tempFile << line << '\n';
         } else {
             found = true;
@@ -83,6 +83,7 @@ bool deleteLine(const string &filename, const string &targetLine) {
     return found;
 }
 
+// edits a matching line from the file
 bool editLine (const string &filename, const string &targetLine, const string &updatedLine) {
     ifstream inFile (filename);
     ofstream tempFile ("tempFile.txt");
@@ -119,6 +120,7 @@ bool editLine (const string &filename, const string &targetLine, const string &u
     return found;
 }
 
+// updates total tokens in the system
 void updateTotalTokens (int change) {
     int systemTokens = 0;
     string line;
@@ -146,6 +148,7 @@ void updateTotalTokens (int change) {
     }
 }
 
+// updates total money in the system
 void updateTotalMoney (float pesos) {
     float systemMoney = 0;
     string line;
@@ -173,11 +176,13 @@ void updateTotalMoney (float pesos) {
     }
 }
 
+// clears the console with delay
 void clearSystem(int delayMillis) { 
     Sleep(delayMillis); 
     system("cls");
 }
 
+// validates string input to not accept empty inputs
 string promptNonEmptyInput(const string& promptText) {
     string input;
     do {
@@ -192,6 +197,7 @@ string promptNonEmptyInput(const string& promptText) {
     return input;
 }
 
+// validates double input for prices
 double promptValidatedPrice(const string& promptText) {
     double price;
     while (true) {
@@ -206,6 +212,7 @@ double promptValidatedPrice(const string& promptText) {
     }
 }
 
+// validates int input for quantity
 int promptValidatedQuantity(const string& promptText) {
     int quantity;
     while (true) {
@@ -220,6 +227,7 @@ int promptValidatedQuantity(const string& promptText) {
     }
 }
 
+// validates numeric input used to access vector elements
 int promptValidatedIndex(const string& promptText, size_t max, bool allowCancel) {
     int choice;
 
@@ -241,6 +249,7 @@ int promptValidatedIndex(const string& promptText, size_t max, bool allowCancel)
     }
 }
 
+// validates integer input for menu choices within a specified range
 int promptChoice (int min, int max, const string& promptText) {
     int choice;
     while (true) {
