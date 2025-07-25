@@ -20,6 +20,7 @@ public:
     virtual void transactions();
     
     std::string getEmail() const { return email; }
+    std::string getUserType() const { return userType; }
     int getTokenBalance() const { return tokenBalance; }
 
     void setUserType(const std::string& t) { userType = t; }
@@ -29,6 +30,31 @@ protected:
     void displayMerchants();
     void displayProducts(const std::string& selectedMerchant);
     bool processPurchase(const std::string& selectedMerchant, const Product& product, int productQty, int totalAmount);
+
+    void initializeBalanceIfNeeded(const std::string& filename) {
+        std::ifstream inFile(filename);
+        bool exists = false;
+        std::string line;
+        
+        while (std::getline(inFile, line)) {
+            if (!line.empty()) {
+                size_t pos = line.find(',');
+                std::string fileEmail = line.substr(0, pos);
+                if (fileEmail == email) {
+                    exists = true;
+                    break;
+                }
+            }
+        }
+        inFile.close();
+
+        if (!exists) {
+            std::ofstream outFile(filename, std::ios::app);
+            outFile << email << ",0\n";
+            outFile.close();
+            tokenBalance = 0;
+        }
+    }
 
     void updateBalanceInFile(int newBalance) {
         tokenBalance = newBalance;
@@ -137,18 +163,20 @@ protected:
     bool getNumericInput(T& input, const std::string& prompt = "", const std::string& errorMsg = "Invalid input.", 
         T min = std::numeric_limits<T>::lowest(), T max = std::numeric_limits<T>::max()) 
     {
-        if (!prompt.empty()) std::cout << prompt;
+        if (!prompt.empty()) std::cout << termcolor::bright_cyan << prompt;
         
         if (!(std::cin >> input)) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cerr << errorMsg << "\n";
+            std::cerr << termcolor::red << errorMsg << "\n";
+            clearSystem();
             return false;
         }
         
         if (input < min || input > max) {
             std::cerr << "Please enter a value between " << min 
                     << " and " << max << "\n";
+            clearSystem();
             return false;
         }
         
@@ -170,7 +198,7 @@ protected:
                     return true;
                 }
             }
-            
+            clearSystem();
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cerr << errorMsg << "\n";

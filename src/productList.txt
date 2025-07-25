@@ -1,4 +1,4 @@
 CIIT,Suspension,1,0,Only one suspension allowed
 CIIT,Burger,3,985,Nom nom nom
 EduGate,Testing,10,4,mhm
-123,Controller,3,9,pew pew
+123,Controller,3,0,pew pew
