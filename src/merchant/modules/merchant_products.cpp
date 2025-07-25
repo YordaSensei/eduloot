@@ -1,11 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-#include "product_helpers.h"
-
-using namespace std;
+#include "../../product_helpers.h"
 
 void editStock(string email) {
     vector<Product> productList;

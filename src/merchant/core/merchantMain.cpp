@@ -4,9 +4,9 @@
 #include <sstream>
 #include <vector>
 
-#include "merchant_products.cpp"
-#include "merchant_request.cpp"
-#include "merchant_sales.cpp"
+#include "../modules/merchant_products.cpp"
+#include "../modules/merchant_request.cpp"
+#include "../modules/merchant_sales.cpp"
 
 using namespace std;
 

@@ -5,8 +5,8 @@
 #include <cstdlib>
 
 #include "admin/core/adminMain.cpp"  
-#include "merchantMain.cpp"
-#include "student.cpp"
+#include "merchant/core/merchantMain.cpp"
+#include "student/core/student.cpp"
 #include "User.cpp"
 #include "Teacher.cpp"
 #include "Parent.cpp"

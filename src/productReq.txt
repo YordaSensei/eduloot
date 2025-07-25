@@ -12,3 +12,6 @@
 123,add,asd,123,123,asd
 123,delete,Controller,10
 123,change,Controller,6,4
+123,add,asd,12,12,sd
+123,add,test,123,3,0
+123,add,test,20,2,test

@@ -1,11 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-#include "merchant_helpers.h"
-
-using namespace std;
+#include "../core/merchant_helpers.h"
 
 void reqAddProduct(string email) {
     ofstream outFile("productReq.txt", ios::app);
@@ -16,19 +9,10 @@ void reqAddProduct(string email) {
     cout << "|  " << termcolor::bright_white << "       Add Product          " << termcolor::yellow << "|\n";
     cout << "+------------------------------+\n";
 
-    cout << termcolor::bright_white << "Enter Product Name: ";
-    cin.ignore();
-    getline(cin, p.name);
-
-    cout << "Enter Price: ";
-    cin >> p.price;
-
-    cout << "Enter quantity: ";
-    cin >> p.quantity;
-
-    cout << "Enter short description: ";
-    cin.ignore();
-    getline(cin, p.desc);
+    p.name = promptNonEmptyInput("Enter name: ");
+    p.price = promptValidatedQuantity("Enter Price: ");
+    p.quantity = promptValidatedQuantity("Enter Quantity: ");
+    p.desc = promptNonEmptyInput("Enter description: ");
 
     outFile << email << ",add," << p.name << "," << p.price << "," << p.quantity << "," << p.desc << endl;
 
