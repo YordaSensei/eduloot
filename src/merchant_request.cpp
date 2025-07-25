@@ -13,7 +13,7 @@ void reqAddProduct(string email) {
 
     cout << termcolor::bold << termcolor::yellow;
     cout << "\n+------------------------------+\n";
-    cout << "|  " << termcolor::bright_white << "        Add Product          " << termcolor::yellow << "|\n";
+    cout << "|  " << termcolor::bright_white << "       Add Product          " << termcolor::yellow << "|\n";
     cout << "+------------------------------+\n";
 
     cout << termcolor::bright_white << "Enter Product Name: ";
@@ -74,7 +74,7 @@ void reqDeleteProduct(string email) {
 
     cout << termcolor::bold << termcolor::yellow;
     cout << "\n+------------------------------+\n";
-    cout << "|  " << termcolor::bright_white << "        Delete Product         " << termcolor::yellow << "|\n";
+    cout << "|  " << termcolor::bright_white << "      Delete Product        " << termcolor::yellow << "|\n";
     cout << "+------------------------------+\n";
     for (size_t i = 0; i < productList.size(); ++i) {
         cout << i + 1 << ". " << productList[i].name
@@ -108,7 +108,7 @@ void reqCashout(string email) {
     int quantity;
     cout << termcolor::bold << termcolor::yellow;
     cout << "\n+------------------------------+\n";
-    cout << "|  " << termcolor::bright_white << "        Request Cashout         " << termcolor::yellow << "|\n";
+    cout << "|  " << termcolor::bright_white << "      Request Cashout       " << termcolor::yellow << "|\n";
     cout << "+------------------------------+\n";
 
     cout << "How many tokens would you like to convert?\n";
@@ -194,7 +194,7 @@ void reqChangePrice(string email) {
 
     cout << termcolor::bold << termcolor::yellow;
     cout << "\n+------------------------------+\n";
-    cout << "|  " << termcolor::bright_white << " Choose Product for Price Change " << termcolor::yellow << "|\n";
+    cout << "|  " << termcolor::bright_white << "    Request Price Change    " << termcolor::yellow << "|\n";
     cout << "+------------------------------+\n";
     for (size_t i = 0; i < productList.size(); ++i) {
         cout << i + 1 << ". " << productList[i].name
@@ -239,6 +239,7 @@ void reqChangePrice(string email) {
 void viewRequests(string email) {
     ifstream inFile("productReq.txt");
     string line;
+    int choice;
 
     if (!inFile) {
         cout << termcolor::red << "\nERROR: Could not open productReq.txt\n";
@@ -290,58 +291,74 @@ void viewRequests(string email) {
 
     inFile.close();
 
-    cout << termcolor::bold << termcolor::yellow;
-    cout << "\n+------------------------------+\n";
-    cout << "|  " << termcolor::bright_white << "       Product Request        " << termcolor::yellow << "|\n";
-    cout << "+------------------------------+\n";
-
-    if (!addRequests.empty()) {
+    do {
         cout << termcolor::bold << termcolor::yellow;
         cout << "\n+------------------------------+\n";
-        cout << "|  " << termcolor::bright_white << "      Add Product Requests       " << termcolor::yellow << "|\n";
+        cout << "|  " << termcolor::bright_white << "      Product Request       " << termcolor::yellow << "|\n";
         cout << "+------------------------------+\n";
-        for (const string& req : addRequests) {
-            cout << req << endl;
-        }
-    }
 
-    if (!deleteRequests.empty()) {
+        if (!addRequests.empty()) {
+            cout << termcolor::bold << termcolor::yellow;
+            cout << "\n+------------------------------+\n";
+            cout << "|  " << termcolor::bright_white << "   Add Product Requests     " << termcolor::yellow << "|\n";
+            cout << "+------------------------------+\n";
+            for (const string& req : addRequests) {
+                cout << req << endl;
+            }
+        }
+
+        if (!deleteRequests.empty()) {
+            cout << termcolor::bold << termcolor::yellow;
+            cout << "\n+------------------------------+\n";
+            cout << "|  " << termcolor::bright_white << "  Delete Product Requests   " << termcolor::yellow << "|\n";
+            cout << "+------------------------------+\n";
+            for (const string& req : deleteRequests) {
+                cout << req << endl;
+            }
+        }
+
+        if (!changePriceRequests.empty()) {
+            cout << termcolor::bold << termcolor::yellow;
+            cout << "\n+------------------------------+\n";
+            cout << "|  " << termcolor::bright_white << "   Change Price Requests    " << termcolor::yellow << "|\n";
+            cout << "+------------------------------+\n";
+            for (const string& req : changePriceRequests) {
+                cout << req << endl;
+            }
+        }
+
+        ifstream cashoutInFile("cashout.txt");
+
         cout << termcolor::bold << termcolor::yellow;
-        cout << "\n+------------------------------+\n";
-        cout << "|  " << termcolor::bright_white << "      Delete Product Requests       " << termcolor::yellow << "|\n";
-        cout << "+------------------------------+\n";
-        for (const string& req : deleteRequests) {
-            cout << req << endl;
+            cout << "\n+------------------------------+\n";
+            cout << "|  " << termcolor::bright_white << "  Token Cashout Requests    " << termcolor::yellow << "|\n";
+            cout << "+------------------------------+\n";
+        while (getline(cashoutInFile, line)) {
+            stringstream ss(line);
+            string merchantEmail, amount;
+
+            getline(ss, merchantEmail, ',');
+            getline(ss, amount);
+
+            if (merchantEmail == email) {
+                cout << "Requested " << amount << " token(s) for cashout.\n";
+            }
         }
-    }
-
-    if (!changePriceRequests.empty()) {
-        cout << termcolor::bold << termcolor::yellow;
-        cout << "\n+------------------------------+\n";
-        cout << "|  " << termcolor::bright_white << "      Change Price Requests       " << termcolor::yellow << "|\n";
         cout << "+------------------------------+\n";
-        for (const string& req : changePriceRequests) {
-            cout << req << endl;
-        }
-    }
+        cout << "1. Back\n";
+        cout << termcolor::bright_white << "Choice: ";
+        cin >> choice;
 
-    ifstream cashoutInFile("cashout.txt");
-
-    cout << termcolor::bold << termcolor::yellow;
-        cout << "\n+------------------------------+\n";
-        cout << "|  " << termcolor::bright_white << "      Token Cashout Requests       " << termcolor::yellow << "|\n";
-        cout << "+------------------------------+\n";
-    while (getline(cashoutInFile, line)) {
-        stringstream ss(line);
-        string merchantEmail, amount;
-
-        getline(ss, merchantEmail, ',');
-        getline(ss, amount);
-
-        if (merchantEmail == email) {
-            cout << "Requested " << amount << " token(s) for cashout.\n";
-        }
-    }
+        switch (choice){
+            case 1:
+                system("cls");
+                break;
+            default:
+                cout << termcolor::red << "Invalid choice.\n";
+                clearSystem();
+                break;
+        }     
+    } while (choice != 1);
 }
 
 void requestAdmin(string email) {
@@ -352,12 +369,13 @@ void requestAdmin(string email) {
         cout << "\n+------------------------------+\n";
         cout << "|  " << termcolor::bright_white << "     Request to Admin       " << termcolor::yellow << "|\n";
         cout << "+------------------------------+\n";
-        cout << "1. Add Product\n";
-        cout << "2. Delete Product\n";
-        cout << "3. Change Product Price\n";
-        cout << "4. Cashout\n";
-        cout << "5. View Requests\n";
-        cout << "6. Back to Home\n";
+        cout << "|  1. Add Product              |\n";
+        cout << "|  2. Delete Product           |\n";
+        cout << "|  3. Change Product Price     |\n";
+        cout << "|  4. Cashout                  |\n";
+        cout << "|  5. View Requests            |\n";
+        cout << "|  6. Back to Home             |\n";
+        cout << "+------------------------------+\n";
         cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
 
