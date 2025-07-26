@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <limits>
 
 #include "../modules/merchant_products.cpp"
 #include "../modules/merchant_request.cpp"

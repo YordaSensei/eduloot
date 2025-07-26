@@ -37,6 +37,7 @@ void totalSales(string email) {
         cout << "1. Back\n";
         cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
+        system("cls");
     } while (choice != 1);
 }
 
@@ -75,11 +76,9 @@ void merchantTransactions (string email){
         cout << "1. Back\n";
         cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
+        system("cls");
 
         switch (choice){
-            case 1:
-                system("cls");
-                break;
             default:
                 cout << termcolor::red << "Invalid choice.";
                 clearSystem();
