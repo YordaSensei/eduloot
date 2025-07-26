@@ -252,8 +252,19 @@ int promptValidatedIndex(const string& promptText, size_t max, bool allowCancel)
 // validates integer input for menu choices within a specified range
 int promptChoice (int min, int max, const string& promptText) {
     int choice;
+    string input;
+
     while (true) {
         cout << termcolor::bright_yellow << promptText;
+        getline (cin, input);
+
+        if (input.empty()) {
+            cout << termcolor::bright_red << "ERROR: Field cannot be empty.\n" << termcolor::reset;
+            continue;
+        }
+
+        choice = stoi(input);
+
         if (cin >> choice && choice >= min && choice <= max) break;
         cout << termcolor::red << "Invalid choice. Please enter 1-"<< max << ".\n";
         cin.clear();

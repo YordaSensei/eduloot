@@ -1,2 +1,2 @@
 
-#include "admin/core/admin_functions.h"
+        cout << line << endl;
