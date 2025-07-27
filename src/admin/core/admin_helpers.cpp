@@ -185,6 +185,7 @@ void clearSystem(int delayMillis) {
 // validates string input to not accept empty inputs
 string promptNonEmptyInput(const string& promptText) {
     string input;
+
     do {
         cout << termcolor::bright_yellow << promptText;
         getline(cin, input);
@@ -194,6 +195,7 @@ string promptNonEmptyInput(const string& promptText) {
             cout << termcolor::bright_red << "ERROR: Field cannot be empty.\n" << termcolor::reset;
         }
     } while (input.empty());
+
     return input;
 }
 
@@ -202,7 +204,13 @@ double promptValidatedPrice(const string& promptText) {
     double price;
     while (true) {
         cout << termcolor::bright_yellow << promptText;
-        if (cin >> price && price >= 0) {
+        cin >> price;
+
+        if (price = 0) {
+            cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        }
+
+        if (price >= 0) {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return price;
         }
@@ -217,10 +225,17 @@ int promptValidatedQuantity(const string& promptText) {
     int quantity;
     while (true) {
         cout << termcolor::bright_yellow << promptText;
-        if (cin >> quantity && quantity >= 0) {
+        cin >> quantity;
+
+        if (quantity = 0) {
+            cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        }
+
+        if (quantity >= 0) {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             return quantity;
         }
+
         cout << termcolor::bright_red << "ERROR: Invalid quantity input.\n" << termcolor::reset;
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -239,10 +254,12 @@ int promptValidatedIndex(const string& promptText, size_t max, bool allowCancel)
         }
 
         cout << termcolor::red << "Invalid input. ";
-        if (allowCancel)
+        if (allowCancel) {
             cout << "Enter 1-" << max << " or 0 to cancel.\n";
-        else
+        }
+        else {
             cout << "Enter a number between 1 and " << max << ".\n";
+        }
 
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -279,4 +296,13 @@ int promptChoice (int min, int max, const string& promptText) {
     }
 
     return choice;
+}
+
+bool cancelInput (string& input) {
+    if (input == "0") {
+        cout << termcolor::red << "\nCancelling...\nReturning to menu..." << termcolor::reset;
+        return true;
+    }
+
+    return false;
 }

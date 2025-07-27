@@ -36,9 +36,10 @@ void emergencyFundsModule::emergencyFunds () {
     showEmergencyRequests(funds);
 
     int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", funds.size(), true); 
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     if (index == 0) {
-        cout << termcolor::red << "\nReturning to menu...\n" << termcolor::reset;
-        clearSystem(1200);
+        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
+        clearSystem(1500);
         return;
     }
 

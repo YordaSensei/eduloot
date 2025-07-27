@@ -101,8 +101,10 @@ void questsModule::approveStudentQuests() {
     cout << termcolor::magenta << "\n+----------------------------------------------+\n";
     
     int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", quests.size(), true);
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     if (index == 0) {
-        cout << termcolor::yellow << "Cancelled. Returning to menu...\n" << termcolor::reset;
+        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
+        clearSystem(1500);
         return;
     }
     cout << termcolor::reset;
@@ -190,10 +192,12 @@ void questsModule::createQuest() {
     cout << "|        " << termcolor::bright_yellow << "CREATE QUEST     " << termcolor::magenta << "    |\n";
     cout << "+-----------------------------+\n";
     cout << termcolor::reset;
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << termcolor::red << "Press 0 to cancel\n" << termcolor::reset;
 
     string questName = promptNonEmptyInput("Quest: ");
+    if (cancelInput(questName)) {
+        return;
+    }
     int tokenAmount = promptValidatedPrice("Token Reward: ");
     int studentLimit = promptValidatedQuantity("Maximum Claims: ");
 
@@ -217,10 +221,12 @@ void questsModule::deleteQuest() {
     cout << "|      " << termcolor::bright_yellow << " DELETE QUEST    " << termcolor::magenta << "      |\n";
     cout << "+-----------------------------+\n";
     cout << termcolor::reset;
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << termcolor::red << "Press 0 to cancel\n" << termcolor::reset;
 
     string quest = promptNonEmptyInput("Quest: ");
+    if (cancelInput(quest)) {
+        return;
+    }
     int tokenAmount = promptValidatedPrice("Token Reward: ");
     int studentLimit = promptValidatedQuantity("Maximum Claims: ");
 

@@ -114,7 +114,6 @@ void bankModule::promptTokenTopUp () {
     string choice;
 
     while (true) {
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << termcolor::bright_yellow << "\nAdd tokens to the system? [y/n]: ";
         getline(cin, choice);
         cout << termcolor::reset;

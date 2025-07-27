@@ -102,10 +102,8 @@ void displayLoginPrompt(string& email, string& password) {
     cout << "+--------------------------------------------+" << endl;
     cout << "|                  LOGIN                     |" << endl;
     cout << "+--------------------------------------------+" << termcolor::reset << endl;
-    cout << termcolor::bold << termcolor::bright_blue << "Email:   " << termcolor::reset;
-    cin >> email;
-    cout << termcolor::bold << termcolor::bright_blue << "Password:   " << termcolor::reset;
-    cin >> password;
+    email = promptNonEmptyInput ("Email: ");
+    password = promptNonEmptyInput ("Password: ");
 }
 
 bool validateLogin(const string& filename, const string& inputEmail, const string& inputPassword, const string& userType, bool skipPasswordCheck = false) {

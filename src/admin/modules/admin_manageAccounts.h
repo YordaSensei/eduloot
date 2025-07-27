@@ -78,7 +78,7 @@ int AccountManager::printAccountTypeMenu(const string& title) {
     cout << "|  3. Merchant                  |\n";
     cout << "|  4. Parent                    |\n";
     cout << "|  5. Back                      |\n";
-    cout << "+-------------------------------+\n" << termcolor::reset;
+    cout << "+-------------------------------+\n";
 
     choice = promptChoice(1, 5, "Choice: ");
     system("cls");
@@ -99,12 +99,15 @@ void AccountManager::displayAccountType(const string &filename, ostream& (*heade
         cout << termcolor::bold << termcolor::grey;
         while (getline(accountFile, line)) {
             cout << "- " << line << "\n";
-        }
-        cout << termcolor::reset;
+        } 
         accountFile.close();
+        cout << termcolor::reset;
     } else {
         cout << termcolor::red <<  "\nERROR opening file: " << filename << termcolor::reset << endl;
     }
+
+    cout << headerColor << "+-----------------------------------+\n";
+    cout << termcolor::red << "Press 0 to cancel\n" << termcolor::reset;
 }
 
 void AccountManager::viewAccounts() {
@@ -148,8 +151,6 @@ void AccountManager::createAccount() {
             continue;
         }
 
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
         auto option = accountsOption.at(choice);
         string filename                 = get<0>(option);
         ostream& (*color)(ostream&)     = get<1>(option);
@@ -161,6 +162,10 @@ void AccountManager::createAccount() {
             
             while (true) {
                 acc.ciitEmail = promptNonEmptyInput("Email: ");
+
+                if (cancelInput(acc.ciitEmail)) {
+                    return;
+                }
 
                 if (acc.ciitEmail.find("@ciit.edu.ph") == string::npos || acc.ciitEmail.find(" ") != string::npos) {
                     cout << termcolor::bright_red << "\nERROR: Please enter a valid CIIT Email (must contain @ciit.edu.ph and no spaces)\n" << termcolor::reset;
@@ -178,6 +183,10 @@ void AccountManager::createAccount() {
             while (true) {
                 acc.username = promptNonEmptyInput("Username: ");
 
+                if (cancelInput(acc.username)) {
+                    return;
+                }
+
                 if (isUsernameTaken(filename, acc.username)) {
                     cout << termcolor::bright_red << "\nERROR: Username already exists! Please try a different one.\n" << termcolor::reset;
                     continue;
@@ -188,6 +197,10 @@ void AccountManager::createAccount() {
 
             acc.password = promptNonEmptyInput("Password: ");
 
+            if (cancelInput(acc.password)) {
+                return;
+            }
+            
             ofstream accountsFile(filename, ios::app);
             if (accountsFile.is_open()) {
                 accountsFile << acc.ciitEmail << "," << acc.username << "," << acc.password << endl;
@@ -203,21 +216,38 @@ void AccountManager::createAccount() {
 
         else if (choice == 3) {
             Merchant shop;
-            shop.shopname = promptNonEmptyInput("Shop Name: ");
 
-            if (isEmailTaken(filename, shop.shopname)) {
-                cout << termcolor::bright_red << "ERROR: Shop already exists!\n" << termcolor::reset;
-                continue;
+            while (true) {
+                shop.shopname = promptNonEmptyInput("Shop Name: ");
+
+                if (cancelInput(shop.shopname)) {
+                    return;
+                }
+            
+                if (isEmailTaken(filename, shop.shopname)) {
+                    cout << termcolor::bright_red << "ERROR: Shop already exists!\n" << termcolor::reset;
+                    continue;
+                }
             }
                 
-            shop.username = promptNonEmptyInput("Username: ");
+            while (true) {
+                shop.username = promptNonEmptyInput("Username: ");
 
-            if (isUsernameTaken(filename, shop.username)) {
-                cout << termcolor::bright_red << "ERROR: Username already exists! Please try a different one.\n" << termcolor::reset;
-                continue;
+                if (cancelInput(shop.username)) {
+                    return;
+                }
+
+                if (isUsernameTaken(filename, shop.username)) {
+                    cout << termcolor::bright_red << "ERROR: Username already exists! Please try a different one.\n" << termcolor::reset;
+                    continue;
+                }
             }
 
             shop.password = promptNonEmptyInput("Password: ");
+
+            if (cancelInput(shop.password)) {
+                return;
+            }
 
             ofstream accountsFile(filename, ios::app);
             if (accountsFile.is_open()) {
@@ -249,8 +279,6 @@ void AccountManager::deleteAccount() {
             continue;
         }
 
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
         auto option = accountsOption.at(choice);
         string filename                 = get<0>(option);
         ostream& (*color)(ostream&)     = get<1>(option);
@@ -265,8 +293,17 @@ void AccountManager::deleteAccount() {
 
         string promptLabel = (choice == 3) ? "Shop Name: " : "CIIT Email: ";
         string emailOrshop = promptNonEmptyInput(promptLabel);
+        if (cancelInput(emailOrshop)) {
+                return;
+        }
         string username    = promptNonEmptyInput("Username: ");
+        if (cancelInput(username)) {
+                return;
+        }
         string password    = promptNonEmptyInput("Password: ");
+        if (cancelInput(password)) {
+                return;
+        }
 
         string accountToDelete = emailOrshop + "," + username + "," + password;
         deleteLine(filename, accountToDelete);
@@ -292,8 +329,6 @@ void AccountManager::editAccount() {
             continue;
         }
 
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
         auto option = accountsOption.at(choice);
         string filename                 = get<0>(option);
         ostream& (*color)(ostream&)     = get<1>(option);
@@ -308,8 +343,17 @@ void AccountManager::editAccount() {
 
         string label = (choice == 3) ? "Shop Name: " : "CIIT Email: ";
         string findemailOrShop = promptNonEmptyInput(label);
+        if (cancelInput(findemailOrShop)) {
+                return;
+        }
         string findusername = promptNonEmptyInput("Username: ");
+        if (cancelInput(findusername)) {
+                return;
+        }
         string findpassword = promptNonEmptyInput("Password: ");
+        if (cancelInput(findpassword)) {
+                return;
+        }
         string oldDetails = findemailOrShop + "," + findusername + "," + findpassword;
 
         bool accountFound = false;
@@ -338,6 +382,11 @@ void AccountManager::editAccount() {
         string emailOrShop, username;
         while (true) {
             emailOrShop = promptNonEmptyInput(label);
+
+            if (cancelInput(emailOrShop)) {
+                    return;
+            }
+
             if (emailOrShop == findemailOrShop || isEmailTaken(filename, emailOrShop)) {
                 cout << termcolor::bright_red << "ERROR: That " << ((choice == 3) ? "shop name" : "email") << " already exists!\n" << termcolor::reset;
                 continue;
@@ -348,6 +397,11 @@ void AccountManager::editAccount() {
 
         while (true) {
             username = promptNonEmptyInput("Username: ");
+
+            if (cancelInput(username)) {
+                    return;
+            }
+
             if (username == findusername || isUsernameTaken(filename, username)) {
                 cout << termcolor::bright_red << "ERROR: Username already exists! Please try a different one.\n" << termcolor::reset;
                 continue;
@@ -357,6 +411,11 @@ void AccountManager::editAccount() {
         }
 
         string password = promptNonEmptyInput("Password: ");
+
+        if (cancelInput(password)) {
+            return;
+        }
+
         string newDetails = emailOrShop + "," + username + "," + password;
 
         editLine(filename, oldDetails, newDetails);
