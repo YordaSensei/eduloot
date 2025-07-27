@@ -16,7 +16,7 @@ void clearSystem(int delayMillis = 1200);
 string promptNonEmptyInput(const string& promptText);
 double promptValidatedPrice(const string& promptText);
 int promptValidatedQuantity(const string& promptText);
-int promptValidatedIndex(const string& promptText, size_t max, bool allowCancel = false);
+int promptValidatedIndex(const string& promptText, size_t max);
 int promptChoice (int min, int max, const string& promptText);
 bool cancelInput (string& input);
 

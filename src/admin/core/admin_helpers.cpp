@@ -243,18 +243,23 @@ int promptValidatedQuantity(const string& promptText) {
 }
 
 // validates numeric input used to access vector elements
-int promptValidatedIndex(const string& promptText, size_t max, bool allowCancel) {
+int promptValidatedIndex(const string& promptText, size_t max) {
     int choice;
 
     while (true) {
         cout << termcolor::bright_yellow << promptText;
         if (cin >> choice) {
-            if (allowCancel && choice == 0) return 0;
+            if (choice == 0) { 
+                cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
+                clearSystem(1500);
+                return 0;
+            }
+
             if (choice >= 1 && choice <= static_cast<int>(max)) return choice;
         }
 
         cout << termcolor::red << "Invalid input. ";
-        if (allowCancel) {
+        if (choice < 1 || choice > static_cast<int>(max)) {
             cout << "Enter 1-" << max << " or 0 to cancel.\n";
         }
         else {
@@ -286,8 +291,6 @@ int promptChoice (int min, int max, const string& promptText) {
                 break;
             } else {
                 cout << termcolor::red << "Invalid choice. Please enter 1-"<< max << ".\n";
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
             }
         } catch (...) {
             cout << termcolor::red << "Invalid input. Please enter a valid number.\n" << termcolor::reset;

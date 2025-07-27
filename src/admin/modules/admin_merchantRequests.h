@@ -185,13 +185,8 @@ void MerchantRequestsModule::handleAddRequests(const vector<Products> &addReques
 
     cout << termcolor::reset;
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", addRequests.size(), true);
+    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", addRequests.size());
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
-        return;
-    }
 
     const Products& selected = addRequests[index - 1];
 
@@ -243,13 +238,8 @@ void MerchantRequestsModule::handleDeleteRequests (const vector<Products> &delet
 
     cout << termcolor::reset;
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", deleteRequests.size(), true);
+    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", deleteRequests.size());
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
-        return;
-    }
 
     const Products selected = deleteRequests[index - 1];
 
@@ -311,13 +301,8 @@ void MerchantRequestsModule::handleEditRequests (const vector<Products> &editReq
 
     cout << termcolor::reset;
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", editRequests.size(), true);
+    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", editRequests.size());
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
-        return;
-    }
 
     const Products& selected = editRequests[index - 1];
 
@@ -411,13 +396,8 @@ void MerchantRequestsModule::handleConcerns() {
     
     cout << termcolor::reset;
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", concerns.size(), true);
+    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", concerns.size());
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
-        return;
-    }
 
     string selectedConcern = concerns[index - 1];
 
@@ -483,13 +463,8 @@ void MerchantRequestsModule::handleCashout() {
         displayedIndex++;
     }
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", cashout.size(), true);
+    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", cashout.size());
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
-        return;
-    }
 
     const cashoutRequest selected = cashout[index - 1]; 
 
