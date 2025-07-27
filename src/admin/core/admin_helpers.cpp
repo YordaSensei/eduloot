@@ -225,20 +225,26 @@ int promptValidatedQuantity(const string& promptText) {
     int quantity;
     while (true) {
         cout << termcolor::bright_yellow << promptText;
-        cin >> quantity;
+        
+        if (cin >> quantity) {
 
-        if (quantity = 0) {
-            cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
-        }
+            if (quantity == 0) {
+                cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+                clearSystem(1200);
+                return;
+            }
 
-        if (quantity >= 0) {
+            if (quantity > 0) {
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                return quantity;
+            } else {
+                cout << termcolor::red << "Please enter a positive number or 0 to cancel.\n" << termcolor::reset;
+            }
+
+        } else {
+            cout << termcolor::bright_red << "ERROR: Invalid quantity input.\n" << termcolor::reset;
+            cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            return quantity;
-        }
-
-        cout << termcolor::bright_red << "ERROR: Invalid quantity input.\n" << termcolor::reset;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 }
 

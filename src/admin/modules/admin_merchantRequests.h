@@ -185,11 +185,8 @@ void MerchantRequestsModule::handleAddRequests(const vector<Products> &addReques
 
     cout << termcolor::reset;
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", addRequests.size());
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
+    int index = promptChoice(1, addRequests.size(), "Enter request number to approve (0 to cancel): ");
+    if (cancelInput(index)) {
         return;
     }
 
@@ -243,11 +240,8 @@ void MerchantRequestsModule::handleDeleteRequests (const vector<Products> &delet
 
     cout << termcolor::reset;
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", deleteRequests.size());
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
+    int index = promptChoice(1, deleteRequests.size(), "Enter request number to approve (0 to cancel): ");
+    if (cancelInput(index)) {
         return;
     }
 
@@ -311,11 +305,8 @@ void MerchantRequestsModule::handleEditRequests (const vector<Products> &editReq
 
     cout << termcolor::reset;
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", editRequests.size());
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
+    int index = promptChoice(1, editRequests.size(), "Enter request number to approve (0 to cancel): ");
+    if (cancelInput(index)) {
         return;
     }
 
@@ -411,11 +402,8 @@ void MerchantRequestsModule::handleConcerns() {
     
     cout << termcolor::reset;
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", concerns.size());
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
+    int index = promptChoice(1, concerns.size(), "Enter request number to approve (0 to cancel): ");
+    if (cancelInput(index)) {
         return;
     }
 
@@ -483,11 +471,8 @@ void MerchantRequestsModule::handleCashout() {
         displayedIndex++;
     }
 
-    int index = promptValidatedIndex("Enter request number to approve (0 to cancel): ", cashout.size());
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-        clearSystem(1500);
+    int index = promptChoice(1, cashout.size(), "Enter request number to approve (0 to cancel): ");
+    if (cancelInput(index)) {
         return;
     }
 
