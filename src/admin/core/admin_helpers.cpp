@@ -231,7 +231,7 @@ int promptValidatedQuantity(const string& promptText) {
             if (quantity == 0) {
                 cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
                 clearSystem(1200);
-                return;
+                return 0;
             }
 
             if (quantity > 0) {
@@ -245,6 +245,7 @@ int promptValidatedQuantity(const string& promptText) {
             cout << termcolor::bright_red << "ERROR: Invalid quantity input.\n" << termcolor::reset;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
     }
 }
 

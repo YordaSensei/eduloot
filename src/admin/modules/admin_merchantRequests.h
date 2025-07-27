@@ -186,9 +186,6 @@ void MerchantRequestsModule::handleAddRequests(const vector<Products> &addReques
     cout << termcolor::reset;
 
     int index = promptChoice(1, addRequests.size(), "Enter request number to approve (0 to cancel): ");
-    if (cancelInput(index)) {
-        return;
-    }
 
     const Products& selected = addRequests[index - 1];
 
@@ -241,9 +238,6 @@ void MerchantRequestsModule::handleDeleteRequests (const vector<Products> &delet
     cout << termcolor::reset;
 
     int index = promptChoice(1, deleteRequests.size(), "Enter request number to approve (0 to cancel): ");
-    if (cancelInput(index)) {
-        return;
-    }
 
     const Products selected = deleteRequests[index - 1];
 
@@ -306,9 +300,6 @@ void MerchantRequestsModule::handleEditRequests (const vector<Products> &editReq
     cout << termcolor::reset;
 
     int index = promptChoice(1, editRequests.size(), "Enter request number to approve (0 to cancel): ");
-    if (cancelInput(index)) {
-        return;
-    }
 
     const Products& selected = editRequests[index - 1];
 
@@ -403,9 +394,6 @@ void MerchantRequestsModule::handleConcerns() {
     cout << termcolor::reset;
 
     int index = promptChoice(1, concerns.size(), "Enter request number to approve (0 to cancel): ");
-    if (cancelInput(index)) {
-        return;
-    }
 
     string selectedConcern = concerns[index - 1];
 
@@ -472,9 +460,6 @@ void MerchantRequestsModule::handleCashout() {
     }
 
     int index = promptChoice(1, cashout.size(), "Enter request number to approve (0 to cancel): ");
-    if (cancelInput(index)) {
-        return;
-    }
 
     const cashoutRequest selected = cashout[index - 1]; 
 

@@ -101,9 +101,6 @@ void questsModule::approveStudentQuests() {
     cout << termcolor::magenta << "\n+----------------------------------------------+\n";
     
     int index = promptChoice(1, quests.size(), "Enter request number to approve (0 to cancel): ");
-    if (cancelInput(index)) {
-        return;
-    }
     cout << termcolor::reset;
 
     CompletedQuests selected = quests[index - 1];

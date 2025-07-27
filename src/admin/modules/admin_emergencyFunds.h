@@ -36,9 +36,6 @@ void emergencyFundsModule::emergencyFunds () {
     showEmergencyRequests(funds);
 
     int index = promptChoice(1, funds.size(),"Enter request number to approve (0 to cancel): "); 
-    if (cancelInput(index)) {
-        return;
-    }
 
     approveEmergencyRequest(funds[index - 1]);
 }
