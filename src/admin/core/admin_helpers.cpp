@@ -249,12 +249,7 @@ int promptValidatedIndex(const string& promptText, size_t max) {
     while (true) {
         cout << termcolor::bright_yellow << promptText;
         if (cin >> choice) {
-            if (choice == 0) { 
-                cout << termcolor::red << "\nCancelled. Returning to menu..\n" << termcolor::reset;
-                clearSystem(1500);
-                return 0;
-            }
-
+            if (choice == 0) return 0;
             if (choice >= 1 && choice <= static_cast<int>(max)) return choice;
         }
 
