@@ -64,7 +64,7 @@ int main() {
 
             string inputChildEmail;
             cout << "Enter your child's email: ";
-            while (!(cin >> inputChildEmail) || inputChildEmail.empty()) {sa
+            while (!(cin >> inputChildEmail) || inputChildEmail.empty()) {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "Invalid email. Please try again: ";

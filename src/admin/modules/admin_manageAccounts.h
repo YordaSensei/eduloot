@@ -37,7 +37,7 @@ const map<int, tuple<string,  ostream& (*)(ostream&), string>> AccountManager::a
 void AccountManager::manageAccounts() {
     int choice;
     do {
-        cout << termcolor::bold << termcolor::cyan;
+        cout << termcolor::bold << termcolor::magenta;
         cout << "\n+-------------------------------+\n";
         cout << "|        MANAGE ACCOUNTS        |\n";
         cout << "+-------------------------------+\n";

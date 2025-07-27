@@ -263,12 +263,19 @@ int promptChoice (int min, int max, const string& promptText) {
             continue;
         }
 
-        choice = stoi(input);
-
-        if (cin >> choice && choice >= min && choice <= max) break;
-        cout << termcolor::red << "Invalid choice. Please enter 1-"<< max << ".\n";
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        try {
+            choice = stoi(input);
+            if (choice >= min && choice <= max) {
+                break;
+            } else {
+                cout << termcolor::red << "Invalid choice. Please enter 1-"<< max << ".\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+        } catch (...) {
+            cout << termcolor::red << "Invalid input. Please enter a valid number.\n" << termcolor::reset;
+            continue;
+        }
     }
 
     return choice;
