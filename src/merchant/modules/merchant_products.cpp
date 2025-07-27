@@ -39,7 +39,7 @@ void editStock(string email) {
 
     cout << termcolor::bold << termcolor::yellow;
     cout << "\n+------------------------------+\n";
-    cout << "|  " << termcolor::bright_white << "  Change Product Stock    " << termcolor::yellow << "|\n";
+    cout << "|  " << termcolor::bright_white << "    Change Product Stock    " << termcolor::yellow << "|\n";
     cout << "+------------------------------+\n";
     for (size_t i = 0; i < merchantProducts.size(); ++i) {
         cout << i + 1 << ". " << merchantProducts[i].name
@@ -130,11 +130,11 @@ void products(string email) {
         cout << "2. Back to Home\n";
         cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
+        system("cls");
 
         switch (choice) {
             case 1:
                 editStock(email);
-                system("cls");
                 break;
             case 2:
                 cout << termcolor::red << "Returning to Home...\n";

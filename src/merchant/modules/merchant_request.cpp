@@ -9,6 +9,7 @@ void reqAddProduct(string email) {
     cout << "|  " << termcolor::bright_white << "       Add Product          " << termcolor::yellow << "|\n";
     cout << "+------------------------------+\n";
 
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     p.name = promptNonEmptyInput("Enter name: ");
     p.price = promptValidatedQuantity("Enter Price: ");
     p.quantity = promptValidatedQuantity("Enter Quantity: ");
@@ -362,26 +363,22 @@ void requestAdmin(string email) {
         cout << "+------------------------------+\n";
         cout << termcolor::bright_white << "Choice: ";
         cin >> choice;
+        system("cls");
 
         switch(choice) {
-            case 1:
-                system("cls");
+            case 1:  
                 reqAddProduct(email);
                 break;
             case 2:
-                system("cls");
                 reqDeleteProduct(email);
                 break;
             case 3:
-                system("cls");
                 reqChangePrice(email);
                 break;
             case 4:
-                system("cls");
                 reqCashout(email);
                 break;
             case 5:
-                system("cls");
                 viewRequests(email);
                 break;
             case 6:
