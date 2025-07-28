@@ -48,7 +48,12 @@ void AccountManager::manageAccounts() {
         cout << "|  5. Back                      |\n";
         cout << "+-------------------------------+\n" << termcolor::reset;
 
-        choice = promptChoice(1, 5, "Choice: ");
+        do {
+            choice = promptChoice(1, 5, "Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
         system("cls");
 
         switch (choice) {
@@ -80,7 +85,12 @@ int AccountManager::printAccountTypeMenu(const string& title) {
     cout << "|  5. Back                      |\n";
     cout << "+-------------------------------+\n";
 
-    choice = promptChoice(1, 5, "Choice: ");
+    do {
+        choice = promptChoice(1, 5, "Choice: ");
+        if (choice == 0) {
+            cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+        }
+    } while (choice == 0);
     system("cls");
     return choice;
 }
@@ -113,7 +123,13 @@ void AccountManager::displayAccountType(const string &filename, ostream& (*heade
 void AccountManager::viewAccounts() {
     int choice;
     do {
-        choice = printAccountTypeMenu("VIEW");
+        do {
+            choice = printAccountTypeMenu("VIEW");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
+
         if (choice==5) {
             cout << termcolor::red << "\nReturning to menu...\n" << termcolor::reset;
             clearSystem(1200);
@@ -138,7 +154,12 @@ void AccountManager::createAccount() {
     int choice;
 
     do {
-        choice = printAccountTypeMenu("CREATE");
+        do {
+            choice = printAccountTypeMenu("CREATE");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
 
         if (choice==5) {
             cout << termcolor::red << "\nReturning to menu...\n" << termcolor::reset;
@@ -266,7 +287,12 @@ void AccountManager::createAccount() {
 void AccountManager::deleteAccount() {
     int choice;
     do {
-       choice = printAccountTypeMenu("DELETE");
+       do {
+            choice = printAccountTypeMenu("DELETE");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
 
         if (choice==5) {
             cout << termcolor::red << "\nReturning to menu...\n" << termcolor::reset;
@@ -316,7 +342,12 @@ void AccountManager::editAccount() {
     int choice;
 
     do {
-        choice = printAccountTypeMenu("EDIT");
+        do {
+            choice = printAccountTypeMenu("EDIT");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
 
         if (choice==5) {
             cout << termcolor::red << "\nReturning to menu...\n" << termcolor::reset;

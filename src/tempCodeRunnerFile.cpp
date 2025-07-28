@@ -1,2 +1,1 @@
-
-        cout << line << endl;
+Promp

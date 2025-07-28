@@ -34,7 +34,12 @@ void adminMain() {
     do {
         printAdminMenu();
 
-        choice = promptChoice(1, 8, "Choice: "); // helper function
+        do {
+            choice = promptChoice(1, 8, "Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
         system("cls"); // clears the terminal
 
         switch (choice) {

@@ -2,53 +2,61 @@
 
 using namespace std;
 
-// verifies if the username already exists
-bool isUsernameTaken (const string &accountsFile, const string &usernameToCheck) {
-    ifstream file (accountsFile);
-    if (!file.is_open()) return false;
+// Checks if the given username already exists in the specified accounts file
+bool isUsernameTaken(const string &accountsFile, const string &usernameToCheck) {
+    ifstream file(accountsFile);
+    if (!file.is_open()) return false; // Return false if file couldn't be opened
+
     string line;
 
+    // Read the file line by line
     while (getline(file, line)) {
-        stringstream split (line);
+        stringstream split(line);
         string email, username, password;
 
+        // Parse each line by comma
         if (getline(split, email, ',') &&
             getline(split, username, ',') &&
             getline(split, password)) {
-        
-                if (username == usernameToCheck) {
-                return true;
+            
+            // Check if the username matches the one to check
+            if (username == usernameToCheck) {
+                return true; // Return true if username is found
             }
         }
     }
 
-    return false;
+    return false; // Return false if username is not found
 }
 
-// verifies if the email already exists
-bool isEmailTaken (const string &accountsFile, const string &emailToCheck) {
-    ifstream file (accountsFile);
-    if (!file.is_open()) return false;
+// Checks if the given email already exists in the specified accounts file
+bool isEmailTaken(const string &accountsFile, const string &emailToCheck) {
+    ifstream file(accountsFile);
+    if (!file.is_open()) return false; // Return false if the file couldn't be opened
+
     string line;
 
+    // Read the file line by line
     while (getline(file, line)) {
-        stringstream split (line);
+        stringstream split(line);
         string email, username, password;
 
+        // Parse each line by comma
         if (getline(split, email, ',') &&
             getline(split, username, ',') &&
             getline(split, password)) {
-        
-                if (email == emailToCheck) {
-                return true;
+            
+            // Check if the email matches the one to check
+            if (email == emailToCheck) {
+                return true; // Return true if email is found
             }
         }
     }
 
-    return false;
+    return false; // Return false if email is not found
 }
 
-// deletes a matching line from the file
+// Deletes a matching line from the specified file
 bool deleteLine(const string &filename, const string &targetLine) {
     ifstream inFile(filename);
     ofstream tempFile("tempFile.txt");
@@ -59,13 +67,14 @@ bool deleteLine(const string &filename, const string &targetLine) {
     }
 
     string line;
-    bool found = false;
+    bool found = false; // Flag to track if the target line was found
 
+    // Read the file line by line
     while (getline(inFile, line)) {
         if (line != targetLine) {
-            tempFile << line << '\n';
+            tempFile << line << '\n'; // Write non-matching lines to the temp file
         } else {
-            found = true;
+            found = true; // Skip writing the target line (effectively deleting it)
         }
     }
 
@@ -73,45 +82,45 @@ bool deleteLine(const string &filename, const string &targetLine) {
     tempFile.close();
 
     if (found) {
-        remove(filename.c_str());
-        rename("tempFile.txt", filename.c_str());
+        remove(filename.c_str());                  // Remove the original file
+        rename("tempFile.txt", filename.c_str());  // Rename the temp file to the original filename
         cout << "Successful\n";
     } else {
-        remove("tempFile.txt");
+        remove("tempFile.txt"); // Clean up the unused temp file
     }
 
     return found;
 }
 
-// edits a matching line from the file
-bool editLine (const string &filename, const string &targetLine, const string &updatedLine) {
-    ifstream inFile (filename);
-    ofstream tempFile ("tempFile.txt");
+// Edits a matching line from the specified file and replaces it with the updated line
+bool editLine(const string &filename, const string &targetLine, const string &updatedLine) {
+    ifstream inFile(filename);
+    ofstream tempFile("tempFile.txt");
 
     if (!inFile || !tempFile) {
-    cout << "\nERROR: Failed to access file.\n";
-    return false;
-    }   
+        cout << "\nERROR: Failed to access file.\n";
+        return false;
+    }
 
     string line;
     bool found = false;
 
+    // Read the file line by line
     while (getline(inFile, line)) {
         if (line == targetLine) {
-            tempFile << updatedLine << endl;
+            tempFile << updatedLine << endl; // Replace the matching line with the updated line
             found = true;
         } else {
-            tempFile << line << endl;
+            tempFile << line << endl; // Write the other lines
         }
     }
 
     inFile.close();
     tempFile.close();
 
-    remove(filename.c_str());
-    rename("tempFile.txt", filename.c_str());
-
     if (found) {
+        remove(filename.c_str());                    // Delete the original file
+        rename("tempFile.txt", filename.c_str());    // Rename temp file to original file name
         cout << "\n-- Edited successfully --\n";
     } else {
         cout << "\n-- NOT found --\n";
@@ -120,28 +129,28 @@ bool editLine (const string &filename, const string &targetLine, const string &u
     return found;
 }
 
-// updates total tokens in the system
-void updateTotalTokens (int change) {
+// Updates the total number of tokens in the system using the given change amount
+void updateTotalTokens(int change) {
     int systemTokens = 0;
     string line;
 
-    ifstream inFile ("admin/files/tokensSystem.txt");
+    ifstream inFile("admin/files/tokensSystem.txt");
     if (inFile.is_open()) {
-        getline(inFile, line);
-        if (!line.empty()){
-            systemTokens = stoi(line);
+        getline(inFile, line); // Read the current token value from the file
+        if (!line.empty()) {
+            systemTokens = stoi(line); // Convert the string to an integer
         }
         inFile.close();
     } else {
         cout << "\nERROR opening file...\n";
     }
 
-    systemTokens += change;
-    if (systemTokens < 0) systemTokens = 0;
+    systemTokens += change; // Add the change to the current total
+    if (systemTokens < 0) systemTokens = 0; // Ensure tokens don't go negative
 
-    ofstream outFile ("admin/files/tokensSystem.txt");
-    if(outFile.is_open()) {
-        outFile << systemTokens << endl;
+    ofstream outFile("admin/files/tokensSystem.txt");
+    if (outFile.is_open()) {
+        outFile << systemTokens << endl; // Write the updated value back to the file
         outFile.close();
     } else {
         cout << "\nERROR opening file...\n";
@@ -155,21 +164,21 @@ void updateTotalMoney (float pesos) {
 
     ifstream inFile ("admin/files/moneySystem.txt");
     if (inFile.is_open()) {
-        getline(inFile, line);
+        getline(inFile, line); // Read the current money amount from the file
         if (!line.empty()){
-            systemMoney = stoi(line);
+            systemMoney = stoi(line); // Convert the string to an integer
         }
         inFile.close();
     } else {
         cout << "\nERROR opening moneySystem.txt...\n";
     }
 
-    systemMoney += pesos;
-    if (systemMoney < 0) systemMoney = 0;
+    systemMoney += pesos; // Add the change to the current total
+    if (systemMoney < 0) systemMoney = 0; // Ensure money don't go negative
 
     ofstream outFile ("admin/files/moneySystem.txt");
     if(outFile.is_open()) {
-        outFile << systemMoney << endl;
+        outFile << systemMoney << endl; // Write the updated value back to the file
         outFile.close();
     } else {
         cout << "\nERROR opening moneySystem.txt...\n";
@@ -182,7 +191,7 @@ void clearSystem(int delayMillis) {
     system("cls");
 }
 
-// validates string input to not accept empty inputs
+// Prompts the user for a non-empty string input using the given prompt text
 string promptNonEmptyInput(const string& promptText) {
     string input;
 
@@ -194,88 +203,14 @@ string promptNonEmptyInput(const string& promptText) {
         if (input.empty()) {
             cout << termcolor::bright_red << "ERROR: Field cannot be empty.\n" << termcolor::reset;
         }
-    } while (input.empty());
+    } while (input.empty()); // Repeat until the user enters a non-empty value
 
     return input;
 }
 
-// validates double input for prices
+// Prompts the user for a valid price input (double) with basic validation and a cancel option
 double promptValidatedPrice(const string& promptText) {
     double price;
-    while (true) {
-        cout << termcolor::bright_yellow << promptText;
-        cin >> price;
-
-        if (price = 0) {
-            cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
-        }
-
-        if (price >= 0) {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            return price;
-        }
-        cout << termcolor::bright_red << "ERROR: Invalid price input.\n" << termcolor::reset;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-}
-
-// validates int input for quantity
-int promptValidatedQuantity(const string& promptText) {
-    int quantity;
-    while (true) {
-        cout << termcolor::bright_yellow << promptText;
-        
-        if (cin >> quantity) {
-
-            if (quantity == 0) {
-                cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
-                clearSystem(1200);
-                return 0;
-            }
-
-            if (quantity > 0) {
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                return quantity;
-            } else {
-                cout << termcolor::red << "Please enter a positive number or 0 to cancel.\n" << termcolor::reset;
-            }
-
-        } else {
-            cout << termcolor::bright_red << "ERROR: Invalid quantity input.\n" << termcolor::reset;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-    }
-}
-
-// validates numeric input used to access vector elements
-int promptValidatedIndex(const string& promptText, size_t max) {
-    int choice;
-
-    while (true) {
-        cout << termcolor::bright_yellow << promptText;
-        if (cin >> choice) {
-            if (choice == 0) return 0;
-            if (choice >= 1 && choice <= static_cast<int>(max)) return choice;
-        }
-
-        cout << termcolor::red << "Invalid input. ";
-        if (choice < 1 || choice > static_cast<int>(max)) {
-            cout << "Enter 1-" << max << " or 0 to cancel.\n";
-        }
-        else {
-            cout << "Enter a number between 1 and " << max << ".\n";
-        }
-
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }
-}
-
-// validates integer input for menu choices within a specified range
-int promptChoice (int min, int max, const string& promptText) {
-    int choice;
     string input;
 
     while (true) {
@@ -288,11 +223,99 @@ int promptChoice (int min, int max, const string& promptText) {
         }
 
         try {
+            price = stod(input);
+
+           if (price == 0) {
+                // Allows 0 input as cancellation
+                cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                clearSystem(1200);
+                return 0;
+            } 
+
+            if (price > 0) {
+                // Valid positive price input
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                return price;
+            } else {
+                // Handles negative numbers
+                cout << termcolor::red << "Please enter a positive number or 0 to cancel.\n" << termcolor::reset;
+            }
+            
+        } catch (...) {
+            // handles non-numeric input
+            cout << termcolor::bright_red << "ERROR: Invalid price input.\n" << termcolor::reset;
+            continue;
+        }
+    }
+}
+
+// Prompts the user for a valid quantity input (integer) with basic validation and a cancel option
+int promptValidatedQuantity(const string& promptText) {
+    int quantity;
+    string input;
+
+    while (true) {
+        cout << termcolor::bright_yellow << promptText;
+        getline (cin, input);
+
+        if (input.empty()) {
+            cout << termcolor::bright_red << "ERROR: Field cannot be empty.\n" << termcolor::reset;
+            continue;
+        }
+
+        try {
+            quantity = stoi(input);
+
+            if (quantity == 0) {
+                // Allows 0 input to cancel
+                cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                clearSystem(1200); // Clears the screen or applies delay (custom function)
+                return 0;
+            }
+
+            if (quantity > 0) {
+                // Valid positive quantity
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                return quantity;
+            } else {
+                // Handles negative numbers
+                cout << termcolor::red << "Please enter a positive number or 0 to cancel.\n" << termcolor::reset;
+            }
+        } catch (...) {
+            // Handles non-numeric input
+            cout << termcolor::red << "Invalid input. Please enter a valid number.\n" << termcolor::reset;
+            continue;
+        }
+    }
+}
+
+// validates integer input for choices within a specified range
+int promptChoice (int min, int max, const string& promptText) {
+    int choice;
+    string input;
+
+    while (true) {
+        cout << termcolor::bright_yellow << promptText;
+        getline (cin, input); // gets string input--
+
+        if (input.empty()) {
+            cout << termcolor::bright_red << "ERROR: Field cannot be empty.\n" << termcolor::reset;
+            continue;
+        }
+
+        try {
             choice = stoi(input);
+
+            if (choice == 0) {
+                return 0;
+            };
+
             if (choice >= min && choice <= max) {
                 break;
             } else {
-                cout << termcolor::red << "Invalid choice. Please enter 1-"<< max << ".\n";
+                cout << termcolor::red << "Invalid choice. Please enter 1-"<< max << " or 0 to cancel.\n";
             }
         } catch (...) {
             cout << termcolor::red << "Invalid input. Please enter a valid number.\n" << termcolor::reset;

@@ -101,6 +101,11 @@ void questsModule::approveStudentQuests() {
     cout << termcolor::magenta << "\n+----------------------------------------------+\n";
     
     int index = promptChoice(1, quests.size(), "Enter request number to approve (0 to cancel): ");
+    if (index == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem(1200);
+        return;
+    }
     cout << termcolor::reset;
 
     CompletedQuests selected = quests[index - 1];
@@ -244,7 +249,12 @@ void questsModule::questsTab() {
         cout << "|  5. Back                      |\n";
         cout << "+-------------------------------+\n";
 
-        choice = promptChoice(1, 5, "choice: ");
+        do {
+            choice = promptChoice(1, 5, "choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
         system("cls");
 
         switch (choice) {
