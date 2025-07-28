@@ -35,7 +35,12 @@ void totalSales(string email) {
         }
 
         cout << "1. Back\n";
-        choice = promptChoice(1,1,"Choice: ");
+        do {
+            choice = promptChoice(1,1,"Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
         system("cls");
     } while (choice != 1);
 }
@@ -73,7 +78,12 @@ void merchantTransactions (string email){
         productInFile.close();
         cout << "+------------------------------+\n";
         cout << "1. Back\n";
-        choice = promptChoice(1,1,"Choice: ");
+        do {
+            choice = promptChoice(1,1,"Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
         system("cls");
 
         switch (choice){
@@ -99,7 +109,12 @@ void sales(string email) {
         cout << "|  2. Transactions             |\n";
         cout << "|  3. Back to Home             |\n";
         cout << "+------------------------------+\n";
-        choice = promptChoice(1,3,"Choice: ");
+        do {
+            choice = promptChoice(1,3,"Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
         system("cls");
 
         switch (choice){

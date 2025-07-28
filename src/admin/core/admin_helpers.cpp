@@ -226,16 +226,11 @@ double promptValidatedPrice(const string& promptText) {
             price = stod(input);
 
            if (price == 0) {
-                // Allows 0 input as cancellation
-                cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                clearSystem(1200);
                 return 0;
             } 
 
             if (price > 0) {
                 // Valid positive price input
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 return price;
             } else {
                 // Handles negative numbers
@@ -268,16 +263,11 @@ int promptValidatedQuantity(const string& promptText) {
             quantity = stoi(input);
 
             if (quantity == 0) {
-                // Allows 0 input to cancel
-                cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                clearSystem(1200); // Clears the screen or applies delay (custom function)
                 return 0;
             }
 
             if (quantity > 0) {
                 // Valid positive quantity
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 return quantity;
             } else {
                 // Handles negative numbers
@@ -315,7 +305,7 @@ int promptChoice (int min, int max, const string& promptText) {
             if (choice >= min && choice <= max) {
                 break;
             } else {
-                cout << termcolor::red << "Invalid choice. Please enter 1-"<< max << " or 0 to cancel.\n";
+                cout << termcolor::red << "Invalid choice. Please enter a valid option.\n";
             }
         } catch (...) {
             cout << termcolor::red << "Invalid input. Please enter a valid number.\n" << termcolor::reset;

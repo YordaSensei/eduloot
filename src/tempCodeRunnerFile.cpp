@@ -1,1 +1,2 @@
-Promp
+
+        displayLoginPrompt(inputEmail, inputPassword);

@@ -66,7 +66,13 @@ void reqDeleteProduct(string email) {
     }
     cout << "+------------------------------+\n";
 
-    int choice = promptChoice(1,productList.size(),"Enter product number to delete: ");
+    int choice = promptChoice(1,productList.size(),"Enter product number to delete (0 to cancel): ");
+
+    if (choice == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem(1200);
+        return;
+    } 
 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     string reason = promptNonEmptyInput("Reason for deletion: ");
@@ -93,7 +99,13 @@ void reqCashout(string email) {
     cout << termcolor::yellow << "Total amount is PHP " << totalAmount << " (fee included).\n";
     
     cout << "Are you sure you want to convert " << quantity << " tokens? (1 - Yes, 0 - No)\n";
-    int choice = promptChoice (0,1,"Choice: ");
+    int choice = promptChoice (1,1,"Choice: ");
+
+    if (choice == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem(1200);
+        return;
+    } 
 
     if (choice = 1){
         vector<MerchantAcc> balance;
@@ -173,7 +185,12 @@ void reqChangePrice(string email) {
              << " (Current Price: " << productList[i].price << ")\n";
     }
 
-    int choice = promptChoice (1,productList.size(),"Enter product number to change price: ");
+    int choice = promptChoice (1,productList.size(),"Enter product number to change price (0 to cancel): ");
+    if (choice == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem(1200);
+        return;
+    } 
 
     int newPrice = promptValidatedQuantity("Enter new price: ");
 
@@ -306,7 +323,13 @@ void viewRequests(string email) {
         }
         cout << "+------------------------------+\n";
         cout << "1. Back\n";
-        choice = promptChoice (1,1,"Choice: ");
+        do {
+            choice = promptChoice(1,1,"Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
+        
 
         switch (choice){
             case 1:
@@ -331,7 +354,13 @@ void requestAdmin(string email) {
         cout << "|  5. View Requests            |\n";
         cout << "|  6. Back to Home             |\n";
         cout << "+------------------------------+\n";
-        choice = promptChoice (1,6,"Choice: ");
+        do {
+            choice = promptChoice(1,6,"Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
+        
         system("cls");
 
         switch(choice) {

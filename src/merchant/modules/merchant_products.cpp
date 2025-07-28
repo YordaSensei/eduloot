@@ -47,7 +47,12 @@ void editStock(string email) {
     }
     cout << "+------------------------------+\n";
 
-    int choice = promptChoice (1,merchantProducts.size(),"Enter product number to edit stock: ");
+    int choice = promptChoice (1,merchantProducts.size(),"Enter product number to edit stock (0 to cancel): ");
+    if (choice == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem(1200);
+        return;
+    } 
 
     int newQty = promptValidatedQuantity("Enter new stock quantity: ");
 
@@ -118,7 +123,12 @@ void products(string email) {
         cout << termcolor::yellow << "+------------------------------+\n";
         cout << "1. Edit Stock\n";
         cout << "2. Back to Home\n";
-        choice = promptChoice (1,2,"Choice: ");
+        do {
+            choice = promptChoice(1,2,"Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
         system("cls");
 
         switch (choice) {
