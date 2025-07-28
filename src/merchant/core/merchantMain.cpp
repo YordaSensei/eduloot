@@ -1,7 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
 #include <vector>
 #include <limits>
 
@@ -24,8 +20,7 @@ void merchantMain(string email) {
         cout << "|  3. Request To Admin         |\n";
         cout << "|  4. Log Out                  |\n";
         cout << "+------------------------------+\n";
-        cout << termcolor::bright_white << "Choice: ";
-        cin >> choice;
+        choice = promptChoice(1,4,"Choice: ");
         system("cls");
 
         switch(choice) {

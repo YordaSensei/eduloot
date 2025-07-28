@@ -47,19 +47,9 @@ void editStock(string email) {
     }
     cout << "+------------------------------+\n";
 
-    int choice;
-    cout << termcolor::bright_white << "Enter product number to edit stock: ";
-    cin >> choice;
+    int choice = promptChoice (1,merchantProducts.size(),"Enter product number to edit stock: ");
 
-    if (choice < 1 || choice > merchantProducts.size()) {
-        cout << termcolor::red << "Invalid choice.\n";
-        clearSystem();
-        return;
-    }
-
-    int newQty;
-    cout << "Enter new stock quantity for " << merchantProducts[choice - 1].name << ": ";
-    cin >> newQty;
+    int newQty = promptValidatedQuantity("Enter new stock quantity: ");
 
     for (Product& p : productList) {
         if (p.merchant == email && p.name == merchantProducts[choice - 1].name) {
@@ -128,8 +118,7 @@ void products(string email) {
         cout << termcolor::yellow << "+------------------------------+\n";
         cout << "1. Edit Stock\n";
         cout << "2. Back to Home\n";
-        cout << termcolor::bright_white << "Choice: ";
-        cin >> choice;
+        choice = promptChoice (1,2,"Choice: ");
         system("cls");
 
         switch (choice) {

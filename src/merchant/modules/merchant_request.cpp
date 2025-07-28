@@ -9,7 +9,6 @@ void reqAddProduct(string email) {
     cout << "|  " << termcolor::bright_white << "       Add Product          " << termcolor::yellow << "|\n";
     cout << "+------------------------------+\n";
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     p.name = promptNonEmptyInput("Enter name: ");
     p.price = promptValidatedQuantity("Enter Price: ");
     p.quantity = promptValidatedQuantity("Enter Quantity: ");
@@ -25,7 +24,7 @@ void reqAddProduct(string email) {
 void reqDeleteProduct(string email) {
     vector<Product> productList;
     ifstream inFile("productList.txt");
-    string line, reason;
+    string line;
 
     while (getline(inFile, line)) {
         if (!line.empty()) {
@@ -67,19 +66,10 @@ void reqDeleteProduct(string email) {
     }
     cout << "+------------------------------+\n";
 
-    int choice;
-    cout << termcolor::bright_white << "Enter product number to delete: ";
-    cin >> choice;
+    int choice = promptChoice(1,productList.size(),"Enter product number to delete: ");
 
-    if (choice < 1 || choice > productList.size()) {
-        cout << termcolor::red << "Invalid choice.\n";
-        clearSystem();
-        return;
-    }
-
-    cin.ignore(); // flush newline
-    cout << "Reason for deletion: ";
-    getline(cin, reason);
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    string reason = promptNonEmptyInput("Reason for deletion: ");
 
     ofstream outFile("productReq.txt", ios::app);
     outFile << email << ",delete," << productList[choice - 1].name << "," << reason << endl;
@@ -90,7 +80,6 @@ void reqDeleteProduct(string email) {
 }
 
 void reqCashout(string email) {
-    int quantity;
     cout << termcolor::bold << termcolor::yellow;
     cout << "\n+------------------------------+\n";
     cout << "|  " << termcolor::bright_white << "      Request Cashout       " << termcolor::yellow << "|\n";
@@ -98,17 +87,15 @@ void reqCashout(string email) {
 
     cout << "How many tokens would you like to convert?\n";
     cout << "(PHP 3.00 = 1 Token) with a 5 percent fee.\n";
-    cout << termcolor::bright_white << "Tokens to convert: ";
-    cin >> quantity;
+    int quantity = promptValidatedQuantity("Tokens to convert: ");
 
-    char choice;
     float totalAmount = (quantity *3.0f) * 0.95f;
     cout << termcolor::yellow << "Total amount is PHP " << totalAmount << " (fee included).\n";
-    cout << "Are you sure you want to convert " << quantity << " tokens? (y/n)\n";
-    cout << termcolor::bright_white << "Choice: ";
-    cin >> choice;
+    
+    cout << "Are you sure you want to convert " << quantity << " tokens? (1 - Yes, 0 - No)\n";
+    int choice = promptChoice (0,1,"Choice: ");
 
-    if (choice == 'y' || choice == 'Y'){
+    if (choice = 1){
         vector<MerchantAcc> balance;
         MerchantAcc m;
         string line;
@@ -186,24 +173,12 @@ void reqChangePrice(string email) {
              << " (Current Price: " << productList[i].price << ")\n";
     }
 
-    int choice;
-    cout << termcolor::bright_white << "Enter product number to change price: ";
-    cin >> choice;
+    int choice = promptChoice (1,productList.size(),"Enter product number to change price: ");
 
-    if (choice < 1 || choice > productList.size()) {
-        cout << termcolor::red << "Invalid choice.\n";
-        clearSystem();
-        return;
-    }
+    int newPrice = promptValidatedQuantity("Enter new price: ");
 
-    double newPrice;
-    cout << "Enter new price for " << productList[choice - 1].name << ": ";
-    cin >> newPrice;
-
-    cin.ignore();
-    string reason;
-    cout << "Enter reason for price change: ";
-    getline(cin, reason);
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    string reason = promptNonEmptyInput("Enter reason for price change: ");
 
     ofstream reqFile("productReq.txt", ios::app);
     if (!reqFile) {
@@ -331,16 +306,11 @@ void viewRequests(string email) {
         }
         cout << "+------------------------------+\n";
         cout << "1. Back\n";
-        cout << termcolor::bright_white << "Choice: ";
-        cin >> choice;
+        choice = promptChoice (1,1,"Choice: ");
 
         switch (choice){
             case 1:
                 system("cls");
-                break;
-            default:
-                cout << termcolor::red << "Invalid choice.\n";
-                clearSystem();
                 break;
         }     
     } while (choice != 1);
@@ -348,7 +318,7 @@ void viewRequests(string email) {
 
 void requestAdmin(string email) {
     int choice;
-
+    
     do {
         cout << termcolor::bold << termcolor::yellow;
         cout << "\n+------------------------------+\n";
@@ -361,8 +331,7 @@ void requestAdmin(string email) {
         cout << "|  5. View Requests            |\n";
         cout << "|  6. Back to Home             |\n";
         cout << "+------------------------------+\n";
-        cout << termcolor::bright_white << "Choice: ";
-        cin >> choice;
+        choice = promptChoice (1,6,"Choice: ");
         system("cls");
 
         switch(choice) {
@@ -386,7 +355,6 @@ void requestAdmin(string email) {
                 clearSystem();
                 break;
             default:
-                cout << termcolor::red << "Invalid choice.\n";
                 clearSystem();
                 break;
         }

@@ -82,6 +82,7 @@ int main() {
         }
         else {
             cout << termcolor::red << "Invalid email or password. Please try again.\n\n" << termcolor::reset;
+            clearSystem();
         }
     }
 

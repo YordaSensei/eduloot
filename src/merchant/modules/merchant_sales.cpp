@@ -35,8 +35,7 @@ void totalSales(string email) {
         }
 
         cout << "1. Back\n";
-        cout << termcolor::bright_white << "Choice: ";
-        cin >> choice;
+        choice = promptChoice(1,1,"Choice: ");
         system("cls");
     } while (choice != 1);
 }
@@ -74,11 +73,12 @@ void merchantTransactions (string email){
         productInFile.close();
         cout << "+------------------------------+\n";
         cout << "1. Back\n";
-        cout << termcolor::bright_white << "Choice: ";
-        cin >> choice;
+        choice = promptChoice(1,1,"Choice: ");
         system("cls");
 
         switch (choice){
+            case 1:
+                break;
             default:
                 cout << termcolor::red << "Invalid choice.";
                 clearSystem();
@@ -99,25 +99,19 @@ void sales(string email) {
         cout << "|  2. Transactions             |\n";
         cout << "|  3. Back to Home             |\n";
         cout << "+------------------------------+\n";
-        cout << termcolor::bright_white << "Choice: ";
-        cin >> choice;
+        choice = promptChoice(1,3,"Choice: ");
+        system("cls");
 
         switch (choice){
             case 1:
-                system("cls");
                 totalSales(email);
                 break;
             case 2:
-                system("cls");
                 merchantTransactions(email);               
                 break;
             case 3: 
                 cout << termcolor::red << "Returning to home...";    
                 clearSystem();          
-                break;
-            default:
-                cout << termcolor::red << "Invalid choice.";               
-                clearSystem();
                 break;
         }
     } while (choice != 3);
