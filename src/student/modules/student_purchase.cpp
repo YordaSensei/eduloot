@@ -26,7 +26,6 @@ void purchase(string email) {
         }
     }
 
-    cout << "|  " << "3. " << setw(25) << left << termcolor::bright_cyan << "Back to Home" << termcolor::blue << "|" << endl;
     cout << "+------------------------------+\n";
     merchantInFile.close();
 
@@ -35,19 +34,12 @@ void purchase(string email) {
         return;
     }
 
-    int merchantChoice;
-    cout << termcolor::bright_cyan << "Select number of merchant: ";
-    cin >> merchantChoice;
-
-    if (merchantChoice < 1 || merchantChoice > merchantList.size()) {
-        if (merchantChoice == 3){
-            cout << termcolor::red << "Returning to Home...\n";
-        } else {
-            cout << termcolor::red << "Invalid choice.\n"; 
-        }
-        clearSystem();
+    int merchantChoice = promptChoice (1,merchantList.size(),"Select number of merchant (0 to cancel): ");;
+    if (merchantChoice == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem(1200);
         return;
-    }
+    } 
 
     string selectedMerchant = merchantList[merchantChoice - 1];
 
@@ -90,30 +82,28 @@ void purchase(string email) {
     }
     cout << "+------------------------------+\n";
 
-    int productChoice;
-    cout << termcolor::bright_cyan << "Select number of product: ";
-    cin >> productChoice;
-
-    if (productChoice < 1 || productChoice > productList.size()) {
-        cout << termcolor::red << "Invalid product selection.\n";
-        clearSystem();
+    int productChoice = promptChoice (1,productList.size(),"Select number of product (0 to cancel): ");
+    if (productChoice == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem(1200);
         return;
-    }
+    } 
 
     cout << "Selected: " << productList[productChoice - 1].name <<  " | Price: " << productList[productChoice - 1].price << " tokens" << endl;
 
-    int productQty;
-    cout << "Quantity: ";
-    cin >> productQty;
+    int productQty = promptValidatedQuantity("Quantity: ");
 
     int totalAmount = productQty * productList[productChoice - 1].price;
     if (productQty > 0 && productQty <= productList[productChoice - 1].quantity){
         cout << "Total Amount: " << totalAmount << endl;
-        cout << "Are you sure you want to purchase " << productQty << " " << productList[productChoice - 1].name << "? (y/n): ";
-        char choice;
-        cin >> choice;
+        cout << "Are you sure you want to purchase " << productQty << " " << productList[productChoice - 1].name << "? (1 - Yes, 0 - No)\n";
 
-        if (choice == 'y' || choice == 'Y'){
+        int choice = promptChoice (1,1,"Choice: ");
+        if (choice == 0) {
+            cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+            clearSystem(1200);
+            return;
+        } else if (choice == 1) {
             vector<Student> studentBalance;
             Student s;
 

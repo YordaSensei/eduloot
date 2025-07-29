@@ -39,36 +39,40 @@ void viewBalance(string email) {
         }
 
         cout << "1. Back\n";
-        cout << termcolor::bright_cyan << "Choice: ";
-        cin >> choice;
+        do {
+            choice = promptChoice(1,1,"Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
         
         switch(choice) {
             case 1:
                 system("cls");
-                break;
-            default:
-                cout << termcolor::red << "Invalid choice.\n";
-                clearSystem();
                 break;
         }
     } while (choice != 1);
 }
 
 void purchaseTokens(string email) {
-    int quantity;
-    cout << "How many tokens would you like to purchase? (PHP 3.00 = 1 Token): ";
-    cin >> quantity;
+    int quantity = promptValidatedQuantity("How many tokens would you like to purchase? (PHP 3.00 = 1 Token | Type 0 to cancel): ");
+    if (quantity == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem();
+        return;
+    } 
 
-    char choice;
     float totalAmount = quantity * 3;
     cout << "Total amount is " << totalAmount << ".\n";
-    cout << "Are you sure you want to purchase " << quantity << " amount of tokens? (y/n)\n";
-    cout << "Choice: ";
-    cin >> choice;
+    cout << "Are you sure you want to purchase " << quantity << " amount of tokens? (1 - Yes, 0 - No)\n";
 
     bool found = false;
-
-    if (choice == 'y' || choice == 'Y'){
+    int choice = promptChoice (1,1,"Choice: ");
+    if (choice == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem();
+        return;
+    } else if (choice == 1){
         vector<Student> balance;
 
         ifstream inFile("studentBalance.txt");
@@ -130,32 +134,32 @@ void purchaseTokens(string email) {
             }
         }
         currentBalOutFile.close();
-    } else if (choice == 'n' || choice == 'N') {
-        cout << termcolor::red << "Conversion cancelled.\n";
-        clearSystem();
-    } else {
-        cout << termcolor::red << "Invalid choice.\n";
-        clearSystem();
     }
 }
 
 void convertTokens(string email) {
-    int quantity;
     cout << "How many tokens would you like to convert?\n";
     cout << "(PHP 3.00 = 1 Token) with a 5 percent fee.\n";
-    cout << "Tokens to convert: ";
-    cin >> quantity;
+    int quantity = promptValidatedQuantity("Tokens to convert (0 to cancel): ");
+    if (quantity == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem();
+        return;
+    } 
 
-    char choice;
     float totalAmount = (quantity *3.0f) * 0.95f;
-    cout << "Total amount is PHP " << totalAmount << " (fee included).\n";
-    cout << "Are you sure you want to convert " << quantity << " tokens? (y/n)\n";
-    cout << "Choice: ";
-    cin >> choice;
 
-    if (choice == 'y' || choice == 'Y'){
+    cout << "Total amount is PHP " << totalAmount << " (fee included).\n";
+    cout << "Are you sure you want to convert " << quantity << " tokens? (1 - Yes, 0 - No)\n";
+    int choice = promptChoice (1,1,"Choice: ");
+    if (choice == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem();
+        return;
+    } else if (choice == 1) {
         vector<Student> balance;
         Student s;
+        bool success = false;
         
         ifstream inFile("studentBalance.txt");
         while (getline(inFile, line)) {
@@ -188,32 +192,28 @@ void convertTokens(string email) {
         }
         outFile.close ();
 
-        time_t now = time(0);
-        string dt = ctime(&now);
-        dt.pop_back();
+        if (success) {
+            time_t now = time(0);
+            string dt = ctime(&now);
+            dt.pop_back();
 
-        ifstream currentBalOutFile("studentBalance.txt");
-        while (getline(currentBalOutFile, line)) {
-            if (!line.empty()) {
-                string studentEmail, strBalance;
-                stringstream split(line);
+            ifstream currentBalOutFile("studentBalance.txt");
+            while (getline(currentBalOutFile, line)) {
+                if (!line.empty()) {
+                    string studentEmail, strBalance;
+                    stringstream split(line);
 
-                getline(split, studentEmail, ',');
-                getline(split, strBalance);
+                    getline(split, studentEmail, ',');
+                    getline(split, strBalance);
 
-                ofstream transactionOutFile("studentTokenTransactions.txt", ios::app);
-                transactionOutFile << email << ",Converted," << quantity << "," << strBalance << "," << dt << endl;
-                transactionOutFile.close();
+                    ofstream transactionOutFile("studentTokenTransactions.txt", ios::app);
+                    transactionOutFile << email << ",Converted," << quantity << "," << strBalance << "," << dt << endl;
+                    transactionOutFile.close();
+                }
             }
+            currentBalOutFile.close();
+            clearSystem();
         }
-        currentBalOutFile.close();
-        clearSystem();
-    } else if (choice == 'n' || choice == 'N') {
-        cout << termcolor::red << "Conversion cancelled.\n";
-        clearSystem();
-    } else {
-        cout << termcolor::red << "Invalid choice.\n";
-        clearSystem();
     }
 }
 
@@ -230,8 +230,12 @@ void wallet(string email) {
         cout << "|  3. Convert to Cash          |\n";
         cout << "|  4. "<< termcolor::bright_cyan <<"Back to Home             "<< termcolor::blue <<"|\n";
         cout << "+------------------------------+\n"<< termcolor::reset;
-        cout << termcolor::bright_cyan << "Choice: ";
-        cin >> choice;
+        do {
+            choice = promptChoice(1,4,"Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
 
         switch(choice) {
             case 1:
