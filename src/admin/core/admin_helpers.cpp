@@ -253,7 +253,7 @@ double promptValidatedPrice(const string& promptText) {
             price = stod(input);
 
            if (price == 0) {
-                return 0;
+                return 0; // returns 0 for cancel option
             } 
 
             if (price > 0) {
@@ -315,21 +315,22 @@ int promptChoice (int min, int max, const string& promptText) {
 
     while (true) {
         cout << termcolor::bright_yellow << promptText;
-        getline (cin, input); // gets string input--
+        getline (cin, input); // gets string input
 
-        if (input.empty()) {
+        if (input.empty()) { // Checks if the user submitted an empty input 
             cout << termcolor::bright_red << "ERROR: Field cannot be empty.\n" << termcolor::reset;
             continue;
         }
 
         try {
-            choice = stoi(input);
+            choice = stoi(input); // converts string to integer
 
             if (choice == 0) {
                 return 0;
             };
 
             if (choice >= min && choice <= max) {
+                // valid input
                 break;
             } else {
                 cout << termcolor::red << "Invalid choice. Please enter a valid option.\n";
@@ -343,6 +344,7 @@ int promptChoice (int min, int max, const string& promptText) {
     return choice;
 }
 
+// Checks if the user entered "0" to cancel the current string input process.
 bool cancelInput (string& input) {
     if (input == "0") {
         cout << termcolor::red << "\nCancelling...\nReturning to menu..." << termcolor::reset;

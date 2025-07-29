@@ -20,6 +20,7 @@ class emergencyFundsModule {
         void logApproval (const studentreq &selected);
 };
 
+// Displays all emergency fund requests
 void emergencyFundsModule::emergencyFunds () {
     cout << termcolor::bold << termcolor::magenta
          << "\n+---------------------------------+\n"
@@ -27,7 +28,7 @@ void emergencyFundsModule::emergencyFunds () {
          << termcolor::magenta << " |\n"
          << "+---------------------------------+\n" << termcolor::reset;
 
-    vector<studentreq> funds = LoadEmergencyRequests();
+    vector<studentreq> funds = LoadEmergencyRequests();  // Load all pending emergency fund requests into a vector for processing
     if (funds.empty()) {
         cout << termcolor::red << "(No pending emergency funds requests)\n" << termcolor::reset;
         return;
@@ -38,9 +39,10 @@ void emergencyFundsModule::emergencyFunds () {
     int index = promptChoice(1, funds.size(),"Enter request number to approve (0 to cancel): "); 
     if (index == 0) return;
 
-    approveEmergencyRequest(funds[index - 1]);
+    approveEmergencyRequest(funds[index - 1]); // sa part na to, diretso ko na lang po as argument yung selected index ng vector instead of making another variable
 }
 
+// vector that stores the contents of the file
 vector <studentreq> emergencyFundsModule::LoadEmergencyRequests() {
     ifstream requestFundsFile("studentEmergencyFunds.txt");
     vector<studentreq> funds;
@@ -61,11 +63,14 @@ vector <studentreq> emergencyFundsModule::LoadEmergencyRequests() {
         } catch(...) {
             continue;
         }
+
+        funds.push_back(req);
     }
     requestFundsFile.close();
     return funds;
 }
 
+// prints the contents of the vector
 void emergencyFundsModule::showEmergencyRequests(const vector<studentreq> &requests) {
     for (size_t i = 0; i < requests.size(); i++) {
         cout << termcolor::yellow << i + 1 << ". " << requests[i].email << " | " 

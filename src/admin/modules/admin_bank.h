@@ -15,7 +15,9 @@ class bankModule {
         void promptTokenTopUp();
 };
 
+// function to show bank summary
 void bankModule::showBankSummary () {
+    // calls all needed functions and assigns its return value to its corresponding variable
     int tokensOut = readTokensOut();
     int tokensLeft = readTokensLeft();
     float totalMoney = readTotalMoney();
@@ -37,6 +39,7 @@ void bankModule::showBankSummary () {
     promptTokenTopUp();
 }
 
+// Function to read total tokens that are out
 int bankModule::readTokensOut() {
     ifstream tokenFile("admin/files/tokensOut.txt");
     string line;
@@ -47,19 +50,13 @@ int bankModule::readTokensOut() {
         return 0;
     }
 
-    while (getline(tokenFile, line)) {
-        stringstream split(line);
-        string name, tokenStr;
-            
-        getline(split, name, ',');
-        getline(split, tokenStr);
-
+    while (getline(tokenFile, line)) { // gets the value inside the tokensOut file
         try {
-            tokensOut += stoi(tokenStr);
+            if (!line.empty()) tokensLeft = stoi(line);
         } catch (...) {
             continue;
         }
-    } 
+    }
 
     tokenFile.close();
     return tokensOut;
@@ -109,6 +106,7 @@ float bankModule::readTotalMoney () {
     return totalMoney;
 }
 
+// function that asks the admin for token top ups
 void bankModule::promptTokenTopUp () {
     int topUp;
     string choice;
@@ -122,7 +120,7 @@ void bankModule::promptTokenTopUp () {
             cout << termcolor::bold << "\nEnter number of tokens to add: " << termcolor::reset;
             cin >> topUp;
 
-            if (cin.fail() || topUp <= 0) {
+            if (cin.fail() || topUp <= 0) { // handles invalid inputs and negative numbers
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << termcolor::red << "Invalid token amount. Please enter a positive number.\n" << termcolor::reset;
