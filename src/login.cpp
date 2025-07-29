@@ -6,7 +6,7 @@
 
 #include "admin/core/adminMain.cpp"  
 #include "merchant/core/merchantMain.cpp"
-#include "student/core/student.cpp"
+#include "student/core/studentMain.cpp"
 #include "User.cpp"
 #include "Teacher.cpp"
 #include "Parent.cpp"

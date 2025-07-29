@@ -1,4 +1,14 @@
-void totalSales(string email) {
+#pragma once
+
+class MerchantSales {
+    public:
+        void sales(string email);
+    private:
+        void totalSales(string email);
+        void merchantTransactions (string email);
+};
+
+void MerchantSales::totalSales(string email) {
     vector<MerchantAcc> balance;
     string line;
     MerchantAcc m;
@@ -45,7 +55,7 @@ void totalSales(string email) {
     } while (choice != 1);
 }
 
-void merchantTransactions (string email){
+void MerchantSales::merchantTransactions (string email){
     string line;
     int choice;
 
@@ -97,7 +107,7 @@ void merchantTransactions (string email){
     } while (choice != 1);
 }
 
-void sales(string email) {
+void MerchantSales::sales(string email) {
     int choice;
 
     do {

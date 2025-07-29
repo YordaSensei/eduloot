@@ -1,9 +1,9 @@
 #include <iomanip>
 
 #include "student_helpers.h"
-#include "../modules/student_wallet.cpp"
+#include "../modules/student_wallet.h"
 #include "../modules/student_purchase.h"
-#include "../modules/student_quests.cpp"
+#include "../modules/student_quests.h"
 #include "../modules/student_notifications.h"
 #include "../modules/student_transactions.h"
 #include "../modules/student_emergencyFunds.h"
@@ -35,14 +35,16 @@ void studentMain(string email) {
 
         switch(choice) {
             case 1:
-                wallet(email);
+                StudentWallet wallet;
+                wallet.wallet(email);
                 break;
             case 2:
                 studentPurchase purchase;
                 purchase.purchase(email);
                 break;
             case 3:
-                quests(email);
+                StudentQuests quests;
+                quests.quests(email);
                 break;
             case 4:
                 studentNotifications notifs;

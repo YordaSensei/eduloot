@@ -1,6 +1,19 @@
+#pragma once
 #include "../core/merchant_helpers.h"
 
-void reqAddProduct(string email) {
+class MerchantRequest {
+    public:
+        void requestAdmin(string email);
+
+    private:
+        void reqAddProduct(string email);
+        void reqDeleteProduct(string email);
+        void reqCashout(string email);
+        void reqChangePrice(string email);
+        void viewRequests(string email);
+};
+
+void MerchantRequest::reqAddProduct(string email) {
     ofstream outFile("productReq.txt", ios::app);
     Product p;
 
@@ -21,7 +34,7 @@ void reqAddProduct(string email) {
     clearSystem();
 }
 
-void reqDeleteProduct(string email) {
+void MerchantRequest::reqDeleteProduct(string email) {
     vector<Product> productList;
     ifstream inFile("productList.txt");
     string line;
@@ -84,7 +97,7 @@ void reqDeleteProduct(string email) {
     clearSystem(2000);
 }
 
-void reqCashout(string email) {
+void MerchantRequest::reqCashout(string email) {
     cout << termcolor::bold << termcolor::yellow;
     cout << "\n+------------------------------+\n";
     cout << "|  " << termcolor::bright_white << "      Request Cashout       " << termcolor::yellow << "|\n";
@@ -139,7 +152,7 @@ void reqCashout(string email) {
     }
 }
 
-void reqChangePrice(string email) {
+void MerchantRequest::reqChangePrice(string email) {
     vector<Product> productList;
     ifstream inFile("productList.txt");
     string line;
@@ -207,7 +220,7 @@ void reqChangePrice(string email) {
     clearSystem(2000);
 }
 
-void viewRequests(string email) {
+void MerchantRequest::viewRequests(string email) {
     ifstream inFile("productReq.txt");
     string line;
     int choice;
@@ -333,7 +346,7 @@ void viewRequests(string email) {
     } while (choice != 1);
 }
 
-void requestAdmin(string email) {
+void MerchantRequest::requestAdmin(string email) {
     int choice;
     
     do {

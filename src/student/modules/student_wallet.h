@@ -1,9 +1,19 @@
+#pragma once
 #include <ctime>
 #include "../../admin/includes/admin_helpers.h"
 
 string line;
 
-void viewBalance(string email) {
+class StudentWallet {
+    public:
+        void wallet(string email);
+    private:
+        void viewBalance(string email);
+        void purchaseTokens(string email);
+        void convertTokens(string email);
+};
+
+void StudentWallet::viewBalance(string email) {
     vector<Student> balance;
     Student s;
     bool found = false;
@@ -54,7 +64,7 @@ void viewBalance(string email) {
     } while (choice != 1);
 }
 
-void purchaseTokens(string email) {
+void StudentWallet::purchaseTokens(string email) {
     int quantity = promptValidatedQuantity("How many tokens would you like to purchase? (PHP 3.00 = 1 Token | Type 0 to cancel): ");
     if (quantity == 0) {
         cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
@@ -138,7 +148,7 @@ void purchaseTokens(string email) {
     }
 }
 
-void convertTokens(string email) {
+void StudentWallet::convertTokens(string email) {
     cout << "How many tokens would you like to convert?\n";
     cout << "(PHP 3.00 = 1 Token) with a 5 percent fee.\n";
     int quantity = promptValidatedQuantity("Tokens to convert (0 to cancel): ");
@@ -177,6 +187,10 @@ void convertTokens(string email) {
                         updateTotalTokens(quantity);
                         updateTokensOut (-quantity);
                         updateTotalMoney(-totalAmount);
+
+                        ofstream refundOutFile("tokenRefunds.txt");
+                        refundOutFile << email << "," << quantity << "," << totalAmount;
+
                         cout << termcolor::red << quantity << " tokens converted successfully.\n";
                         clearSystem();
                     } else {
@@ -221,7 +235,7 @@ void convertTokens(string email) {
     }
 }
 
-void wallet(string email) {
+void StudentWallet::wallet(string email) {
     int choice;
 
     do {

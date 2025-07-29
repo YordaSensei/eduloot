@@ -2,8 +2,8 @@
 #include <limits>
 
 #include "../modules/merchant_products.h"
-#include "../modules/merchant_request.cpp"
-#include "../modules/merchant_sales.cpp"
+#include "../modules/merchant_request.h"
+#include "../modules/merchant_sales.h"
 
 using namespace std;
 
@@ -34,10 +34,12 @@ void merchantMain(string email) {
                 products.products(email);
                 break;
             case 2:
-                sales(email);
+                MerchantSales sales;
+                sales.sales(email);
                 break;
             case 3:
-                requestAdmin(email); 
+                MerchantRequest request;
+                request.requestAdmin(email); 
                 break;
             case 4:
                 cout << termcolor::red << "Logging Out...";

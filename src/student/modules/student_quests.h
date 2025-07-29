@@ -1,6 +1,12 @@
+#pragma once
 #include "../../quest_helpers.h"
 
-void quests(string email) {
+class StudentQuests {
+    public:
+        void quests(string email);
+};
+
+void StudentQuests::quests(string email) {
     int choice;
     do {
 
