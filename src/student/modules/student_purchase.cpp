@@ -106,6 +106,8 @@ void purchase(string email) {
         } else if (choice == 1) {
             vector<Student> studentBalance;
             Student s;
+            bool studentFound = false;
+            bool success = false;
 
             ifstream studentInFile("studentBalance.txt");
             while (getline(studentInFile, line)) {
@@ -117,6 +119,7 @@ void purchase(string email) {
                     s.balance = stoi(strBalance);
 
                     if (s.email == email){
+                        studentFound = true;
                         if (s.balance >= totalAmount){
                             s.balance -= totalAmount;
 
@@ -148,7 +151,6 @@ void purchase(string email) {
                                 MerchantAcc nm;
                                 nm.email = selectedMerchant;
                                 nm.balance = totalAmount;
-
                                 merchantBalance.push_back(nm);
                             }
 
@@ -191,7 +193,7 @@ void purchase(string email) {
                             }
                             productOutFile.close ();
 
-                            
+                            success = true;
 
                             cout << "Purchased successfully!\n";
                             clearSystem();
@@ -199,6 +201,9 @@ void purchase(string email) {
                             cout << termcolor::red << "You don't have enough tokens to purchase.\n";
                             clearSystem();
                         }
+                    } else {
+                        cout << termcolor::red << "You don't have enough tokens to purchase.\n";
+                        clearSystem();
                     }
                     
                     studentBalance.push_back(s);
@@ -212,49 +217,51 @@ void purchase(string email) {
             }
             studentOutFile.close();
 
-            time_t now = time(0);
-            string dt = ctime(&now);
-            dt.pop_back();
+            if (success && studentFound) {
+                time_t now = time(0);
+                string dt = ctime(&now);
+                dt.pop_back();
 
-            string currentStudentBalance;
-            ifstream studentBalInFile("studentBalance.txt");
-            while (getline(studentBalInFile, line)) {
-                if (!line.empty()) {
-                    string studentEmail, strBalance;
-                    stringstream split(line);
+                string currentStudentBalance;
+                ifstream studentBalInFile("studentBalance.txt");
+                while (getline(studentBalInFile, line)) {
+                    if (!line.empty()) {
+                        string studentEmail, strBalance;
+                        stringstream split(line);
 
-                    getline(split, studentEmail, ',');
-                    getline(split, strBalance);
-                    
-                    if (studentEmail == email){
-                        currentStudentBalance = strBalance;
-                        break;
+                        getline(split, studentEmail, ',');
+                        getline(split, strBalance);
+                        
+                        if (studentEmail == email){
+                            currentStudentBalance = strBalance;
+                            break;
+                        }
                     }
                 }
-            }
-            studentBalInFile.close();
+                studentBalInFile.close();
 
-            string currentMerchantBalance;
-            ifstream merchantBalInFile("merchantBalance.txt");
-            while (getline(merchantBalInFile, line)) {
-                if (!line.empty()) {
-                    string merchantEmail, strBalance;
-                    stringstream split(line);
+                string currentMerchantBalance;
+                ifstream merchantBalInFile("merchantBalance.txt");
+                while (getline(merchantBalInFile, line)) {
+                    if (!line.empty()) {
+                        string merchantEmail, strBalance;
+                        stringstream split(line);
 
-                    getline(split, merchantEmail, ',');
-                    getline(split, strBalance);
+                        getline(split, merchantEmail, ',');
+                        getline(split, strBalance);
 
-                    if (merchantEmail == selectedMerchant){
-                        currentMerchantBalance = strBalance;
-                        break;
+                        if (merchantEmail == selectedMerchant){
+                            currentMerchantBalance = strBalance;
+                            break;
+                        }
                     }
                 }
-            }
-            merchantBalInFile.close();
+                merchantBalInFile.close();
 
-            ofstream transactionOutFile("studentProductTransactions.txt", ios::app);
-            transactionOutFile << email << "," << selectedMerchant << "," << productList[productChoice - 1].name << "," << totalAmount << "," << productQty << "," << currentStudentBalance << "," << currentMerchantBalance << "," << dt << endl;
-            transactionOutFile.close();
+                ofstream transactionOutFile("studentProductTransactions.txt", ios::app);
+                transactionOutFile << email << "," << selectedMerchant << "," << productList[productChoice - 1].name << "," << totalAmount << "," << productQty << "," << currentStudentBalance << "," << currentMerchantBalance << "," << dt << endl;
+                transactionOutFile.close();
+            }
         }
     }
 }

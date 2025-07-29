@@ -178,8 +178,10 @@ void convertTokens(string email) {
                         updateTokensOut (-quantity);
                         updateTotalMoney(-totalAmount);
                         cout << termcolor::red << quantity << " tokens converted successfully.\n";
+                        clearSystem();
                     } else {
                         cout << termcolor::red << "You have don't have enough tokens to convert.\n";
+                        clearSystem();
                     }
                 }
 
