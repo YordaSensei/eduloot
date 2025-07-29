@@ -1,2 +1,5 @@
 nathan.alilam@ciit.edu.ph,120
+<<<<<<< Updated upstream
 1,35
+=======
+>>>>>>> Stashed changes
