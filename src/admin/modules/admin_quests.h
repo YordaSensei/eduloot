@@ -16,7 +16,7 @@ struct Quests {
     int claimsLeft;
 };
 
-class questsModule {
+class QuestsModule {
     public:
         void questsTab();
 
@@ -29,7 +29,7 @@ class questsModule {
         void updateStudentBalance(const string& email, int tokens);
 };
 
-void questsModule::viewQuests() {
+void QuestsModule::viewQuests() {
     ifstream questFile("quests.txt");
     string line;
 
@@ -53,7 +53,7 @@ void questsModule::viewQuests() {
     questFile.close();
 }
 
-void questsModule::approveStudentQuests() {
+void QuestsModule::approveStudentQuests() {
     ifstream accomplishedQuestsFile("studentAccomplishedQuests.txt");
     vector<CompletedQuests> quests;
     string line;
@@ -123,7 +123,7 @@ void questsModule::approveStudentQuests() {
     clearSystem(3000);
 }
 
-void questsModule::updateStudentBalance(const string &email, int tokenAmount) {
+void QuestsModule::updateStudentBalance(const string &email, int tokenAmount) {
     vector<string> balanceLines;
     ifstream walletIn("studentBalance.txt");
     string walletLine;
@@ -155,7 +155,7 @@ void questsModule::updateStudentBalance(const string &email, int tokenAmount) {
     walletOut.close();
 }
 
-void questsModule::updateQuestClaims (const string &questName, int decrement) {
+void QuestsModule::updateQuestClaims (const string &questName, int decrement) {
     // Update claims
     ifstream questsIn("quests.txt");
     vector<string> updatedQuests;
@@ -190,7 +190,7 @@ void questsModule::updateQuestClaims (const string &questName, int decrement) {
     questsOut.close();
 }
 
-void questsModule::createQuest() {
+void QuestsModule::createQuest() {
     viewQuests();
 
     cout << termcolor::bold << termcolor::magenta;
@@ -247,7 +247,7 @@ void questsModule::createQuest() {
     }
 }
 
-void questsModule::deleteQuest() {
+void QuestsModule::deleteQuest() {
     viewQuests();
 
     cout << termcolor::bold << termcolor::magenta;
@@ -288,7 +288,7 @@ void questsModule::deleteQuest() {
     }
 }
 
-void questsModule::questsTab() {
+void QuestsModule::questsTab() {
     int choice;
 
     do {

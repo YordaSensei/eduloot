@@ -53,7 +53,7 @@ void adminMain() {
                 break;
             }
             case 3: {
-                questsModule quests;
+                QuestsModule quests;
                 quests.questsTab();
                 break;
             }
@@ -63,12 +63,12 @@ void adminMain() {
                 break;
             }
             case 5: {
-                bankModule bank;
+                BankModule bank;
                 bank.showBankSummary();
                 break;
             }
             case 6:
-                emergencyFundsModule funds;
+                EmergencyFundsModule funds;
                 funds.emergencyFunds();
                 break;
             case 7: {

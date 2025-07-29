@@ -8,7 +8,7 @@ struct studentreq {
     int tokenAmount;
 };
 
-class emergencyFundsModule {
+class EmergencyFundsModule {
     public:
         void emergencyFunds();
 
@@ -21,7 +21,7 @@ class emergencyFundsModule {
 };
 
 // Displays all emergency fund requests
-void emergencyFundsModule::emergencyFunds () {
+void EmergencyFundsModule::emergencyFunds () {
     cout << termcolor::bold << termcolor::magenta
          << "\n+---------------------------------+\n"
          << "| " << termcolor::yellow << "    Provide Emergency Funds    " 
@@ -43,7 +43,7 @@ void emergencyFundsModule::emergencyFunds () {
 }
 
 // vector that stores the contents of the file
-vector <studentreq> emergencyFundsModule::LoadEmergencyRequests() {
+vector <studentreq> EmergencyFundsModule::LoadEmergencyRequests() {
     ifstream requestFundsFile("studentEmergencyFunds.txt");
     vector<studentreq> funds;
     string line;
@@ -71,14 +71,14 @@ vector <studentreq> emergencyFundsModule::LoadEmergencyRequests() {
 }
 
 // prints the contents of the vector
-void emergencyFundsModule::showEmergencyRequests(const vector<studentreq> &requests) {
+void EmergencyFundsModule::showEmergencyRequests(const vector<studentreq> &requests) {
     for (size_t i = 0; i < requests.size(); i++) {
         cout << termcolor::yellow << i + 1 << ". " << requests[i].email << " | " 
              << requests[i].reason << " | " << requests[i].tokenAmount << termcolor::reset << endl;
     }
 }
 
-void emergencyFundsModule::approveEmergencyRequest (studentreq &selected) {
+void EmergencyFundsModule::approveEmergencyRequest (studentreq &selected) {
     if (deleteLine("studentEmergencyFunds.txt", selected.originalLine)) {
         updateTotalTokens(-selected.tokenAmount);
         updateTokensOut(selected.tokenAmount);
@@ -93,7 +93,7 @@ void emergencyFundsModule::approveEmergencyRequest (studentreq &selected) {
     }
 }
 
-void emergencyFundsModule::writeToWallet (const studentreq &selected) {
+void EmergencyFundsModule::writeToWallet (const studentreq &selected) {
     vector<string> lines;
     ifstream walletIn("studentBalance.txt");
     string walletLine;
@@ -127,7 +127,7 @@ void emergencyFundsModule::writeToWallet (const studentreq &selected) {
     walletOut.close();
 }
 
-void emergencyFundsModule::logApproval (const studentreq &selected) {
+void EmergencyFundsModule::logApproval (const studentreq &selected) {
     ofstream("admin/files/studentApprovedReqs.txt", ios::app) << selected.originalLine << endl;
     ofstream("admin/files/studentLoan.txt", ios::app) << selected.originalLine << endl;
 }

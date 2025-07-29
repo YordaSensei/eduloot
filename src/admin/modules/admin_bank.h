@@ -3,7 +3,7 @@
 
 using namespace std;
 
-class bankModule {
+class BankModule {
     public:
         void showBankSummary();
     private:
@@ -16,7 +16,7 @@ class bankModule {
 };
 
 // function to show bank summary
-void bankModule::showBankSummary () {
+void BankModule::showBankSummary () {
     // calls all needed functions and assigns its return value to its corresponding variable
     int tokensOut = readTokensOut();
     int tokensLeft = readTokensLeft();
@@ -40,7 +40,7 @@ void bankModule::showBankSummary () {
 }
 
 // Function to read total tokens that are out
-int bankModule::readTokensOut() {
+int BankModule::readTokensOut() {
     ifstream tokenFile("admin/files/tokensOut.txt");
     string line;
     int tokensOut = 0;
@@ -62,7 +62,7 @@ int bankModule::readTokensOut() {
     return tokensOut;
 }
 
-int bankModule::readTokensLeft () {
+int BankModule::readTokensLeft () {
     ifstream adminFile("admin/files/tokensSystem.txt");
     string line;
     int tokensLeft = 0;
@@ -84,7 +84,7 @@ int bankModule::readTokensLeft () {
     return tokensLeft;
 }
 
-float bankModule::readTotalMoney () {
+float BankModule::readTotalMoney () {
     ifstream moneyFile("admin/files/moneySystem.txt");
     string line;
     float totalMoney = 0.00;
@@ -107,7 +107,7 @@ float bankModule::readTotalMoney () {
 }
 
 // function that asks the admin for token top ups
-void bankModule::promptTokenTopUp () {
+void BankModule::promptTokenTopUp () {
     int topUp;
     string choice;
 
