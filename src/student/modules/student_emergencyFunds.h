@@ -1,4 +1,11 @@
-void emergencyFunds(string email) {
+#pragma once
+
+class emergencyFunds {
+    public:
+        void requestFunds(string email);
+};
+
+void emergencyFunds::requestFunds(string email) {
     ofstream outFile("studentEmergencyFunds.txt", ios::app);
 
     cout << termcolor::bold << termcolor::blue;

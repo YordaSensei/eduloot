@@ -1,9 +1,15 @@
+#pragma once
 #include <vector>
 #include <ctime>
 #include "../../product_helpers.h"
 #include "../../merchant/core/merchant_helpers.h"
 
-void purchase(string email) {
+class studentPurchase {
+    public:
+        void purchase(string email);
+};
+
+void studentPurchase::purchase(string email) {
     vector<string> merchantList;
     ifstream merchantInFile("merchantAccounts.txt");
     string line;

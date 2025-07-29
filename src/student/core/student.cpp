@@ -2,11 +2,11 @@
 
 #include "student_helpers.h"
 #include "../modules/student_wallet.cpp"
-#include "../modules/student_purchase.cpp"
+#include "../modules/student_purchase.h"
 #include "../modules/student_quests.cpp"
-#include "../modules/student_notifications.cpp"
-#include "../modules/student_transactions.cpp"
-#include "../modules/student_emergencyFunds.cpp"
+#include "../modules/student_notifications.h"
+#include "../modules/student_transactions.h"
+#include "../modules/student_emergencyFunds.h"
 
 void studentMain(string email) {
     int choice;
@@ -38,19 +38,23 @@ void studentMain(string email) {
                 wallet(email);
                 break;
             case 2:
-                purchase(email);
+                studentPurchase purchase;
+                purchase.purchase(email);
                 break;
             case 3:
                 quests(email);
                 break;
             case 4:
-                studentNotifications(email);
+                studentNotifications notifs;
+                notifs.notifications(email);
                 break;
             case 5:
-                studentTransactions(email);
+                studentTransactions transacs;
+                transacs.transactions(email);
                 break;
             case 6:
-                emergencyFunds(email);
+                emergencyFunds funds;
+                funds.requestFunds(email);
                 break;
             case 7:
                 cout << termcolor::red << "Logging Out...";

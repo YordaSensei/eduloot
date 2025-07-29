@@ -1,4 +1,11 @@
-void studentNotifications(string email) {
+#pragma once
+
+class studentNotifications {
+    public:
+        void notifications(string email);
+};
+
+void studentNotifications::notifications(string email) {
     string line;
     int choice;
 
