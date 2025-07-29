@@ -52,7 +52,7 @@ int bankModule::readTokensOut() {
 
     while (getline(tokenFile, line)) { // gets the value inside the tokensOut file
         try {
-            if (!line.empty()) tokensLeft = stoi(line);
+            if (!line.empty()) tokensOut = stoi(line);
         } catch (...) {
             continue;
         }

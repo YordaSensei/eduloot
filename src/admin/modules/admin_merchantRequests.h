@@ -20,7 +20,6 @@ class MerchantRequestsModule {
     private:
         //core menus
         void handleProducts();
-        void handleConcerns();
         void handleCashout();
 
         //sub-handlers for products
@@ -42,13 +41,12 @@ void MerchantRequestsModule::merchantRequest() {
             cout << "|   " << termcolor::bright_yellow << "    MERCHANT REQUESTS       " << termcolor::magenta << "|\n";
             cout << "+-------------------------------+\n";
             cout << "|  1. Products                  |\n";
-            cout << "|  2. Concerns                  |\n";
-            cout << "|  3. Cash Out                  |\n";
-            cout << "|  4. Back                      |\n";
+            cout << "|  2. Cash Out                  |\n";
+            cout << "|  3. Back                      |\n";
             cout << "+-------------------------------+\n";
             
             do {
-                mainChoice = promptChoice(1, 4, "Choice: ");
+                mainChoice = promptChoice(1, 3, "Choice: ");
                 if (mainChoice == 0) {
                     cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
                 }
@@ -57,16 +55,15 @@ void MerchantRequestsModule::merchantRequest() {
 
             switch (mainChoice) {
                 case 1: handleProducts(); break;
-                case 2: handleConcerns(); break;
-                case 3: handleCashout(); break;
-                case 4: 
+                case 2: handleCashout(); break;
+                case 3: 
                     cout << termcolor::bright_red <<"Returning to admin menu...\n" << termcolor::reset; 
                     clearSystem(); break;
                 default: 
                     cout << termcolor::bright_red << "\nInvalid choice!\n" << termcolor::reset;
                     continue;
             }
-    } while (mainChoice != 4);
+    } while (mainChoice != 3);
 }
 
 // groups the requests by merchant
@@ -383,56 +380,6 @@ void MerchantRequestsModule::handleEditRequests (const vector<Products> &editReq
         approvedFile.close();
 
         cout << termcolor::green << "\nProduct edited and request approved.\n" << termcolor::reset;
-        clearSystem(2000);
-    }
-}
-
-// handles concerns
-void MerchantRequestsModule::handleConcerns() {
-    vector <string> concerns;
-    string line;
-
-    ifstream inFile("concerns.txt");
-    while (getline(inFile, line)) {
-        concerns.push_back(line);
-    }
-    inFile.close();
-
-    if (concerns.empty()) {
-        cout << termcolor::red << "(No pending concerns)\n" << termcolor::reset;
-        return;
-    }
-
-    cout << termcolor::bold << termcolor::magenta;
-    cout << "\n+------------------------------------+\n";
-    cout << "| " << termcolor::bright_yellow << "     Pending Merchant Concerns     " << termcolor::magenta << "|\n";
-    cout << "+------------------------------------+\n";
-    cout << termcolor::reset;
-
-    int displayedIndex = 1;
-    for (size_t i = 0; i < concerns.size(); i++) {
-        cout << termcolor::bright_white << displayedIndex << ". " 
-        << termcolor::bright_yellow << concerns[i] << endl;
-        displayedIndex++;
-    }
-    
-    cout << termcolor::reset;
-
-    int index = promptChoice(1, concerns.size(), "Enter request number to approve (0 to cancel): ");
-    if (index == 0) {
-        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
-        clearSystem(1200);
-        return;
-    }
-
-    string selectedConcern = concerns[index - 1];
-
-    if (deleteLine("concerns.txt", selectedConcern)) {
-        ofstream approvedFile("admin/files/approvedReq.txt", ios::app);
-        approvedFile << "concern," + selectedConcern << endl;
-        approvedFile.close();
-
-        cout << termcolor::green << "\nConcern approved.\n" << termcolor::reset;
         clearSystem(2000);
     }
 }

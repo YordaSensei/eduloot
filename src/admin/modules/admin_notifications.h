@@ -14,7 +14,6 @@ private:
 
 const vector<NotificationModule::NotificationFile> NotificationModule::notifFiles = {
     {"Product Requests", "productReq.txt"},
-    {"Merchant Concerns", "concerns.txt"},
     {"Merchant Cash Out Requests", "cashout.txt"},
     {"Emergency Fund Requests", "studentEmergencyFunds.txt"},
     {"Student Balances", "studentBalance.txt"},

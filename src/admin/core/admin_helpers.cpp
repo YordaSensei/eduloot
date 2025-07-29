@@ -165,7 +165,7 @@ void updateTotalMoney (float pesos) {
     if (inFile.is_open()) {
         getline(inFile, line); // Read the current money amount from the file
         if (!line.empty()){
-            systemMoney = stoi(line); // Convert the string to an integer
+            systemMoney = stof(line); // Convert the string to an integer
         }
         inFile.close();
     } else {
