@@ -200,10 +200,7 @@ void reqChangePrice(string email) {
         return;
     }
 
-    reqFile << email << ",change,"
-            << productList[choice - 1].name << ","
-            << newPrice << ","
-            << reason << "\n";
+    reqFile << email << ",edit," << productList[choice - 1].name << "," << newPrice << "," << reason << "\n";
 
     reqFile.close();
     cout << termcolor::red << "Price change request submitted successfully.\n";
