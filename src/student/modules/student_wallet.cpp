@@ -111,6 +111,7 @@ void purchaseTokens(string email) {
         outFile.close ();
 
         updateTotalTokens(-quantity);
+        updateTokensOut (quantity);
         updateTotalMoney(totalAmount);
         cout << termcolor::red << quantity << " tokens purchased successfully.\n";
         clearSystem();
@@ -174,6 +175,7 @@ void convertTokens(string email) {
                     if (s.balance >= quantity){
                         s.balance -= quantity;
                         updateTotalTokens(quantity);
+                        updateTokensOut (-quantity);
                         updateTotalMoney(-totalAmount);
                         cout << termcolor::red << quantity << " tokens converted successfully.\n";
                     } else {
