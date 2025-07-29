@@ -83,8 +83,7 @@ bool deleteLine(const string &filename, const string &targetLine) {
 
     if (found) {
         remove(filename.c_str());                  // Remove the original file
-        rename("tempFile.txt", filename.c_str());  // Rename the temp file to the original filename
-        cout << "Successful\n";
+        rename("tempFile.txt", filename.c_str()); 
     } else {
         remove("tempFile.txt"); // Clean up the unused temp file
     }
@@ -319,6 +318,7 @@ int promptChoice (int min, int max, const string& promptText) {
 bool cancelInput (string& input) {
     if (input == "0") {
         cout << termcolor::red << "\nCancelling...\nReturning to menu..." << termcolor::reset;
+        clearSystem(1200);
         return true;
     }
 

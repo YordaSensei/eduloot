@@ -124,7 +124,6 @@ void AccountManager::displayAccountType(const string &filename, ostream& (*heade
     }
 
     cout << headerColor << "+-----------------------------------+\n";
-    cout << termcolor::red << "Press 0 to cancel\n" << termcolor::reset;
 }
 
 // function for viewing accounts
@@ -167,6 +166,7 @@ void AccountManager::createAccount() {
         // Prompt the user for account type until they enter something valid
         do {
             choice = printAccountTypeMenu("CREATE");
+            cout << termcolor::red << "Press 0 to cancel\n" << termcolor::reset;
 
             // Prevent user from selecting 0
             if (choice == 0) {
@@ -247,10 +247,10 @@ void AccountManager::createAccount() {
             if (accountsFile.is_open()) {
                 accountsFile << acc.ciitEmail << "," << acc.username << "," << acc.password << endl;
                 accountsFile.close();
-                cout << termcolor::green << "\nAccount created successfully!\n" << termcolor::reset;
+                cout << termcolor::green << "\nAccount created successfully!\n Returning to menu.." << termcolor::reset;
                 clearSystem(2000);
             } else {
-                cout << termcolor::bright_red << "\nERROR: Cannot open file.\n" << termcolor::reset;
+                cout << termcolor::bright_red << "\nERROR: Cannot open file.\nReturning to menu.." << termcolor::reset;
                 clearSystem(2000);
             }
         }
@@ -319,6 +319,7 @@ void AccountManager::deleteAccount() {
     do {
        do {
             choice = printAccountTypeMenu("DELETE");
+            cout << termcolor::red << "Press 0 to cancel\n" << termcolor::reset;
             if (choice == 0) {
                 cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
             }
@@ -370,9 +371,29 @@ void AccountManager::deleteAccount() {
 
         // Combine details into a single line string for deletion
         string accountToDelete = emailOrshop + "," + username + "," + password;
-        deleteLine(filename, accountToDelete);  // Call helper to delete the specific line from file
-        clearSystem(2000);
-        break;
+
+        bool accountFound = false;
+        string line;
+        ifstream findAccount(filename);
+        while (getline(findAccount, line)) {
+            if (line == accountToDelete) {
+                accountFound = true;
+                break; // Stop once found
+            } 
+        } 
+        findAccount.close();
+
+        if (accountFound) {
+            cout << termcolor::green << "Account found!\n" << termcolor::reset;
+            deleteLine(filename, accountToDelete);  // Call helper to delete the specific line from file
+            clearSystem(2000);
+            return;
+        } else {
+            cout << termcolor::red << "Account not found.\nReturning to menu..." << termcolor::reset;
+            clearSystem(1200);
+            return; // exists the function if account is not found
+        }
+        
     } while (choice != 5);
 }
 
@@ -382,6 +403,7 @@ void AccountManager::editAccount() {
     do {
         do {
             choice = printAccountTypeMenu("EDIT");
+            cout << termcolor::red << "Press 0 to cancel\n" << termcolor::reset;
             if (choice == 0) {
                 cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
             }
@@ -442,7 +464,8 @@ void AccountManager::editAccount() {
         if (accountFound) {
             cout << termcolor::green << "Account found!\n" << termcolor::reset;
         } else {
-            cout << termcolor::red << "Account not found.\n" << termcolor::reset;
+            cout << termcolor::red << "Account not found.\nReturning to menu..." << termcolor::reset;
+            clearSystem(1200);
             return; // exists the function if account is not found
         }
         

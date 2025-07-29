@@ -550,7 +550,8 @@ void MerchantRequestsModule::handleCashout() {
         approvedFile.close();
 
         cout << termcolor::green << "\nTokens Successfully Cashed Out!\n";
-        cout << "P" << net << " transferred\n" << termcolor::reset;
-        clearSystem(3000);
+        cout << "P" << net << " transferred\n";
+        cout << "\nReturning to menu..." << termcolor::reset;
+        clearSystem(4000);
     } 
 }

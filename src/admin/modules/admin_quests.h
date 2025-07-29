@@ -143,9 +143,13 @@ void questsModule::updateStudentBalance(const string &email, int tokenAmount) {
     }
     walletIn.close();
 
+    // Overwrite both files with the updated balances
+    // 'studentBalance.txt' is the main file, and 'tokensOut.txt' is a mirror
     ofstream walletOut("studentBalance.txt");
+    ofstream tokensOut ("admin/files/tokensOut.txt");
     for (const string& line : balanceLines) {
         walletOut << line << endl;
+        tokensOut << line << endl;
     }
     walletOut.close();
 }
@@ -186,6 +190,8 @@ void questsModule::updateQuestClaims (const string &questName, int decrement) {
 }
 
 void questsModule::createQuest() {
+    viewQuests();
+
     cout << termcolor::bold << termcolor::magenta;
     cout << "\n+-----------------------------+\n";
     cout << "|        " << termcolor::bright_yellow << "CREATE QUEST     " << termcolor::magenta << "    |\n";
@@ -197,19 +203,47 @@ void questsModule::createQuest() {
     if (cancelInput(questName)) {
         return;
     }
-    int tokenAmount = promptValidatedPrice("Token Reward: ");
-    int studentLimit = promptValidatedQuantity("Maximum Claims: ");
 
-    string quest = questName + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
+    bool questFound = false;
+    string line;
+    ifstream findQuest("quests.txt");
+    while (getline(findQuest, line)) {
+        stringstream split(line);
+         string name,tokenStr, limitStr;
 
-    ofstream questFile("quests.txt", ios::app);
-    if (!questFile) {
-        cerr << "ERROR: Could not open quests.txt\n";
+         getline(split, name, ',');
+         getline(split, tokenStr, ',');
+         getline(split, limitStr);
+
+         if (name == questName) {
+            questFound = true;
+            break;
+         }
+    } 
+    findQuest.close();
+
+    if (questFound) {
+        cout << termcolor::red << "\nQuest already exists!\nReturning to menu..." << termcolor::reset;
+        clearSystem(2000);
         return;
-    }
+    } else {
+        int tokenAmount = promptValidatedQuantity("Token Reward: ");
+        int studentLimit = promptValidatedQuantity("Maximum Claims: ");
 
-    questFile << quest << endl;
-    questFile.close();
+        string quest = questName + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
+
+        ofstream questFile("quests.txt", ios::app);
+        if (!questFile) {
+            cerr << "ERROR: Could not open quests.txt\n";
+            return;
+        }
+
+        questFile << quest << endl;
+        cout << termcolor::green << "Quest added to list!\nReturning to menu..." << termcolor::reset;
+        questFile.close();
+        clearSystem(1200);
+        return; // exists the function if account is not found
+    }
 }
 
 void questsModule::deleteQuest() {
@@ -226,12 +260,31 @@ void questsModule::deleteQuest() {
     if (cancelInput(quest)) {
         return;
     }
-    int tokenAmount = promptValidatedPrice("Token Reward: ");
+    int tokenAmount = promptValidatedQuantity("Token Reward: ");
     int studentLimit = promptValidatedQuantity("Maximum Claims: ");
 
-    string concat = quest + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
-    deleteLine("quests.txt", concat);
-    clearSystem(2000);
+    string questLine = quest + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
+
+    bool questFound = false;
+    string line;
+    ifstream findQuest("quests.txt");
+    while (getline(findQuest, line)) {
+        if (line == questLine) {
+            questFound = true;
+            break; // Stop once found
+        } 
+    } 
+    findQuest.close();
+
+    if (questFound) {
+        deleteLine("quests.txt", questLine);
+        clearSystem(2000);
+        return;
+    } else {
+        cout << termcolor::red << "\nQuest not found.\nReturning to menu..." << termcolor::reset;
+        clearSystem(1200);
+        return; // exists the function if account is not found
+    }
 }
 
 void questsModule::questsTab() {
