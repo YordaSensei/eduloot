@@ -1,12 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <cstdlib>
 #include <iomanip>
-using namespace std;
-
-#include "../../termcolor/termcolor.hpp"
 
 #include "student_helpers.h"
 #include "../modules/student_wallet.cpp"
@@ -32,9 +24,13 @@ void studentMain(string email) {
         cout << "|  6. Request Emergency Fund   |\n";
         cout << "|  7. Log Out                  |\n";
         cout << "+------------------------------+\n"<< termcolor::reset;
-        cout << termcolor::bright_cyan << "Choice: ";
-        cin >> choice;
-        cout << termcolor::reset;
+        do {
+            choice = promptChoice(1,7,"Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
+
         system("cls");
 
         switch(choice) {

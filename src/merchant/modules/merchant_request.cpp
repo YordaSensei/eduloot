@@ -74,7 +74,6 @@ void reqDeleteProduct(string email) {
         return;
     } 
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     string reason = promptNonEmptyInput("Reason for deletion: ");
 
     ofstream outFile("productReq.txt", ios::app);
@@ -193,8 +192,6 @@ void reqChangePrice(string email) {
     } 
 
     int newPrice = promptValidatedQuantity("Enter new price: ");
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
     string reason = promptNonEmptyInput("Enter reason for price change: ");
 
     ofstream reqFile("productReq.txt", ios::app);
@@ -203,10 +200,7 @@ void reqChangePrice(string email) {
         return;
     }
 
-    reqFile << email << ",change,"
-            << productList[choice - 1].name << ","
-            << newPrice << ","
-            << reason << "\n";
+    reqFile << email << ",edit," << productList[choice - 1].name << "," << newPrice << "," << reason << "\n";
 
     reqFile.close();
     cout << termcolor::red << "Price change request submitted successfully.\n";

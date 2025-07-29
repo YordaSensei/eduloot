@@ -1,19 +1,19 @@
 void emergencyFunds(string email) {
     ofstream outFile("studentEmergencyFunds.txt", ios::app);
-    string reason;
-    int amount;
 
     cout << termcolor::bold << termcolor::blue;
     cout << "\n+------------------------------+\n";
-    cout << "|" << termcolor::bright_cyan << "   Request Emergency Funds   "<< termcolor::blue <<"|\n";
+    cout << "|" << termcolor::bright_cyan << "    Request Emergency Funds   "<< termcolor::blue <<"|\n";
     cout << "+------------------------------+\n";
 
-    cout << termcolor::bright_cyan << "Reason: ";
-    cin.ignore();
-    getline(cin, reason);
+    int amount = promptValidatedQuantity("Enter Amount (0 to cancel): ");
+    if (amount == 0) {
+        cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+        clearSystem();
+        return;
+    }
 
-    cout << "Enter Amount: ";
-    cin >> amount;
+    string reason = promptNonEmptyInput("Reason: ");
 
     outFile << email << "," << reason << "," << amount << endl;
 

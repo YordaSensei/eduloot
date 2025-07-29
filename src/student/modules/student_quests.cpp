@@ -12,8 +12,12 @@ void quests(string email) {
         cout << "|  2. "<< termcolor::bright_cyan <<"Back to Home              "<<termcolor::blue<<"|\n";
         cout << "+-------------------------------+\n"<< termcolor::reset;
 
-        cout << termcolor::bright_cyan << "Choice: ";
-        cin >> choice;
+        do {
+            choice = promptChoice(1,2, "Choice: ");
+            if (choice == 0) {
+                cout << termcolor::bright_red << "Zero is not a valid option here.\n" << termcolor::reset;
+            }
+        } while (choice == 0);
 
         switch (choice) {
             case 1: {
@@ -61,14 +65,7 @@ void quests(string email) {
                 }
                 cout << "+------------------------------+\n";
 
-                int questChoice;
-                cout << termcolor::bright_cyan << "Select number of quest: ";
-                cin >> questChoice;
-
-                if (questChoice < 1 || questChoice > questList.size()) {
-                    cout << "Invalid choice.\n";
-                    return;
-                }
+                int questChoice = promptChoice (1,questList.size(),"Select number of finished quest (0 to cancel): ");
 
                 // Save to accomplished quests file
                 ofstream outFile("studentAccomplishedQuests.txt", ios::app);
@@ -92,10 +89,6 @@ void quests(string email) {
                 cout << termcolor::red << "Returning to Home...\n";
                 clearSystem();
                 break;
-
-            default:
-                cout << termcolor::red << "Invalid choice.\n";
-                clearSystem();
         }
     } while (choice != 2);
 }
