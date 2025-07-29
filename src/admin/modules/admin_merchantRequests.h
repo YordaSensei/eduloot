@@ -461,7 +461,7 @@ void MerchantRequestsModule::handleCashout() {
         getline(ss, tokenStr);
 
         try {
-            c.tokenAmount = stof(tokenStr);
+            c.tokenAmount = stoi(tokenStr);
         } catch (...) {
             continue;
         }
@@ -541,10 +541,10 @@ void MerchantRequestsModule::handleCashout() {
     float gross = selected.tokenAmount * tokenRate;
     float net = gross - (gross * fee);
 
-    updateTotalTokens(selected.tokenAmount); // system tokens increase
-    updateTotalMoney(-net); // system cash decreases
-
     if (deleteLine("cashout.txt", selected.originalLine)) {
+        updateTotalTokens(selected.tokenAmount); // system tokens increase
+        updateTotalMoney(-net); // system cash decreases
+        updateTokensOut(-selected.tokenAmount);
         ofstream approvedFile("admin/files/approvedReq.txt", ios::app);
         approvedFile << "cashout," << selected.originalLine << "\n"; 
         approvedFile.close();

@@ -42,7 +42,7 @@ void emergencyFundsModule::emergencyFunds () {
 }
 
 vector <studentreq> emergencyFundsModule::LoadEmergencyRequests() {
-    ifstream requestFundsFile("admin/files/studentEmergencyFunds.txt");
+    ifstream requestFundsFile("studentEmergencyFunds.txt");
     vector<studentreq> funds;
     string line;
 
@@ -74,13 +74,9 @@ void emergencyFundsModule::showEmergencyRequests(const vector<studentreq> &reque
 }
 
 void emergencyFundsModule::approveEmergencyRequest (studentreq &selected) {
-    updateTotalTokens(-selected.tokenAmount);
-
-    ofstream tokensOut("admin/files/tokensOut.txt", ios::app);
-    tokensOut << selected.email << "," << selected.tokenAmount << endl;
-    tokensOut.close();
-
     if (deleteLine("studentEmergencyFunds.txt", selected.originalLine)) {
+        updateTotalTokens(-selected.tokenAmount);
+        updateTokensOut(selected.tokenAmount);
         writeToWallet (selected);
         logApproval (selected);
 

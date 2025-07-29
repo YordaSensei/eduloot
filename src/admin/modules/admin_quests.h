@@ -143,13 +143,14 @@ void questsModule::updateStudentBalance(const string &email, int tokenAmount) {
     }
     walletIn.close();
 
+    updateTotalTokens(-tokenAmount);
+    updateTokensOut(tokenAmount);
+
     // Overwrite both files with the updated balances
     // 'studentBalance.txt' is the main file, and 'tokensOut.txt' is a mirror
     ofstream walletOut("studentBalance.txt");
-    ofstream tokensOut ("admin/files/tokensOut.txt");
     for (const string& line : balanceLines) {
         walletOut << line << endl;
-        tokensOut << line << endl;
     }
     walletOut.close();
 }

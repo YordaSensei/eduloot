@@ -184,6 +184,34 @@ void updateTotalMoney (float pesos) {
     }
 }
 
+void updateTokensOut (int tokens) {
+    int tokensOut = 0;
+    string line;
+
+    ifstream inFile("admin/files/tokensOut.txt");
+    if (inFile.is_open()) {
+        getline(inFile, line); // Read the current token value from the file
+        if (!line.empty()) {
+            tokensOut = stoi(line); // Convert the string to an integer
+        }
+        inFile.close();
+    } else {
+        cout << "\nERROR opening file...\n";
+    }
+
+    tokensOut += tokens; // Add the change to the current total
+    if (tokensOut < 0) tokensOut = 0; // Ensure tokens don't go negative
+
+    ofstream outFile("admin/files/tokensOut.txt");
+    if (outFile.is_open()) {
+        outFile << tokensOut << endl; // Write the updated value back to the file
+        outFile.close();
+    } else {
+        cout << "\nERROR opening file...\n";
+    }
+
+}
+
 // clears the console with delay
 void clearSystem(int delayMillis) { 
     Sleep(delayMillis); 

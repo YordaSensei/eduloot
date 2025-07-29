@@ -5,3 +5,4 @@ cashout,123,1
 123,delete,Controller,10
 123,add,test,1,3,test
 cashout,123,10
+cashout,123,10

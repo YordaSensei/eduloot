@@ -14,11 +14,11 @@ class TransactionsModule {
 
 const vector<TransactionsModule::transactionFile> TransactionsModule::transFiles = {
         {"Token Purchases (Student)", "studentBalance.txt"},
-        {"Emergency Funds", "admin/file/studentApprovedReqs.txt"},
+        {"Emergency Funds", "admin/files/studentApprovedReqs.txt"},
         {"Token Purchases (Teacher)", "teacherBalance.txt"},
         {"Token Refunds", "tokenRefunds.txt"},
-        {"Quest Approvals", "admin/file/approvedQuests.txt"},
-        {"Merchant Cash Outs", "cashout.txt"}
+        {"Quest Approvals", "admin/files/approvedQuests.txt"},
+        {"Merchant Requests", "admin/files/approvedReq.txt"}
 };
 
 void TransactionsModule::showTransactions() {
