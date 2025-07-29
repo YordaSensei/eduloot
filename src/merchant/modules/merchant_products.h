@@ -1,6 +1,15 @@
+#pragma once
 #include "../../product_helpers.h"
 
-void editStock(string email) {
+class MerchantProducts {
+    public:
+        void products(string email);
+    
+    private:
+        void editStock(string email);
+};
+
+void MerchantProducts::editStock(string email) {
     vector<Product> productList;
     ifstream inFile("productList.txt");
     string line;
@@ -73,7 +82,7 @@ void editStock(string email) {
     clearSystem();
 }
 
-void products(string email) {
+void MerchantProducts::products(string email) {
     int choice;
 
     do {

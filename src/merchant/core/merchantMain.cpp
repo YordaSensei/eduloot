@@ -1,7 +1,7 @@
 #include <vector>
 #include <limits>
 
-#include "../modules/merchant_products.cpp"
+#include "../modules/merchant_products.h"
 #include "../modules/merchant_request.cpp"
 #include "../modules/merchant_sales.cpp"
 
@@ -30,7 +30,8 @@ void merchantMain(string email) {
 
         switch(choice) {
             case 1:
-                products(email);
+                MerchantProducts products;
+                products.products(email);
                 break;
             case 2:
                 sales(email);
