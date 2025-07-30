@@ -17,3 +17,8 @@
 123,change,Controller,32,asd
 123,change,Controller,3,as
 123,delete,Controller,asd
+CIIT,add,Burger,5,50,Yummy burger
+CIIT,add,Fries,10,40,Yummy Fries
+CIIT,edit,Burger,10,Ingredient prices went up
+CIIT,delete,Burger,No longer selling
+CIIT,edit,Burger,10,New Ingredients

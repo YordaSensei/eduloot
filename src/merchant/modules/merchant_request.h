@@ -262,7 +262,7 @@ void MerchantRequest::viewRequests(string email) {
 
             string formatted = "Product to delete: " + name + "\nReason: " + reason + "\n";
             deleteRequests.push_back(formatted);
-        } else if (action == "change") {
+        } else if (action =="edit") {
             string name, price, reason;
             getline(ss, name, ',');
             getline(ss, price, ',');

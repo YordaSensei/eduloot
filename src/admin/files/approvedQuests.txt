@@ -1,4 +1,0 @@
-123,join org,5,15
-nathan.alilam@ciit.edu.ph,attend seminar,10,10
-123,attend seminar,10,9
-1,join org,5,13

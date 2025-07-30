@@ -1,11 +1,8 @@
 #include <vector>
-#include <limits>
 
 #include "../modules/merchant_products.h"
 #include "../modules/merchant_request.h"
 #include "../modules/merchant_sales.h"
-
-using namespace std;
 
 void merchantMain(string email) {
     int choice;
