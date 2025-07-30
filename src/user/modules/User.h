@@ -27,6 +27,8 @@ public:
     void setEmail(const std::string& e) { email = e; }
     
 protected:
+    void displayAdminMessages();
+    void displaySystemAlerts();
     void displayMerchants();
     void displayProducts(const std::string& selectedMerchant);
     bool processPurchase(const std::string& selectedMerchant, const Product& product, int productQty, int totalAmount);
