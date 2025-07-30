@@ -101,14 +101,14 @@ void EmergencyFundsModule::writeToWallet (const studentreq &selected) {
 
     while (getline(walletIn, walletLine)) {
         stringstream ss(walletLine);
-        string username, balanceStr;
-        getline(ss, username, ',');
+        string email, balanceStr;
+        getline(ss, email, ',');
         getline(ss, balanceStr);
 
-        if (username == selected.email) {
+        if (email == selected.email) {
             try {
                 int balance = stoi(balanceStr) + selected.tokenAmount;
-                lines.push_back(username + "," + to_string(balance));
+                lines.push_back(email + "," + to_string(balance));
                 found = true;
             } catch (...) {
                 continue;

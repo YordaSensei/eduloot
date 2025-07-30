@@ -1,5 +1,4 @@
 123,add,test,1,2,f
-123,add,asd,12,0,
 123,add,,284,0,
 123,add,,296,0,
 123,add,,248,0,
@@ -16,4 +15,3 @@
 123,change,Controller,32,asd
 123,change,Controller,32,asd
 123,change,Controller,3,as
-123,delete,Controller,asd
