@@ -17,7 +17,9 @@ const vector<NotificationModule::NotificationFile> NotificationModule::notifFile
     {"Merchant Cash Out Requests", "cashout.txt"},
     {"Emergency Fund Requests", "studentEmergencyFunds.txt"},
     {"Student Balances", "studentBalance.txt"},
-    {"Student Accomplished Quests", "studentAccomplishedQuests.txt"}
+    {"Student Accomplished Quests", "studentAccomplishedQuests.txt"},
+    {"Teacher Balances", "teacherBalance.txt"},
+    {"Parent Messages", "parentBalance.txt"}
 };
 
 void NotificationModule::showNotifications() {

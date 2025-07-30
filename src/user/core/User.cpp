@@ -402,7 +402,7 @@ void User::displayAdminMessages() {
     cout << "+--------------------------------+\n";
     cout << termcolor::reset;
     
-    ifstream msgFile("adminMessages.txt");
+    ifstream msgFile(userType + "AdminMessages.txt");
     string line;
     bool hasMessages = false;
     
