@@ -1,3 +1,4 @@
 teacher@ciit.edu.ph,PURCHASE,33,529,Fri Jul 25 21:05:58 2025
 teacher@ciit.edu.ph,CONVERSION,-10,519,Fri Jul 25 21:06:17 2025
 meme@ciit.edu.ph,PURCHASE,33,33,Wed Jul 30 12:45:55 2025
+teacher@ciit.edu.ph,CONVERSION,-400,92,Wed Jul 30 17:49:45 2025

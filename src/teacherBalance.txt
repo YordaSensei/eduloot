@@ -1,2 +1,2 @@
-teacher@ciit.edu.ph,492
+teacher@ciit.edu.ph,92
 meme@ciit.edu.ph,-100

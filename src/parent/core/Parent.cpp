@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <ctime>
+#include <vector>
 
 using namespace std;
 
@@ -136,70 +138,6 @@ void Parent::transferToChild() {
     } else {
         cout << "Transfer cancelled.\n";
     }
-}
-
-void Parent::transactions() {
-    int choice;
-    ifstream tokenInFile(getUserType() + "TokenTransactions.txt");
-    
-    do {
-        cout << termcolor::bold << termcolor::blue;
-        cout << "\n+------------------------------+\n";
-        cout << "|" << termcolor::bright_cyan << "      Token Transactions      "<< termcolor::blue <<"|\n";
-        cout << "+------------------------------+\n" << endl;
-        
-        if (tokenInFile.is_open()) {
-            string line;
-            bool hasTransactions = false;
-            
-            while (getline(tokenInFile, line)) {
-                if (!line.empty()) {
-                    stringstream ss(line);
-                    string fileEmail, type, amountStr, balanceStr, time;
-                    
-                    getline(ss, fileEmail, ',');
-                    getline(ss, type, ',');
-                    getline(ss, amountStr, ',');
-                    getline(ss, balanceStr, ',');
-                    getline(ss, time);
-                    
-                    if (fileEmail == getEmail()) {
-                        hasTransactions = true;
-                        int amount = stoi(amountStr);
-                        int balance = stoi(balanceStr);
-                        
-                        cout << "Type: " << type 
-                             << " | Amount: " << (amount >= 0 ? "+" : "") << amount
-                             << " | Balance: " << balance
-                             << " | Time: " << time
-                             << endl;
-                    }
-                }
-            }
-            
-            if (!hasTransactions) {
-                cout << "No transactions found.\n";
-            }
-            
-            tokenInFile.close();
-        } else {
-            cout << "No transaction history available.\n";
-        }
-
-        cout << "\n+------------------------------+\n" << endl;
-        
-        cout << "1. " << termcolor::bright_cyan << "Back to Home\n" << termcolor::blue;
-        cout << "2. " << termcolor::bright_cyan << "Refresh\n";
-
-        if (!getNumericInput(choice, "Choice: ", "Invalid input, select only numbers displayed in the menu.", 1, 2)) {
-            continue;
-        }
-        
-        if (choice == 2) {
-            tokenInFile.open(getUserType() + "TokenTransactions.txt");
-        }
-
-    } while (choice != 1);
 }
 
 void Parent::updateChildBalance(const string& childEmail, int newBalance) {

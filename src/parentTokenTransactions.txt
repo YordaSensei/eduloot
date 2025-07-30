@@ -1,2 +1,5 @@
 parent@ciit.edu.ph,PURCHASE,33,33,Fri Jul 25 21:52:00 2025
 parent@ciit.edu.ph,TRANSFER_OUT,-20,13,Fri Jul 25 21:52:19 2025
+nanay@ciit.edu.ph,PURCHASE,333,333,Wed Jul 30 17:44:32 2025
+nanay@ciit.edu.ph,CONVERSION,-10,323,Wed Jul 30 17:44:43 2025
+nanay@ciit.edu.ph,TRANSFER_OUT,-100,223,Wed Jul 30 17:44:59 2025

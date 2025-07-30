@@ -1,13 +1,14 @@
 #pragma once
-#include "../../user/modules/User.h"
+#include "../../user/modules/Wallet.h"
+#include "../../user/modules/Purchase.h"
+#include "../../user/modules/Notifications.h"
+#include "../../user/modules/Transactions.h"
 
-class Parent : public User {
+class Parent : public Wallet, public Purchase, public Notifications, public Transactions {
 public:
     void transferToChild();
     void viewChildBal();
     void parentMain(string insertedEmail, string insertedChildEmail);
-    void transactions() override;
-    
     void setInsertedChildEmail(const std::string& e) { childEmail = e; }
 
 private:
