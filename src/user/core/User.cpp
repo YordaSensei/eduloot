@@ -414,7 +414,7 @@ void User::displayAdminMessages() {
             getline(ss, recipient, ',');
             getline(ss, message);
             
-            if (recipient == email || recipient == "ALL") {
+            if (recipient == email || recipient == userType) {
                 cout << " • " << message << "\n";
                 hasMessages = true;
             }
