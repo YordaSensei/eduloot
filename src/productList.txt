@@ -1,3 +1,2 @@
 EduGate,Testing,10,4,mhm
-123,Controller,3,3,pew pew
-CIIT,Burger,5,45,Yummy Burger
+123,asd,12,0,

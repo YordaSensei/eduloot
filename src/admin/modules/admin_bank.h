@@ -108,35 +108,51 @@ float BankModule::readTotalMoney () {
 
 // function that asks the admin for token top ups
 void BankModule::promptTokenTopUp () {
+    string input;
     int topUp;
     string choice;
 
     while (true) {
-        cout << termcolor::bright_yellow << "\nAdd tokens to the system? [y/n]: ";
-        getline(cin, choice);
-        cout << termcolor::reset;
+    string choice, input;
+    int topUp = 0;
+    
+    cout << termcolor::bright_yellow << "\nAdd tokens to the system? [y/n]: ";
+    getline(cin, choice);
+    cout << termcolor::reset;
 
-        if (choice == "y" || choice == "Y"){
+    if (choice == "y" || choice == "Y") {
+        do {
             cout << termcolor::bold << "\nEnter number of tokens to add: " << termcolor::reset;
-            cin >> topUp;
+            getline(cin, input);
 
-            if (cin.fail() || topUp <= 0) { // handles invalid inputs and negative numbers
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if (input.empty()) {
+                cout << termcolor::bright_red << "ERROR: Field cannot be empty.\n" << termcolor::reset;
+            }
+        } while (input.empty());
+
+            try {
+                topUp = stoi(input); // Convert string to int
+            } catch (const exception& e) {
+                cout << termcolor::red << "Invalid number. Please enter a valid integer.\n" << termcolor::reset;
+                continue; // retry loop
+            }
+
+            if (topUp <= 0) {
                 cout << termcolor::red << "Invalid token amount. Please enter a positive number.\n" << termcolor::reset;
             } else {
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 updateTotalTokens(topUp);
                 cout << termcolor::green << "\nSuccessfully added " << topUp << " tokens (P" << topUp * tokenRate << ") to the system.\n" << termcolor::reset;
                 clearSystem(3000);
                 break;
             }
+
         } else if (choice == "n" || choice == "N") {
             cout << termcolor::yellow << "No tokens added. Returning to menu...\n" << termcolor::reset;
             clearSystem(1200);
             break;
+
         } else {
             cout << termcolor::bright_red << "Invalid input. Please enter 'y' or 'n'.\n" << termcolor::reset;
-        } 
+        }
     }
 }

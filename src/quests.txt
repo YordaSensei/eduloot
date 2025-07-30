@@ -1,4 +1,4 @@
-attend seminar,10,8
+attend seminar,10,7
 join org,5,12
 meow,23,1
 bark,1,1

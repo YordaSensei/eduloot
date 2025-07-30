@@ -1,5 +1,4 @@
 123,add,test,1,2,f
-123,add,asd,12,0,
 123,add,,284,0,
 123,add,,296,0,
 123,add,,248,0,
@@ -16,9 +15,3 @@
 123,change,Controller,32,asd
 123,change,Controller,32,asd
 123,change,Controller,3,as
-123,delete,Controller,asd
-CIIT,add,Burger,5,50,Yummy burger
-CIIT,add,Fries,10,40,Yummy Fries
-CIIT,edit,Burger,10,Ingredient prices went up
-CIIT,delete,Burger,No longer selling
-CIIT,edit,Burger,10,New Ingredients

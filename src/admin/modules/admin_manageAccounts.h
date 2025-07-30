@@ -8,13 +8,6 @@ class AccountManager {
         void manageAccounts();
 
     private:
-        enum AccountType {
-            STUDENT = 1,
-            TEACHER,
-            MERCHANT,
-            PARENT,
-            BACK
-        };
 
         int printAccountTypeMenu(const string &title);
         void viewAccounts();
@@ -99,7 +92,6 @@ int AccountManager::printAccountTypeMenu(const string& title) {
     system("cls");
     return choice;
 }
-
 
 // Function to display the contents of a specific account type file with a formatted header
 void AccountManager::displayAccountType(const string &filename, ostream& (*headerColor)(ostream&), const string &title) {
