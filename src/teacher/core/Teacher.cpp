@@ -1,4 +1,4 @@
-#include "Teacher.h"
+#include "../modules/Teacher.h"
 #include <iostream>
 
 using namespace std;

@@ -1,13 +1,13 @@
-#include "User.h"
+#include "../modules/User.h"
 #include <iostream>
 #include <limits>
 #include <vector>
 #include <fstream>
 #include <sstream>
 #include <string>
-#include "admin/includes/admin_helpers.h"
-#include "product_helpers.h"
-#include "merchant/core/merchant_helpers.h"
+#include "../../admin/includes/admin_helpers.h"
+#include "../../product_helpers.h"
+#include "../../merchant/core/merchant_helpers.h"
 #include <iomanip>
 
 using namespace std;

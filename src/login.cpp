@@ -7,9 +7,9 @@
 #include "admin/core/adminMain.cpp"  
 #include "merchant/core/merchantMain.cpp"
 #include "student/core/studentMain.cpp"
-#include "User.cpp"
-#include "Teacher.cpp"
-#include "Parent.cpp"
+#include "user/core/User.cpp"
+#include "teacher/core/Teacher.cpp"
+#include "parent/core/Parent.cpp"
 #include "admin/core/admin_helpers.cpp"
 #include "termcolor/termcolor.hpp"
 
