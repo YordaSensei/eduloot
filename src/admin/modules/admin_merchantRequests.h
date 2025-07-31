@@ -69,6 +69,11 @@ void MerchantRequestsModule::merchantRequest() {
 // groups the requests by merchant
 void MerchantRequestsModule::loadProductRequests (map <string, vector<Products>> &requestsByMerchant) {
     ifstream productReqsFile ("productReq.txt");
+    if (!productReqsFile.is_open()) {
+        cerr << "ERROR: Could not open productReq.txt.\n";
+        return;
+    }
+
     string line;
 
     while (getline(productReqsFile, line)) {
@@ -203,6 +208,11 @@ void MerchantRequestsModule::handleAddRequests(const vector<Products> &addReques
 
     // add approved product to product list
     ofstream productListFile("productList.txt", ios::app);
+    if (!productListFile.is_open()) {
+        cerr << "ERROR: Could not open productList.txt for reading.\n";
+        return; 
+    }
+
     if (productListFile.is_open()) {
         productListFile << selected.shopName << ',' << selected.name << ','
                 << selected.price << ',' << selected.quantity << ',' 
@@ -259,6 +269,11 @@ void MerchantRequestsModule::handleDeleteRequests (const vector<Products> &delet
     const Products selected = deleteRequests[index - 1];
 
     ifstream findProduct("productList.txt");
+    if (!findProduct.is_open()) {
+        cerr << "ERROR: Could not open productList.txt for reading.\n";
+        return; 
+    }
+
     string line, targetLine;
     while (getline(findProduct, line)) {
         stringstream split(line);
@@ -398,6 +413,11 @@ void MerchantRequestsModule::handleCashout() {
     string line;
 
     ifstream cashoutFile("cashout.txt");
+    if (!cashoutFile.is_open()) {
+        cerr << "ERROR: Could not open cashout.txt.\n";
+        return;
+    }
+
     while (getline(cashoutFile, line)) {
         cashoutRequest c;
         c.originalLine = line; 
@@ -449,6 +469,10 @@ void MerchantRequestsModule::handleCashout() {
     string walletLine;
     bool found = false;
     ifstream walletFile ("merchantBalance.txt");
+    if (!walletFile.is_open()) {
+        cerr << "ERROR: Could not open merchantBalance.txt.\n";
+        return;
+    }
 
     while (getline(walletFile, walletLine)) {
         stringstream split(walletLine);
@@ -480,6 +504,11 @@ void MerchantRequestsModule::handleCashout() {
     }
 
     ofstream walletOut("merchantBalance.txt");
+    if (!walletOut.is_open()) {
+        cerr << "ERROR: Could not open merchantBalance.txt.\n";
+        return;
+    }
+    
     for (const auto& updatedLines : balanceLines) {
         walletOut << updatedLines << "\n";
     }
@@ -492,7 +521,13 @@ void MerchantRequestsModule::handleCashout() {
         updateTotalTokens(selected.tokenAmount); // system tokens increase
         updateTotalMoney(-net); // system cash decreases
         updateTokensOut(-selected.tokenAmount);
+
         ofstream approvedFile("admin/files/approvedReq.txt", ios::app);
+        if (!approvedFile.is_open()) {
+            cerr << "ERROR: Could not open approvedReq.txt.\n";
+            return;
+        }
+
         approvedFile << "cashout," << selected.originalLine << "\n"; 
         approvedFile.close();
 

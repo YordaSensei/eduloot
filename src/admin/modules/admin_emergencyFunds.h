@@ -45,6 +45,11 @@ void EmergencyFundsModule::emergencyFunds () {
 // vector that stores the contents of the file
 vector <studentreq> EmergencyFundsModule::LoadEmergencyRequests() {
     ifstream requestFundsFile("studentEmergencyFunds.txt");
+    if (!requestFundsFile.is_open()) {
+        cerr << "ERROR: Could not open studentEmergencyFunds.txt for reading.\n";
+        return; 
+    }
+
     vector<studentreq> funds;
     string line;
 
@@ -96,6 +101,11 @@ void EmergencyFundsModule::approveEmergencyRequest (studentreq &selected) {
 void EmergencyFundsModule::writeToWallet (const studentreq &selected) {
     vector<string> lines;
     ifstream walletIn("studentBalance.txt");
+    if (!walletIn.is_open()) {
+        cerr << "ERROR: Could not open studentBalance.txt for reading.\n";
+        return; 
+    }
+
     string walletLine;
     bool found = false;
 
@@ -123,6 +133,11 @@ void EmergencyFundsModule::writeToWallet (const studentreq &selected) {
         lines.push_back(selected.email + "," + to_string(selected.tokenAmount));
 
     ofstream walletOut("studentBalance.txt");
+    if (!walletOut.is_open()) {
+        cerr << "ERROR: Could not open studentBalance.txt for reading.\n";
+        return; 
+    }
+    
     for (const auto& approved : lines) walletOut << approved << '\n';
     walletOut.close();
 }

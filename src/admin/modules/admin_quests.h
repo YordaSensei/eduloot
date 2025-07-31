@@ -128,15 +128,20 @@ void QuestsModule::updateStudentBalance(const string &email, int tokenAmount) {
     ifstream walletIn("studentBalance.txt");
     string walletLine;
 
+    if (!walletIn.is_open()) {
+    cerr << "ERROR: Could not open studentBalance.txt for reading.\n";
+    return;
+    }
+
     while (getline(walletIn, walletLine)) {
         stringstream ss(walletLine);
-        string username, balanceStr;
-        getline(ss, username, ',');
+        string studentEmail, balanceStr;
+        getline(ss, studentEmail, ',');
         getline(ss, balanceStr);
 
-        if (username == email) {
+        if (studentEmail == email) {
             int balance = stoi(balanceStr) + tokenAmount;
-            balanceLines.push_back(username + "," + to_string(balance));
+            balanceLines.push_back(studentEmail + "," + to_string(balance));
         } else {
             balanceLines.push_back(walletLine);
         }
@@ -149,6 +154,11 @@ void QuestsModule::updateStudentBalance(const string &email, int tokenAmount) {
     // Overwrite both files with the updated balances
     // 'studentBalance.txt' is the main file, and 'tokensOut.txt' is a mirror
     ofstream walletOut("studentBalance.txt");
+    if (!walletOut.is_open()) {
+    cerr << "ERROR: Could not open studentBalance.txt for writing.\n";
+    return;
+    }
+
     for (const string& line : balanceLines) {
         walletOut << line << endl;
     }
@@ -158,6 +168,11 @@ void QuestsModule::updateStudentBalance(const string &email, int tokenAmount) {
 void QuestsModule::updateQuestClaims (const string &questName, int decrement) {
     // Update claims
     ifstream questsIn("quests.txt");
+    if (!questsIn.is_open()) {
+        cerr << "ERROR: Could not open quests.txt\n";
+        return;
+    }
+
     vector<string> updatedQuests;
     string questLine;
 
@@ -174,9 +189,7 @@ void QuestsModule::updateQuestClaims (const string &questName, int decrement) {
             if (claims > 0) {
                 string updatedLine = questName + "," + tokenStr + "," + to_string(claims);
             updatedQuests.push_back(updatedLine);
-            } 
-            
-            if (claims == 0) continue;
+            } else if (claims == 0) continue;
         } else {
             updatedQuests.push_back(questLine);
         }
@@ -184,6 +197,11 @@ void QuestsModule::updateQuestClaims (const string &questName, int decrement) {
     questsIn.close();
 
     ofstream questsOut("quests.txt");
+    if (!questsOut.is_open()) {
+        cerr << "ERROR: Could not open quests.txt\n";
+        return;
+    }
+
     for (const string& line : updatedQuests) {
         questsOut << line << endl;
     }
@@ -208,6 +226,11 @@ void QuestsModule::createQuest() {
     bool questFound = false;
     string line;
     ifstream findQuest("quests.txt");
+     if (!findQuest.is_open()) {
+        cerr << "ERROR: Could not open quests.txt\n";
+        return;
+    }
+
     while (getline(findQuest, line)) {
         stringstream split(line);
          string name,tokenStr, limitStr;
@@ -230,6 +253,12 @@ void QuestsModule::createQuest() {
     } else {
         int tokenAmount = promptValidatedQuantity("Token Reward: ");
         int studentLimit = promptValidatedQuantity("Maximum Claims: ");
+
+        if (tokenAmount == 0 || studentLimit == 0) {
+            cout << termcolor::red << "Cancelled. Returning to menu...\n" << termcolor::reset;
+            clearSystem(1000);
+            return;
+        }
 
         string quest = questName + "," + to_string(tokenAmount) + "," + to_string(studentLimit);
 
@@ -269,6 +298,11 @@ void QuestsModule::deleteQuest() {
     bool questFound = false;
     string line;
     ifstream findQuest("quests.txt");
+    if (!findQuest.is_open()) {
+        cerr << "ERROR: Could not open quests.txt\n";
+        return;
+    }
+    
     while (getline(findQuest, line)) {
         if (line == questLine) {
             questFound = true;
