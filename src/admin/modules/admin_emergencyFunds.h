@@ -47,7 +47,7 @@ vector <studentreq> EmergencyFundsModule::LoadEmergencyRequests() {
     ifstream requestFundsFile("studentEmergencyFunds.txt");
     if (!requestFundsFile.is_open()) {
         cerr << "ERROR: Could not open studentEmergencyFunds.txt for reading.\n";
-        return; 
+        return {}; 
     }
 
     vector<studentreq> funds;
