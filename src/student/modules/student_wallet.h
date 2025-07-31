@@ -151,6 +151,7 @@ void StudentWallet::purchaseTokens(string email) {
 void StudentWallet::convertTokens(string email) {
     cout << "How many tokens would you like to convert?\n";
     cout << "(PHP 3.00 = 1 Token) with a 5 percent fee.\n";
+
     int quantity = promptValidatedQuantity("Tokens to convert (0 to cancel): ");
     if (quantity == 0) {
         cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
@@ -159,9 +160,9 @@ void StudentWallet::convertTokens(string email) {
     } 
 
     float totalAmount = (quantity *3.0f) * 0.95f;
-
     cout << "Total amount is PHP " << totalAmount << " (fee included).\n";
     cout << "Are you sure you want to convert " << quantity << " tokens? (1 - Yes, 0 - No)\n";
+    
     int choice = promptChoice (1,1,"Choice: ");
     if (choice == 0) {
         cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
@@ -184,21 +185,25 @@ void StudentWallet::convertTokens(string email) {
                 if (s.email == email){
                     if (s.balance >= quantity){
                         s.balance -= quantity;
+                        success = true;
+
                         updateTotalTokens(quantity);
                         updateTokensOut (-quantity);
                         updateTotalMoney(-totalAmount);
 
-                        ofstream refundOutFile("tokenRefunds.txt");
-                        refundOutFile << email << "," << quantity << "," << totalAmount;
+                        ofstream refundOutFile("tokenRefunds.txt", ios::app);
+                        refundOutFile << email << "," << quantity << "," << totalAmount << endl;
+                        refundOutFile.close();
 
                         cout << termcolor::red << quantity << " tokens converted successfully.\n";
                         clearSystem();
                     } else {
-                        cout << termcolor::red << "You have don't have enough tokens to convert.\n";
+                        cout << termcolor::red << "You have don't have enough tokens to convert.\n" << termcolor::reset;
                         clearSystem();
+                        inFile.close();
+                        return;
                     }
                 }
-
                 balance.push_back(s);
             }
         }

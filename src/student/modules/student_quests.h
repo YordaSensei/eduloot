@@ -73,6 +73,11 @@ void StudentQuests::quests(string email) {
 
                 int questChoice = promptChoice (1,questList.size(),"Select number of finished quest (0 to cancel): ");
 
+                if (questChoice == 0) {
+                    cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
+                    clearSystem(1200);
+                    return;
+                } 
                 // Save to accomplished quests file
                 ofstream outFile("studentAccomplishedQuests.txt", ios::app);
                 if (outFile) {

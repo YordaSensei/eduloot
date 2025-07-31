@@ -14,7 +14,7 @@ void studentNotifications::notifications(string email) {
         cout << "\n+------------------------------+\n";
         cout << "|" << termcolor::bright_cyan << "       Quests Approved        "<< termcolor::blue <<"|\n";
         cout << "+------------------------------+\n" << endl;
-        ifstream questInFile("../../admin/files/approvedQuests.txt");  
+        ifstream questInFile("admin/files/approvedQuests.txt");  
 
         while (getline(questInFile, line)) {
             if (!line.empty()) {
@@ -38,7 +38,7 @@ void studentNotifications::notifications(string email) {
         cout << "\n+------------------------------+\n";
         cout << "|" << termcolor::bright_cyan << "   Emergency Funds Approved   "<< termcolor::blue <<"|\n";
         cout << "+------------------------------+\n" << endl;
-        ifstream emergencyFundsInFile("studentApprovedReqs.txt");
+        ifstream emergencyFundsInFile("admin/files/studentApprovedReqs.txt");
 
         while (getline(emergencyFundsInFile, line)) {
             if (!line.empty()) {

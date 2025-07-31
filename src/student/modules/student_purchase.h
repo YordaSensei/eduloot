@@ -36,11 +36,14 @@ void studentPurchase::purchase(string email) {
     merchantInFile.close();
 
     if (merchantList.empty()) {
-        cout << "No merchants available.\n";
+        cout << termcolor::red << "No merchants available.\n";
+        clearSystem();
         return;
     }
 
-    int merchantChoice = promptChoice (1,merchantList.size(),"Select number of merchant (0 to cancel): ");;
+    int merchantChoice = promptChoice (1,merchantList.size(),"Select number of merchant (0 to cancel): ");
+    system("cls");
+    
     if (merchantChoice == 0) {
         cout << termcolor::red << "\nCancelled. Returning to menu...\n" << termcolor::reset;
         clearSystem(1200);
@@ -75,7 +78,8 @@ void studentPurchase::purchase(string email) {
     productInFile.close();
 
     if (productList.empty()) {
-        cout << "No products available for this merchant.\n";
+        cout << termcolor::red << "No products available for this merchant.\n";
+        clearSystem();
         return;
     }
 

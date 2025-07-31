@@ -1,2 +1,0 @@
-EduGate,Testing,10,4,mhm
-123,asd,12,0,
